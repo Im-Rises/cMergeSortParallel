@@ -17,9 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install libs
-        run: |
-          sudo apt-get install libglfw3-dev
+      #      - name: Install libs
+      #        run: |
+      #          sudo apt-get install libglfw3-dev
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -63,7 +63,7 @@ jobs:
 
       - name: Install libs
         run: |
-          brew install glfw
+          brew install clang-omp
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
