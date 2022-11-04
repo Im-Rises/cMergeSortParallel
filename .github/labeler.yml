@@ -11,10 +11,10 @@ github-actions:
   - '.github/**/*.yml'
 
 src:
-  - 'ParticleEngine/**/*.{cpp,hpp}'
+  - '*/**/*.{cpp,hpp}'
 
 main:
-  - 'ParticleEngine/main.*'
+  - '*/main.*'
 
 test:
   - 'test/**/*.{cpp,hpp}'
