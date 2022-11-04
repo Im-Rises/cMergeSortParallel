@@ -18,7 +18,8 @@ void swap(int* a, int* b) {
 
 int binarySearch(int x, int T[], int p, int r) {
     int low = p;
-    int high = max(p, r + 1);
+    //    int high = max(p, r + 1);
+    int high = p > r + 1 ? p : r + 1;
     while (low < high)
     {
         int mid = (low + high) / 2;
@@ -47,9 +48,9 @@ void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3) {
         int q2 = binarySearch(T[q1], T, p2, r2);
         int q3 = p3 + (q1 - p1) + (q2 - p2);
         A[q3] = T[q1];
-#pragma omp task
+        //#pragma omp task
         parallelMerge(T, p1, q1 - 1, p2, q2 - 1, A, p3);
-#pragma omp task
+        //#pragma omp task
         parallelMerge(T, q1 + 1, r1, q2, r2, A, q3 + 1);
     }
 }
@@ -69,11 +70,11 @@ void parallelMergeSort(int A[], int p, int r, int B[], int s) {
 #endif
         int q = (p + r) / 2;
         int q2 = q - p + 1;
-#pragma omp task
+        //#pragma omp task
         parallelMergeSort(A, p, q, T, 0);
-#pragma omp task
+        //#pragma omp task
         parallelMergeSort(A, q + 1, r, T, q2);
-#pragma omp taskwait
+        //#pragma omp taskwait
         parallelMerge(T, 0, q2 - 1, q2, n - 1, B, s);
 
 #ifdef _WIN32
@@ -83,16 +84,16 @@ void parallelMergeSort(int A[], int p, int r, int B[], int s) {
 }
 
 int main() {
-    int array[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
-    int otherArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
+    int inputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
+    int outputArray[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    int arraySize = (sizeof(array) / sizeof(int));
+    int arraySize = (sizeof(inputArray) / sizeof(int));
 
-    printArray("Array not sorted: ", array, arraySize);
+    printArray("Array not sorted: ", inputArray, arraySize);
 
-    parallelMergeSort(array, 0, arraySize - 1, otherArray, 0);
+    parallelMergeSort(inputArray, 0, arraySize - 1, outputArray, 0);
 
-    printArray("Array sorted: ", otherArray, arraySize);
+    printArray("Array sorted: ", outputArray, arraySize);
 
     return 0;
 }
