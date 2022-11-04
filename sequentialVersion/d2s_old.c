@@ -1,70 +1,50 @@
 ﻿#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 
 #define ARRAY_SIZE 3
 
 void printArray(int* array, int size) {
     for (int i = 0; i < size; i++)
-    {
         printf("%d ", array[i]);
-    }
     printf("\n");
 }
 
-void merge(int U[], int V[], int T[], int n) {
-    int i = 0;
-    int j = 0;
-    U[n / 2] = INT_MAX;
-    V[n / 2] = INT_MAX;
-    for (int k = 0; k < n; k++)
+void merge(int arr[], int aux[], int low, int mid, int high) {
+    int k = low, i = low, j = mid + 1;
+
+    while (i <= mid && j <= high)
     {
-        if (U[i] < V[j])
-        {
-            T[k] = U[i++];
-        }
+        if (arr[i] <= arr[j])
+            aux[k++] = arr[i++];
         else
-        {
-            T[k] = V[j++];
-        }
+            aux[k++] = arr[j++];
     }
+
+    while (i <= mid)
+    {
+        aux[k++] = arr[i++];
+    }
+    for (int i = low; i <= high; i++)
+        arr[i] = aux[i];
 }
 
-void mergeSort(int T[], int n) {
-    if (n <= 1)
-    {
+void mergeSort(int arr[], int aux[], int low, int high) {
+    if (high == low)
         return;
-    }
 
-    int* U = malloc(((n / 2) + 1) * sizeof(int));
-    int* V = malloc(((n / 2) + 1) * sizeof(int));
-    if (U == NULL || V == NULL)
-    {
-        printf("Memory allocation error!");
-        exit(1);
-    }
-
-
-    for (int i = 0; i < n / 2; i++)
-    {
-        U[i] = T[i];
-        V[i] = T[i + n / 2];
-    }
-
-    mergeSort(U, n / 2);
-    mergeSort(V, n / 2);
-    merge(U, V, T, n);
-
-    free(U);
-    free(V);
+    int mid = (low + ((high - low) >> 1));
+    mergeSort(arr, aux, low, mid);
+    mergeSort(arr, aux, mid + 1, high);
+    merge(arr, aux, low, mid, high);
 }
+
 
 int main() {
     int array[ARRAY_SIZE] = { 10, 2, 3 };
+    int sortedArray[ARRAY_SIZE];
 
     printArray(array, ARRAY_SIZE);
 
-    mergeSort(array, ARRAY_SIZE);
+    mergeSort(array, sortedArray, 0, ARRAY_SIZE - 1);
 
     printArray(array, ARRAY_SIZE);
 

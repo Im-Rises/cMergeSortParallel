@@ -1,52 +1,62 @@
-﻿#include <stdio.h>
+#include <stdio.h>
+#include <limits.h>
 
-#define ARRAY_SIZE 3
-
-void printArray(int* array, int size) {
+void printArray(char* text,int* array, int size) {
+    printf("%s", text);
     for (int i = 0; i < size; i++)
         printf("%d ", array[i]);
     printf("\n");
 }
 
-void merge(int arr[], int aux[], int low, int mid, int high) {
-    int k = low, i = low, j = mid + 1;
-
-    while (i <= mid && j <= high)
+void merge(int A[], int p, int q, int r) {
+    int n1 = q - p + 1;
+    int n2 = r - q;
+    int L[n1 + 1];
+    int R[n2 + 1];
+    for (int i = 0; i < n1; i++)
+        L[i] = A[p + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = A[q + j + 1];
+    L[n1] = INT_MAX;
+    R[n2] = INT_MAX;
+    int i = 0;
+    int j = 0;
+    for (int k = p; k <= r; k++)
     {
-        if (arr[i] <= arr[j])
-            aux[k++] = arr[i++];
+        if (L[i] <= R[j])
+        {
+            A[k] = L[i];
+            i = i + 1;
+        }
         else
-            aux[k++] = arr[j++];
+        {
+            A[k] = R[j];
+            j = j + 1;
+        }
     }
-
-    while (i <= mid)
-    {
-        aux[k++] = arr[i++];
-    }
-    for (int i = low; i <= high; i++)
-        arr[i] = aux[i];
 }
 
-void mergeSort(int arr[], int aux[], int low, int high) {
-    if (high == low)
-        return;
-
-    int mid = (low + ((high - low) >> 1));
-    mergeSort(arr, aux, low, mid);
-    mergeSort(arr, aux, mid + 1, high);
-    merge(arr, aux, low, mid, high);
+void mergeSort(int A[], int p, int r) {
+    if (p < r)
+    {
+        int q = (p + r) / 2;
+        mergeSort(A, p, q);
+        mergeSort(A, q + 1, r);
+        merge(A, p, q, r);
+    }
 }
 
 
 int main() {
-    int array[ARRAY_SIZE] = { 10, 2, 3 };
-    int sortedArray[ARRAY_SIZE];
+    int array[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0 ,5};
 
-    printArray(array, ARRAY_SIZE);
+    int arraySize = (sizeof(array) / sizeof(int));
 
-    mergeSort(array, sortedArray, 0, ARRAY_SIZE - 1);
+    printArray("Array not sorted: ", array, arraySize);
 
-    printArray(array, ARRAY_SIZE);
+    mergeSort(array, 0, arraySize - 1);
+
+    printArray("Array sorted: ", array, arraySize);
 
     return 0;
 }
