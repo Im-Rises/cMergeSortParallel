@@ -40,11 +40,11 @@ void mergeSort(int arr[], int aux[], int low, int high) {
 
 int main() {
     int array[ARRAY_SIZE] = { 10, 2, 3 };
-    int sortedArray[ARRAY_SIZE];
+    int aux[ARRAY_SIZE];
 
     printArray(array, ARRAY_SIZE);
 
-    mergeSort(array, sortedArray, 0, ARRAY_SIZE - 1);
+    mergeSort(array, aux, 0, ARRAY_SIZE - 1);
 
     printArray(array, ARRAY_SIZE);
 

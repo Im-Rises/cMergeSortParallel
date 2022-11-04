@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <limits.h>
+#include <stdlib.h>
 
-void printArray(char* text,int* array, int size) {
+void printArray(char* text, int* array, int size) {
     printf("%s", text);
     for (int i = 0; i < size; i++)
         printf("%d ", array[i]);
@@ -11,8 +12,15 @@ void printArray(char* text,int* array, int size) {
 void merge(int A[], int p, int q, int r) {
     int n1 = q - p + 1;
     int n2 = r - q;
+#ifdef _WIN32
+    int* L = (int*)malloc((n1 + 1) * sizeof(int));
+    int* R = (int*)malloc((n2 + 1) * sizeof(int));
+#elif defined(__unix__)
     int L[n1 + 1];
     int R[n2 + 1];
+#else
+#warning "Not implemented for macOs"
+#endif
     for (int i = 0; i < n1; i++)
         L[i] = A[p + i];
     for (int j = 0; j < n2; j++)
@@ -34,6 +42,10 @@ void merge(int A[], int p, int q, int r) {
             j = j + 1;
         }
     }
+#ifdef _WIN32
+    free(L);
+    free(R);
+#endif
 }
 
 void mergeSort(int A[], int p, int r) {
@@ -48,7 +60,7 @@ void mergeSort(int A[], int p, int r) {
 
 
 int main() {
-    int array[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0 ,5};
+    int array[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
 
     int arraySize = (sizeof(array) / sizeof(int));
 
