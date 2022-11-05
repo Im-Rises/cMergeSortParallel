@@ -2,25 +2,99 @@
 #include <limits.h>
 #include <stdlib.h>
 
-void printArray(char* text, const int* array, const int size) {
-    printf("%s", text);
-    for (int i = 0; i < size; i++)
-        printf("%d ", array[i]);
-    printf("\n");
+void mergeSort(int A[], int p, int r);
+
+void merge(int A[], int p, int q, int r);
+
+void printArray(char* text, const int* array, int begin, int size);
+
+int main(int argc, char* argv[]) {
+    if (argc != 3)
+    {
+        printf("Usage: %s <input file> <output file>\n", argv[0]);
+        return 1;
+    }
+
+    char* inputFileName = argv[1];
+    char* outputFileName = argv[2];
+
+    // Open input file
+    FILE* inputFile = fopen(inputFileName, "r");
+    if (inputFile == NULL)
+    {
+        printf("Error opening input file");
+        return 2;
+    }
+    int arraySize = getw(inputFile);
+
+    // Create array
+    int* array = (int*)malloc(arraySize * sizeof(int));
+    if (array == NULL)
+    {
+        printf("Error allocating memory");
+        return 2;
+    }
+
+    // Read input file
+    for (int i = 0; i < arraySize; i++)
+    {
+        array[i] = _getw(inputFile);
+    }
+
+    // Close input file
+    fclose(inputFile);
+
+    // Sort array
+    mergeSort(array, 0, arraySize - 1);
+
+    // Print array
+    if (arraySize > 1000)
+    {
+        printArray("Sorted array: ", array, 0, 100);               // first 100 elements
+        printArray("Sorted array: ", array, arraySize - 100, 100); // last 100 elements
+    }
+    else
+    {
+        printArray("Array sorted: ", array, 0, arraySize);
+    }
+
+    // Create output file
+    FILE* file = fopen(outputFileName, "w");
+    if (file == NULL)
+    {
+        printf("Error opening file");
+        return 3;
+    }
+
+    // Write output file
+    for (int i = 0; i < arraySize; i++)
+    {
+        fprintf(file, "%d\n", array[i]);
+    }
+
+    free(array);
+
+    return 0;
+}
+
+
+void mergeSort(int A[], int p, int r) {
+    if (p < r)
+    {
+        int q = (p + r) / 2;
+        mergeSort(A, p, q);
+        mergeSort(A, q + 1, r);
+        merge(A, p, q, r);
+    }
 }
 
 void merge(int A[], int p, int q, int r) {
     int n1 = q - p + 1;
     int n2 = r - q;
-#ifdef _WIN32
-    int* L = (int*)malloc((n1 + 1) * sizeof(int));
-    int* R = (int*)malloc((n2 + 1) * sizeof(int));
-#elif defined(__unix__)
+
     int L[n1 + 1];
     int R[n2 + 1];
-#else
-#warning "Not implemented for macOs"
-#endif
+
     for (int i = 0; i < n1; i++)
         L[i] = A[p + i];
     for (int j = 0; j < n2; j++)
@@ -42,33 +116,11 @@ void merge(int A[], int p, int q, int r) {
             j = j + 1;
         }
     }
-#ifdef _WIN32
-    free(L);
-    free(R);
-#endif
 }
 
-void mergeSort(int A[], int p, int r) {
-    if (p < r)
-    {
-        int q = (p + r) / 2;
-        mergeSort(A, p, q);
-        mergeSort(A, q + 1, r);
-        merge(A, p, q, r);
-    }
-}
-
-
-int main() {
-    int array[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
-
-    int arraySize = (sizeof(array) / sizeof(int));
-
-    printArray("Array not sorted: ", array, arraySize);
-
-    mergeSort(array, 0, arraySize - 1);
-
-    printArray("Array sorted: ", array, arraySize);
-
-    return 0;
+void printArray(char* text, const int* array, const int begin, const int size) {
+    printf("%s", text);
+    for (int i = begin; i < size - begin; i++)
+        printf("%d ", array[i]);
+    printf("\n");
 }

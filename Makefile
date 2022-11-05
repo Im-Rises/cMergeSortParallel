@@ -5,6 +5,9 @@ all:
 	$(MAKE) sequentialVer
 	$(MAKE) clean
 
+fileGenerator:
+	gcc ./fileGenerator/fileGenerator.c -o BuildMakeFile/fileGenerator -std=c11 -pedantic -O2
+
 sequentialVer:
 	gcc ./sequentialVersion/d2s.c -o BuildMakeFile/SquentialVersion -std=c11 -pedantic -O2
 

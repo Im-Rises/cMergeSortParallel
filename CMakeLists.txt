@@ -7,6 +7,9 @@ set(CMAKE_C_EXTENSIONS OFF)
 #set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_BUILD_TYPE Release)
 
+project("fileGenerator")
+add_subdirectory(${PROJECT_NAME})
+
 project("PThreadVersion")
 add_subdirectory(${PROJECT_NAME})
 
