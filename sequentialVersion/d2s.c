@@ -2,7 +2,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
-void printArray(char* text, int* array, int size) {
+void printArray(char* text, const int* array, const int size) {
     printf("%s", text);
     for (int i = 0; i < size; i++)
         printf("%d ", array[i]);
