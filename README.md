@@ -29,11 +29,91 @@ The different algorithms used are described below.
 
 ### Merge Sort
 
-PLACEHOLDER
+```algorithm
+mergeSort(A,p,r)
+    if p < r
+        q = (p+r)/2
+        mergeSort(A,p,q)
+        mergeSort(A,q+1,r)
+        merge(A,p,q,r)
+```
+
+```algorithm
+merge(A,p,q,r)
+    n1 = q-p+1
+    n2 = r-q
+    let L[1..n1+1] and R[1..n2+1] be new arrays
+    for i = 1 to n1
+        L[i] = A[p+i-1]
+    for j = 1 to n2
+        R[j] = A[q+j]
+    L[n1+1] = ∞
+    R[n2+1] = ∞
+    i = 1
+    j = 1
+    for k = p to r
+        if L[i] <= R[j]
+            A[k] = L[i]
+            i = i + 1
+        else A[k] = R[j]
+            j = j + 1
+```
+
+Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
 
 ### Parallel Merge Sort
 
-PLACEHOLDER
+The parallel algorithm is written using `Cilk` algorithm syntax. 
+
+```algorithm
+parallelMergeSort(A,p,r)
+    n = r-p+1
+    if n == 1
+        B[s] = A[p]
+    else let T[1..n] be a new array
+        q = (p+r)/2
+        q2 = q-p+1
+        spawn parallelMergeSort(A,p,q,T,1)
+        parallelMergeSort(A,q+1,r,T,q2+1)
+        sync
+        parallelMerge(T,1,q2,q2+1,n,B,s)
+```
+
+```algorithm
+parallelMerge(A,p_1,r_1,p_2,r_2,A,p_3)
+    n1 = r_1-p_1+1
+    n2 = r_2-p_2+1
+    if n_1 < n_2
+        exchange p_1 and p_2
+        exchange r_1 and r_2
+        exchange n_1 and n_2
+    if n_1 == 0
+        return
+    else 
+        q_1 = (p_1+r_1)/2
+        q_2 = binarySearch(T[q1], T, p_2, r_2)
+        q_3 = p_3+(q_1-p_1)+(q_2-p_2)
+        A[q_3] = T[q_1]
+        spawn parallelMerge(T,p_1,q_1-1,p_2,q_2-1,A,p_3)
+        parallelMerge(T,q_1+1,r_1,q_2,r_2,A,q_3+1)
+        sync
+```
+
+```algorithm
+binarySearch(x,T,p,r)
+    low = p
+    high = max(p,r+1)
+    while low < high
+        mid = (low+high)/2
+        if x <= T[mid]
+            high = mid
+        else 
+            low = mid+1
+    return high
+```
+
+Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
+
 
 ## Project Architecture
 
@@ -115,11 +195,18 @@ cmake .
 
 Linux's users need to install some libs before compiling the project:
 
-First thing to do is to install CMake, type the following command to install it.
+First you need to install `gcc` by typing the following command:
+
+```bash
+sudo apt-get install gcc
+```
+
+Then install CMake, type the following command to install it.
 
 ```bash
 sudo apt-get install cmake
 ```
+
 
 You also need to install the OpenMP lib. Type the following command at the project root.
 
@@ -177,6 +264,8 @@ The executable will be created in the `BuildMakeFile` folder.
 - flawfinder: This script is used to analyze the code with flawfinder.
 
 ## Documentations
+
+Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
 
 Wikipedia:  
 <https://en.wikipedia.org/wiki/Merge_sort>
