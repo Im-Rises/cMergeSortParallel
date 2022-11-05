@@ -31,7 +31,10 @@ brew install libomp
 ## Documentations
 
 Wikipedia:  
-<https://fr.wikipedia.org/wiki/Tri_fusion#Références>
+<https://en.wikipedia.org/wiki/Merge_sort>
+
+OpenMP:  
+<https://www.openmp.org>
 
 OpenMp CMake:  
 <https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html>
