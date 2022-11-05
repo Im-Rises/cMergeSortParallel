@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <limits.h>
 #include <stdlib.h>
+#if defined(_OPENMP)
+#include <omp.h>
+#endif
 
 void mergeSort(int A[], int p, int r);
 
 void merge(int A[], int p, int q, int r);
 
-void printArray(char* text, const int* array, int begin, int size);
+void printArray(const int* array, int begin, int size);
 
 int main(int argc, char* argv[]) {
     if (argc != 3)
@@ -25,7 +28,10 @@ int main(int argc, char* argv[]) {
         printf("Error opening input file");
         return 2;
     }
-    int arraySize = getw(inputFile);
+    // Read size of array
+    int arraySize = 0;
+    fscanf(inputFile, "%d", &arraySize);
+    printf("Array size: %d\n", arraySize);
 
     // Create array
     int* array = (int*)malloc(arraySize * sizeof(int));
@@ -38,24 +44,43 @@ int main(int argc, char* argv[]) {
     // Read input file
     for (int i = 0; i < arraySize; i++)
     {
-        array[i] = _getw(inputFile);
+        fscanf(inputFile, "%d", &array[i]);
     }
 
     // Close input file
     fclose(inputFile);
 
+#if defined(_OPENMP)
+// Create timer
+    double start = omp_get_wtime();
+#endif
+
     // Sort array
     mergeSort(array, 0, arraySize - 1);
+
+#if defined(_OPENMP)
+    // Stop timer
+    double end = omp_get_wtime();
+    printf("Sort and merge Sequential\n"
+           "Time elapsed: %lf seconds\n"
+        , end - start);
+#endif
 
     // Print array
     if (arraySize > 1000)
     {
-        printArray("Sorted array: ", array, 0, 100);               // first 100 elements
-        printArray("Sorted array: ", array, arraySize - 100, 100); // last 100 elements
+        printf("Array too big to print\n");
+        printf("First 100 values: \n");
+        printArray(array, 0, 100);
+        printf("...\n");
+        printf("Last 100 values: \n");
+        printArray(array, arraySize - 100, arraySize);
+        printf("...\n");
     }
     else
     {
-        printArray("Array sorted: ", array, 0, arraySize);
+        printf("Array sorted: \n");
+        printArray(array, 0, arraySize);
     }
 
     // Create output file
@@ -118,9 +143,8 @@ void merge(int A[], int p, int q, int r) {
     }
 }
 
-void printArray(char* text, const int* array, const int begin, const int size) {
-    printf("%s", text);
-    for (int i = begin; i < size - begin; i++)
+void printArray(const int* array, const int begin, const int size) {
+    for (int i = begin; i < size; i++)
         printf("%d ", array[i]);
     printf("\n");
 }
