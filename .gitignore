@@ -5,6 +5,8 @@ out/
 [Ll]ibraries/
 [Dd]ocumentations/
 *.idea/
+!BuildMakeFile/*.txt
+!BuildMakeFile/*.md
 
 # Created by https://www.toptal.com/developers/gitignore/api/c,c++,visualstudio,clion+all,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,visualstudio,clion+all,cmake
