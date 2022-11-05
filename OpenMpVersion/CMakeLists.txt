@@ -1,6 +1,6 @@
-add_executable (${PROJECT_NAME} "d2omp.c" )
+add_executable(${PROJECT_NAME} "d2omp.c")
 
 find_package(OpenMP)
-if(OpenMP_CXX_FOUND)
-    target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX)
-endif()
+if (OpenMP_C_FOUND)
+    target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_C)
+endif ()
