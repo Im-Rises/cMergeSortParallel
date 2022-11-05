@@ -15,11 +15,10 @@ jobs:
       - uses: actions/checkout@v3
       - name: install libs
         run: |
-          ls
           sudo apt-get install make
           sudo apt-get install gcc
-      - name: configure
-        run: ./configure
+#      - name: configure
+#        run: ./configure
       - name: make
         run: make
       #    - name: make check
