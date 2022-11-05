@@ -70,22 +70,32 @@ void parallelMergeSort(int A[], int p, int r, int B[], int s) {
 #endif
         int q = (p + r) / 2;
         int q2 = q - p + 1;
-        //#pragma omp task
-        parallelMergeSort(A, p, q, T, 0);
-        //#pragma omp task
+#pragma omp parallel sections
+        {
+#pragma omp section
+            { parallelMergeSort(A, p, q, T, 0);
+        printf("Thread: %d\n", omp_get_thread_num());
+    }
+#pragma omp section
+    {
         parallelMergeSort(A, q + 1, r, T, q2);
-        //#pragma omp taskwait
-        parallelMerge(T, 0, q2 - 1, q2, n - 1, B, s);
+        printf("Thread: %d\n", omp_get_thread_num());
+    }
+};
+parallelMerge(T, 0, q2 - 1, q2, n - 1, B, s);
 
 #ifdef _WIN32
-        free(T);
+free(T);
 #endif
-    }
+}
 }
 
 int main() {
-    int inputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
-    int outputArray[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    printf("Number of threads: %d\n\n", omp_get_max_threads());
+    omp_set_num_threads(4);
+
+    int inputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5, 10, 200, 30, 2, 1, 300, 50, 4, 2, 5, 6, 2, 9 };
+    int outputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5, 10, 200, 30, 2, 1, 300, 50, 4, 2, 5, 6, 2, 9 };
 
     int arraySize = (sizeof(inputArray) / sizeof(int));
 
