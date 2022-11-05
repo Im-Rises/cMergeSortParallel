@@ -15,6 +15,13 @@ It is implemented using Fixed Framerate and Component Oriented Programming.
 > **Note**  
 > The project is a work in progress and is not yet complete.
 
+## Quickstart
+
+Depending on you `operating system` you will need to install some libs, they are installed differently depending on your
+system, please follow one of the section below `Windows` or `Linux`.
+
+The different algorithms used are described below.
+
 ## Algorithms
 
 - [x] Merge Sort
@@ -28,29 +35,15 @@ PLACEHOLDER
 
 PLACEHOLDER
 
-## Quickstart
-
-To download the app, you can click one of the icons below (depending on your operating system). You can also click the
-release section of the GitHub page.
-
-Depending on you `operating system` you will need to install some libs, they are installed differently depending on your
-system, please follow one of the section below `Windows` or `Linux` or `MacOs`.
-
-> **Warning**
-> Be sure to put the `imgui.ini` file in the same folder as the executable.
-> You can find it in the `root` of the project. If you don't do this, the UI will not be displayed correctly.
-
 ## Project Architecture
 
 ~~~
 ParticleEngine
 ├── .github
-|  ├── labels.yml
-|  ├── release.yml
 │  ├── workflows
+│  │   |── c-cpp.yml
 │  │   |── cmake.yml
 │  │   |── codeql.yml
-│  │   |── cpp-cmake-publish.yml
 │  │   |── cpp-linter.yml
 │  │   |── dependency-review.yml
 │  │   |── flawfinder.yml
@@ -58,39 +51,30 @@ ParticleEngine
 │  │   |── label.yml
 │  │   |── msvc.yml
 │  │   |── stale.yml
-├── dependencies
-|  ├── glad
-|  ├── glfw
-|  ├── glfwglm
-|  ├── imgui
-|  ├── stb
+|  ├── labeler.yml
+|  ├── release.yml
+├── BuildMakeFile
+|  ├── readme.txt
+|  ├── *
+├── OpenMpVersion
+|  ├── CMakelists.txt
+|  ├── d2omp.c
+├── PThreadVersion
+|  ├── CMakelists.txt
+|  ├── d2p.c
+├── sequentialVersion
+|  ├── CMakelists.txt
+|  ├── d2s.c
 ├── ParticleEngine
-│  │   |── *
-|  ├── Particle
-│  │   |── *
-|  ├── Scene
-│  │   |── *
-|  ├── CMakeLists.txt
-|  ├── InputManager.cpp
-|  ├── InputManager.h
-|  ├── main.cpp
-|  ├── ParticleEngine.cpp
-|  ├── ParticleEngine.h
-├── test
-|  ├── TestParticle
-│  │   |── *
-|  ├── CMakeLists.txt
-|  ├── integratorTest.cpp
-|  ├── physicHandlerTest.cpp
-|  ├── particleTest.cpp
 ├── .clang-format
+├── .clang-tidy
 ├── .editorconfig
 ├── .gitattributes
 ├── .gitignore
 ├── CMakelists.txt
 ├── CMakePresets.json
 ├── CMakeSettings.json
-├── imgui.ini
+├── Makefile
 ├── README.md
 ~~~
 
@@ -107,6 +91,7 @@ To compile the app, the first thing you need to do is install a C++ compiler:
 - Visual Studio (MSVC)
 - Mingw
 - GCC
+- ...
 
 You also need to install Cmake:  
 <https://cmake.org>
@@ -148,6 +133,33 @@ You are now able to compile the project. Go to the project root and type the fol
 cmake .
 ```
 
+You can also use the Makefile to compile the project. Type the following command at the project root:
+
+First you need to install `make`:
+
+```bash
+sudo apt-get install make
+```
+
+Then you can compile the project:
+
+```bash
+make
+```
+
+or if you want to compile only one of the scripts type:
+
+```bash
+make <script_name>
+```
+
+The scripts names are:
+- `sequentialVer`
+- `OpenMpVer`
+- `PThreadVer`
+
+The executable will be created in the `BuildMakeFile` folder.
+
 ## GitHub Actions
 
 [![CMake](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/cmake.yml)
@@ -155,9 +167,11 @@ cmake .
 [![CodeQL](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/codeql.yml)
 [![cpp-linter](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/cpp-linter.yml/badge.svg?branch=main)](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/cpp-linter.yml)
 [![flawfinder](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/flawfinder.yml/badge.svg?branch=main)](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/flawfinder.yml)
+[![C/C++ CI](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/c-cpp.yml/badge.svg?branch=main)](https://github.com/Im-Rises/cMergeSortParallel/actions/workflows/c-cpp.yml)
 
 - CMake: This script is used to build the project.
 - MSVC: This script is used to analyze the code with Microsoft C++ Code Analysis.
+- c-cpp: This script is used to build the project with C/C++ CI using make.
 - cpp-linter: This script is used to check the C code formatting.
 - CodeQL: This script is used to analyze the code with CodeQL.
 - flawfinder: This script is used to analyze the code with flawfinder.
