@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
-#if defined(_OPENMP)
+#ifdef _OPENMP
 #include <omp.h>
 #endif
 

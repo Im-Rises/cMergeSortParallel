@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <omp.h>
 
+#define MAX_THREADS 4
+
 void swap(int* a, int* b);
 int binarySearch(int x, int T[], int p, int r);
 void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3);
@@ -42,18 +44,19 @@ int main() {
         }
     }
 
-#if defined(_OPENMP)
     /* Create timer */
     double start = omp_get_wtime();
-#endif
+
+    /* Print the number of threads */
+    omp_set_num_threads(MAX_THREADS);
+    printf("Number of threads: %d\n", omp_get_max_threads());
 
     /* Sort array */
     parallelMergeSort(inputArray, 0, arraySize - 1, outputArray, 0);
 
-#if defined(_OPENMP)
     /* Stop timer */
     printf("Time elapsed: %lf seconds\n\n", omp_get_wtime() - start);
-#endif
+
 
     /* Print array */
     printArraySummary(outputArray, arraySize);
@@ -118,13 +121,8 @@ void parallelMergeSort(int A[], int p, int r, int B[], int s) {
         B[s] = A[p];
     else
     {
-#ifdef _WIN32
-        int* T = (int*)malloc(n * sizeof(int));
-#elif defined(__unix__)
         int T[n];
-#else
-#warning "Not implemented for macOs"
-#endif
+
         int q = (p + r) / 2;
         int q2 = q - p + 1;
 #pragma omp parallel sections
@@ -135,15 +133,10 @@ void parallelMergeSort(int A[], int p, int r, int B[], int s) {
             parallelMergeSort(A, q + 1, r, T, q2);
         };
         parallelMerge(T, 0, q2 - 1, q2, n - 1, B, s);
-
-#ifdef _WIN32
-        free(T);
-#endif
     }
 }
 
-void* allocateMemory(size_t size)
-{
+void* allocateMemory(size_t size) {
     void* memory = malloc(size);
     if (memory == NULL)
     {
