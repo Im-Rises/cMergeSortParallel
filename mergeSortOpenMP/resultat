@@ -1,9 +1,9 @@
------Merge Sort Sequential-----
+-----Merge Sort Parallel using OpenMP-----
 
 To get elapsed time, compile with OpenMP's flag -fopenmp
 
 Array size: 10000
-Time elapsed: 0.001217 seconds
+Time elapsed: 0.025295 seconds
 
 Array sorted:
 Array too big to print

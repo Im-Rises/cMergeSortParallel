@@ -31,5 +31,7 @@ int main(int argc, char* argv[]) {
     }
 
     fclose(file);
+
+    printf("Array generated successfully\n");
     return 0;
 }

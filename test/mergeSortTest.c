@@ -1,7 +1,8 @@
+#include <stdio.h>
 
 int main(){
-    int inputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
-    int outputArray[10];
+//    int inputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
+//    int outputArray[10];
 
 //    int arraySize = (sizeof(inputArray) / sizeof(int));
 //

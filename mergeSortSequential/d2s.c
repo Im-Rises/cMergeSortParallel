@@ -1,27 +1,15 @@
-#include <stdio.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <stdio.h>
 #if defined(_OPENMP)
 #include <omp.h>
 #endif
 
 void mergeSort(int A[], int p, int r);
-
 void merge(int A[], int p, int q, int r);
-
-FILE* openFile(char* fileName, char* mode);
-
-void readLine(FILE* file, int* value);
-
 void* allocateMemory(size_t size);
-
-void copyArrayFromFileToArray(FILE* file,int* array, int arraySize);
-
 void printArraySummary(int* array, int arraySize);
-
 void printArray(const int* array, int begin, int size);
-
-void copyArrayToFile(FILE* file, int* array, int arraySize);
 
 int main(int argc, char* argv[]) {
     /*
@@ -31,33 +19,26 @@ int main(int argc, char* argv[]) {
      * 3 - Error reading line from file
      * 4 - Error allocating memory
      */
-
     printf("-----Merge Sort Sequential-----\n\n");
-    if (argc != 3)
-    {
-        printf("Merge Sort Sequential version: Usage: %s <input file> <output file>\n", argv[0]);
-        return 1;
-    }
+    printf("To get elapsed time, compile with OpenMP's flag -fopenmp\n\n");
 
-    char* inputFileName = argv[1];
-    char* outputFileName = argv[2];
-
-    // Open input file
-    FILE* inputFile = openFile(inputFileName, "r");
-
-    // Read size of array
+    // Read size of array from stream
     int arraySize = 0;
-    readLine(inputFile, &arraySize);
+    scanf("%d", &arraySize);
     printf("Array size: %d\n", arraySize);
 
     // Create array
     int* array = allocateMemory(arraySize * sizeof(int));
 
-    // Copy data from input file to array
-    copyArrayFromFileToArray(inputFile, array, arraySize);
-
-    // Close input file
-    fclose(inputFile);
+    // Copy data from stream to array
+    for (int i = 0; i < arraySize; i++)
+    {
+        if (scanf("%d", &array[i]) != 1)
+        {
+            printf("Error reading line from stream");
+            return 3;
+        }
+    }
 
 #if defined(_OPENMP)
 // Create timer
@@ -69,21 +50,13 @@ int main(int argc, char* argv[]) {
 
 #if defined(_OPENMP)
     // Stop timer
-    double end = omp_get_wtime();
-    printf("Sort and merge Sequential\n"
-           "Time elapsed: %lf seconds\n"
-        , end - start);
+    printf("Time elapsed: %lf seconds\n\n", omp_get_wtime() - start);
 #endif
 
     // Print array
     printArraySummary(array, arraySize);
 
-    // Create output file
-    FILE* file = openFile(outputFileName, "w");
-
-    // Write output file
-    copyArrayToFile(file, array, arraySize);
-
+    // free memory
     free(array);
 
     return 0;
@@ -130,24 +103,7 @@ void merge(int A[], int p, int q, int r) {
     }
 }
 
-FILE* openFile(char* fileName, char* mode){
-    FILE* file = fopen(fileName, mode);
-    if (file == NULL)
-    {
-        printf("Error opening file: %s", fileName);
-        exit(2);
-    }
-    return file;
-}
 
-void readLine(FILE* file, int* value)
-{
-    if (fscanf(file, "%d", value) != 1)
-    {
-        printf("Error reading file");
-        exit(3);
-    }
-}
 
 void* allocateMemory(size_t size)
 {
@@ -160,40 +116,25 @@ void* allocateMemory(size_t size)
     return memory;
 }
 
-void copyArrayFromFileToArray(FILE* file,int* array, int arraySize)
-{
-    for (int i = 0; i < arraySize; i++)
-    {
-        fscanf(file, "%d", &array[i]);
-    }
-}
-
 void printArraySummary(int* array, int arraySize) {
+    printf("Array sorted:\n");
     if (arraySize > 1000)
     {
         printf("Array too big to print\n");
-        printf("First 100 values: \n");
+        printf("- First 100 values: \n");
         printArray(array, 0, 100);
-        printf("...\n");
-        printf("Last 100 values: \n");
+        printf("...");
+        printf("- Last 100 values: \n");
         printArray(array, arraySize - 100, arraySize);
     }
     else
     {
-        printf("Array sorted: \n");
         printArray(array, 0, arraySize);
     }
 }
 
 void printArray(const int* array, const int begin, const int size) {
     for (int i = begin; i < size; i++)
-        printf("%d ", array[i]);
+        printf("%d\n", array[i]);
     printf("\n");
-}
-
-void copyArrayToFile(FILE* file, int* array, int arraySize){
-    for (int i = 0; i < arraySize; i++)
-    {
-        fprintf(file, "%d\n", array[i]);
-    }
 }
