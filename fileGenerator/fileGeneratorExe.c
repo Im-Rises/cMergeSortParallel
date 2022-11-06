@@ -24,7 +24,8 @@ int main(int argc, char* argv[]) {
     }
 
     fprintf(file, "%d\n", size);
-    for (int i = 0; i < size; i++)
+    int i;
+    for (i = 0; i < size; i++)
     {
         int random = rand() % INT_MAX;
         fprintf(file, "%d\n", random);

@@ -22,16 +22,17 @@ int main(int argc, char* argv[]) {
     printf("-----Merge Sort Sequential-----\n\n");
     printf("To get elapsed time, compile with OpenMP's flag -fopenmp\n\n");
 
-    // Read size of array from stream
+    /* Read size of array from stream */
     int arraySize = 0;
     scanf("%d", &arraySize);
     printf("Array size: %d\n", arraySize);
 
-    // Create array
+    /* Create array */
     int* array = allocateMemory(arraySize * sizeof(int));
 
-    // Copy data from stream to array
-    for (int i = 0; i < arraySize; i++)
+    /* Copy data from stream to array */
+    int i;
+    for (i = 0; i < arraySize; i++)
     {
         if (scanf("%d", &array[i]) != 1)
         {
@@ -41,22 +42,22 @@ int main(int argc, char* argv[]) {
     }
 
 #if defined(_OPENMP)
-// Create timer
+/* Create timer */
     double start = omp_get_wtime();
 #endif
 
-    // Sort array
+    /* Sort array */
     mergeSort(array, 0, arraySize - 1);
 
 #if defined(_OPENMP)
-    // Stop timer
+    /* Stop timer */
     printf("Time elapsed: %lf seconds\n\n", omp_get_wtime() - start);
 #endif
 
-    // Print array
+    /* Print array */
     printArraySummary(array, arraySize);
 
-    // free memory
+    /* free memory */
     free(array);
 
     return 0;
@@ -80,15 +81,17 @@ void merge(int A[], int p, int q, int r) {
     int L[n1 + 1];
     int R[n2 + 1];
 
-    for (int i = 0; i < n1; i++)
+    int i,j;
+    for (i = 0; i < n1; i++)
         L[i] = A[p + i];
-    for (int j = 0; j < n2; j++)
+    for (j = 0; j < n2; j++)
         R[j] = A[q + j + 1];
     L[n1] = INT_MAX;
     R[n2] = INT_MAX;
-    int i = 0;
-    int j = 0;
-    for (int k = p; k <= r; k++)
+    i = 0;
+    j = 0;
+    int k;
+    for (k = p; k <= r; k++)
     {
         if (L[i] <= R[j])
         {
@@ -123,7 +126,7 @@ void printArraySummary(int* array, int arraySize) {
         printf("Array too big to print\n");
         printf("- First 100 values: \n");
         printArray(array, 0, 100);
-        printf("...");
+        printf("...\n");
         printf("- Last 100 values: \n");
         printArray(array, arraySize - 100, arraySize);
     }
@@ -134,7 +137,8 @@ void printArraySummary(int* array, int arraySize) {
 }
 
 void printArray(const int* array, const int begin, const int size) {
-    for (int i = begin; i < size; i++)
+    int i;
+    for (i = begin; i < size; i++)
         printf("%d\n", array[i]);
     printf("\n");
 }

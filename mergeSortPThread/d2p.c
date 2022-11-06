@@ -39,19 +39,6 @@ void printArray(const int* array, int begin, int size);
 
 
 int main() {
-    //    int inputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
-    //    int outputArray[10];
-    //
-    //    int arraySize = (sizeof(inputArray) / sizeof(int));
-    //
-    //    printArray("Array not sorted: ", inputArray, arraySize);
-    //
-    //    parallelMergeSort(inputArray, 0, arraySize - 1, outputArray, 0);
-    //
-    //    printArray("Array sorted: ", outputArray, arraySize);
-    //
-    //    return 0;
-
     /*
      * Error list:
      * 1 - Wrong number of arguments
@@ -62,17 +49,18 @@ int main() {
     printf("-----Merge Sort Parallel using PThread-----\n\n");
     printf("To get elapsed time, compile with OpenMP's flag -fopenmp\n\n");
 
-    // Read size of array from stream
+    /* Read size of array from stream */
     int arraySize = 0;
     scanf("%d", &arraySize);
     printf("Array size: %d\n", arraySize);
 
-    // Create array
+    /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
     int* outputArray = allocateMemory(arraySize * sizeof(int));
 
-    // Copy data from stream to array
-    for (int i = 0; i < arraySize; i++)
+    /* Copy data from stream to array */
+    int i;
+    for ( i = 0; i < arraySize; i++)
     {
         if (scanf("%d", &inputArray[i]) != 1)
         {
@@ -82,22 +70,22 @@ int main() {
     }
 
 #if defined(_OPENMP)
-    // Create timer
+    /* Create timer */
     double start = omp_get_wtime();
 #endif
 
-    // Sort array
+    /* Sort array */
     parallelMergeSort(inputArray, 0, arraySize - 1, outputArray, 0);
 
 #if defined(_OPENMP)
-    // Stop timer
+    /* Stop timer */
     printf("Time elapsed: %lf seconds\n\n", omp_get_wtime() - start);
 #endif
 
-    // Print array
+    /* Print array */
     printArraySummary(outputArray, arraySize);
 
-    // free memory
+    /* free memory */
     free(inputArray);
     free(outputArray);
 
@@ -217,7 +205,7 @@ void printArraySummary(int* array, int arraySize) {
         printf("Array too big to print\n");
         printf("- First 100 values: \n");
         printArray(array, 0, 100);
-        printf("...");
+        printf("...\n");
         printf("- Last 100 values: \n");
         printArray(array, arraySize - 100, arraySize);
     }
@@ -228,7 +216,8 @@ void printArraySummary(int* array, int arraySize) {
 }
 
 void printArray(const int* array, const int begin, const int size) {
-    for (int i = begin; i < size; i++)
+    int i;
+    for (i = begin; i < size; i++)
         printf("%d\n", array[i]);
     printf("\n");
 }
