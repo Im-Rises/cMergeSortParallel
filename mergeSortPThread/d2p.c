@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#if defined(_OPENMP)
+#include <omp.h>
+#endif
 
 typedef struct MergeSortArgs MergeSortArgs;
-
 struct MergeSortArgs {
     int* A;
     int p;
@@ -14,7 +16,6 @@ struct MergeSortArgs {
 };
 
 typedef struct MergeArgs MergeArgs;
-
 struct MergeArgs {
     int* T;
     int p1;
@@ -25,32 +26,80 @@ struct MergeArgs {
     int p3;
 };
 
-
 void parallelMergeSort(int A[], int p, int r, int B[], int s);
-
 void* parallelMergeSortThread(void* input);
-
 void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3);
-
 void* parallelMergeThread(void* input);
-
 int binarySearch(int x, int T[], int p, int r);
-
-void printArray(char* text, const int* array, const int size);
-
 void swap(int* a, int* b);
 
+void* allocateMemory(size_t size);
+void printArraySummary(int* array, int arraySize);
+void printArray(const int* array, int begin, int size);
+
+
 int main() {
-    int inputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
-    int outputArray[10];
+    //    int inputArray[] = { 10, 2, 3, 30, 432, 1, -52, 100, 0, 5 };
+    //    int outputArray[10];
+    //
+    //    int arraySize = (sizeof(inputArray) / sizeof(int));
+    //
+    //    printArray("Array not sorted: ", inputArray, arraySize);
+    //
+    //    parallelMergeSort(inputArray, 0, arraySize - 1, outputArray, 0);
+    //
+    //    printArray("Array sorted: ", outputArray, arraySize);
+    //
+    //    return 0;
 
-    int arraySize = (sizeof(inputArray) / sizeof(int));
+    /*
+     * Error list:
+     * 1 - Wrong number of arguments
+     * 2 - Error opening file
+     * 3 - Error reading line from file
+     * 4 - Error allocating memory
+     */
+    printf("-----Merge Sort Parallel using PThread-----\n\n");
+    printf("To get elapsed time, compile with OpenMP's flag -fopenmp\n\n");
 
-    printArray("Array not sorted: ", inputArray, arraySize);
+    // Read size of array from stream
+    int arraySize = 0;
+    scanf("%d", &arraySize);
+    printf("Array size: %d\n", arraySize);
 
+    // Create array
+    int* inputArray = allocateMemory(arraySize * sizeof(int));
+    int* outputArray = allocateMemory(arraySize * sizeof(int));
+
+    // Copy data from stream to array
+    for (int i = 0; i < arraySize; i++)
+    {
+        if (scanf("%d", &inputArray[i]) != 1)
+        {
+            printf("Error reading line from stream");
+            return 3;
+        }
+    }
+
+#if defined(_OPENMP)
+    // Create timer
+    double start = omp_get_wtime();
+#endif
+
+    // Sort array
     parallelMergeSort(inputArray, 0, arraySize - 1, outputArray, 0);
 
-    printArray("Array sorted: ", outputArray, arraySize);
+#if defined(_OPENMP)
+    // Stop timer
+    printf("Time elapsed: %lf seconds\n\n", omp_get_wtime() - start);
+#endif
+
+    // Print array
+    printArraySummary(outputArray, arraySize);
+
+    // free memory
+    free(inputArray);
+    free(outputArray);
 
     return 0;
 }
@@ -112,7 +161,7 @@ void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3) {
         MergeArgs mergeArgs;
         mergeArgs.T = T;
         mergeArgs.p1 = p1;
-        mergeArgs.r1 = q1-1;
+        mergeArgs.r1 = q1 - 1;
         mergeArgs.p2 = p2;
         mergeArgs.r2 = q2 - 1;
         mergeArgs.A = A;
@@ -144,15 +193,42 @@ int binarySearch(int x, int T[], int p, int r) {
     return high;
 }
 
-void printArray(char* text, const int* array, const int size) {
-    printf("%s", text);
-    for (int i = 0; i < size; i++)
-        printf("%d ", array[i]);
-    printf("\n");
-}
-
 void swap(int* a, int* b) {
     int temp = *a;
     *a = *b;
     *b = temp;
+}
+
+void* allocateMemory(size_t size)
+{
+    void* memory = malloc(size);
+    if (memory == NULL)
+    {
+        printf("Error allocating memory");
+        exit(4);
+    }
+    return memory;
+}
+
+void printArraySummary(int* array, int arraySize) {
+    printf("Array sorted:\n");
+    if (arraySize > 1000)
+    {
+        printf("Array too big to print\n");
+        printf("- First 100 values: \n");
+        printArray(array, 0, 100);
+        printf("...");
+        printf("- Last 100 values: \n");
+        printArray(array, arraySize - 100, arraySize);
+    }
+    else
+    {
+        printArray(array, 0, arraySize);
+    }
+}
+
+void printArray(const int* array, const int begin, const int size) {
+    for (int i = begin; i < size; i++)
+        printf("%d\n", array[i]);
+    printf("\n");
 }
