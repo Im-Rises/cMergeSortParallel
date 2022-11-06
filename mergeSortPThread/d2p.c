@@ -60,7 +60,7 @@ int main() {
 
     /* Copy data from stream to array */
     int i;
-    for ( i = 0; i < arraySize; i++)
+    for (i = 0; i < arraySize; i++)
     {
         if (scanf("%d", &inputArray[i]) != 1)
         {
@@ -111,11 +111,17 @@ void parallelMergeSort(int A[], int p, int r, int B[], int s) {
         mergeSortArgs.B = T;
         mergeSortArgs.s = 0;
 
-        pthread_create(&thread_id, NULL, parallelMergeSortThread, (void*)&mergeSortArgs);
-
-        parallelMergeSort(A, q + 1, r, T, q2);
-
-        pthread_join(thread_id, NULL);
+        int threadCode = pthread_create(&thread_id, NULL, parallelMergeSortThread, (void*)&mergeSortArgs);
+        if (threadCode == 0)
+        {
+            parallelMergeSort(A, q + 1, r, T, q2);
+            pthread_join(thread_id, NULL);
+        }
+        else
+        {
+            parallelMergeSort(A, p, q, T, 0);
+            parallelMergeSort(A, q + 1, r, T, q2);
+        }
 
         parallelMerge(T, 0, q2 - 1, q2, n - 1, B, s);
     }
@@ -154,11 +160,17 @@ void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3) {
         mergeArgs.r2 = q2 - 1;
         mergeArgs.A = A;
         mergeArgs.p3 = p3;
-        pthread_create(&thread_id, NULL, parallelMergeThread, (void*)&mergeArgs);
-
-        parallelMerge(T, q1 + 1, r1, q2, r2, A, q3 + 1);
-
-        pthread_join(thread_id, NULL);
+        int threadCode = pthread_create(&thread_id, NULL, parallelMergeThread, (void*)&mergeArgs);
+        if (threadCode == 0)
+        {
+            parallelMerge(T, q1 + 1, r1, q2, r2, A, q3 + 1);
+            pthread_join(thread_id, NULL);
+        }
+        else
+        {
+            parallelMerge(T, p1, q1 - 1, p2, q2 - 1, A, p3);
+            parallelMerge(T, q1 + 1, r1, q2, r2, A, q3 + 1);
+        }
     }
 }
 
@@ -187,8 +199,7 @@ void swap(int* a, int* b) {
     *b = temp;
 }
 
-void* allocateMemory(size_t size)
-{
+void* allocateMemory(size_t size) {
     void* memory = malloc(size);
     if (memory == NULL)
     {

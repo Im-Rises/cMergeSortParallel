@@ -4,9 +4,6 @@ set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-#set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_BUILD_TYPE Release)
-
 project("fileGenerator")
 add_subdirectory(${PROJECT_NAME})
 
@@ -18,3 +15,6 @@ add_subdirectory(${PROJECT_NAME})
 
 project("mergeSortSequential")
 add_subdirectory(${PROJECT_NAME})
+
+enable_testing()
+add_subdirectory("test")
