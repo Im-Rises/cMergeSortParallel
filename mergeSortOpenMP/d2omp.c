@@ -21,7 +21,6 @@ int main() {
      * 4 - Error allocating memory
      */
     printf("-----Merge Sort Parallel using OpenMP-----\n\n");
-    printf("To get elapsed time, compile with OpenMP's flag -fopenmp\n\n");
 
     /* Read size of array from stream */
     int arraySize = 0;
