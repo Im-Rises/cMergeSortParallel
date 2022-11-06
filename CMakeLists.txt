@@ -10,11 +10,11 @@ set(CMAKE_BUILD_TYPE Release)
 project("fileGenerator")
 add_subdirectory(${PROJECT_NAME})
 
-project("PThreadVersion")
+project("mergeSortPThread")
 add_subdirectory(${PROJECT_NAME})
 
-project("OpenMpVersion")
+project("mergeSortOpenMP")
 add_subdirectory(${PROJECT_NAME})
 
-project("sequentialVersion")
+project("mergeSortSequential")
 add_subdirectory(${PROJECT_NAME})

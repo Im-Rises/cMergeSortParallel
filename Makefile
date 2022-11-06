@@ -9,18 +9,18 @@ fileGenerator:
 	gcc ./fileGenerator/fileGenerator.c -o BuildMakeFile/fileGenerator -std=c11 -pedantic -O2
 
 sequentialVer:
-	gcc ./sequentialVersion/d2s.c -o BuildMakeFile/SquentialVersion -std=c11 -pedantic -O2
+	gcc ./mergeSortSequential/d2s.c -o BuildMakeFile/SquentialVersion -std=c11 -pedantic -O2
 
 OpenMpVer:
-	gcc ./OpenMpVersion/d2omp.c -o BuildMakeFile/OpenMpVersion -fopenmp -std=c11 -pedantic -O2
+	gcc ./mergeSortOpenMp/d2omp.c -o BuildMakeFile/mergeSortOpenMp -fopenmp -std=c11 -pedantic -O2
 
 PThreadVer:
-	gcc ./PThreadVersion/d2p.c -o BuildMakeFile/PThreadVersion -lpthread -std=c11 -pedantic -O2
+	gcc ./mergeSortPThread/d2p.c -o BuildMakeFile/mergeSortPThread -lpthread -std=c11 -pedantic -O2
 
 clean :
 	rm -rf *.o
 
 #mrproper : clean
-#	rm -rf OpenMpVersion
-#	rm -rf PThreadVersion
-#	rm -rf sequentialVersion
+#	rm -rf mergeSortOpenMp
+#	rm -rf mergeSortPThread
+#	rm -rf mergeSortSequential

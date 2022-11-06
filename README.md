@@ -20,6 +20,8 @@ It is implemented using Fixed Framerate and Component Oriented Programming.
 Depending on you `operating system` you will need to install some libs, they are installed differently depending on your
 system, please follow one of the section below `Windows` or `Linux`.
 
+For an explanation on `How to use` go to the according section.
+
 The different algorithms used are described below.
 
 ## Algorithms
@@ -114,6 +116,50 @@ binarySearch(x,T,p,r)
 
 Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
 
+## How to use
+
+First you need to build the scripts (check the `compilation` section).
+
+Once done you have 2-4 executables :
+- fileGenerator
+- PThreadVersion (only for Linux)
+- OpenMPVersion
+- sequentialVersion
+
+The `fileGenerator` one is only used to generate the files that will be used by the other 'merge sort' executables.
+
+If you don't want to use it you can use the file named `test_file.txt` at the root of the project.
+
+A file is composed of several lines:
+- the first one is the number of elements in the array
+- the second one is the array
+
+For example :
+```
+4
+11 
+2 
+3 
+400
+```
+
+All the executables take 2 arguments :
+- the path to the input file (compose of the array to sort)
+- the path to the output file (where the sorted array will be written)
+
+For Linux type:
+
+```bash
+./mergeSortSequential ./test_file.txt ./output_file.txt
+```
+
+and for windows
+
+```bash
+.\mergeSortSequential .\test_file.txt .\output_file.txt
+```
+
+The output file will now contain the sorted array.
 
 ## Project Architecture
 
