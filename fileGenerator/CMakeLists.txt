@@ -1,1 +1,1 @@
-add_executable(${PROJECT_NAME} "fileGeneratorExe.c")
+add_executable(${PROJECT_NAME} "fileGenerator.c")

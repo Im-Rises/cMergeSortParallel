@@ -4,11 +4,15 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+#include <time.h>
 
-void swap(int* a, int* b);
+void mergeSort(int A[], int p, int r);
+void merge(int A[], int p, int q, int r);
+
+/*void swap(int* a, int* b);
 int binarySearch(int x, int T[], int p, int r);
 void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3);
-void parallelMergeSort(int A[], int p, int r, int B[], int s);
+void parallelMergeSort(int A[], int p, int r, int B[], int s);*/
 
 void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
@@ -23,7 +27,6 @@ int main() {
      * 4 - Error allocating memory
      */
     printf("-----Merge Sort Sequential-----\n\n");
-    printf("To get elapsed time, compile with OpenMP's flag -fopenmp\n\n");
 
     /* Read size of array from stream */
     int arraySize = 0;
@@ -32,7 +35,7 @@ int main() {
 
     /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
-    int* outputArray = allocateMemory(arraySize * sizeof(int));
+    /*int* outputArray = allocateMemory(arraySize * sizeof(int));*/
 
     /* Copy data from stream to array */
     int i;
@@ -45,30 +48,82 @@ int main() {
         }
     }
 
-#if defined(_OPENMP)
-    /* Create timer */
-    double start = omp_get_wtime();
-#endif
+    /*#if defined(_OPENMP)
+     */
+    /* Create timer */ /*
+   double start = omp_get_wtime();
+#endif*/
+    clock_t t;
+    t = clock();
+    printf("Merge sort timer starts");
 
     /* Sort array */
-    parallelMergeSort(inputArray, 0, arraySize - 1, outputArray, 0);
+    /*mergeSort(inputArray, 0, arraySize - 1, outputArray, 0);*/
+    mergeSort(inputArray, 0, arraySize - 1);
 
-#if defined(_OPENMP)
-    /* Stop timer */
-    printf("Time elapsed: %lf seconds\n\n", omp_get_wtime() - start);
-#endif
+    t = clock() - t;
+    double time_taken = ((double)t) / CLOCKS_PER_SEC; /* calculate the elapsed time*/
+    printf("The merge sort took %f seconds to execute", time_taken);
+    /*#if defined(_OPENMP)
+     */
+    /* Stop timer */ /*
+   printf("Time elapsed: %lf seconds\n\n", omp_get_wtime() - start);
+#endif*/
 
     /* Print array */
-    printArraySummary(outputArray, arraySize);
+    printArraySummary(inputArray, arraySize);
 
     /* free memory */
     free(inputArray);
-    free(outputArray);
+    /*free(outputArray);*/
 
     return 0;
 }
 
-void swap(int* a, int* b) {
+void mergeSort(int A[], int p, int r) {
+    if (p < r)
+    {
+        int q = (p + r) / 2;
+        mergeSort(A, p, q);
+        mergeSort(A, q + 1, r);
+        merge(A, p, q, r);
+    }
+}
+
+void merge(int A[], int p, int q, int r) {
+    int n1 = q - p + 1;
+    int n2 = r - q;
+    int* L = allocateMemory((n1 + 1) * sizeof(int));
+    int* R = allocateMemory((n2 + 1) * sizeof(int));
+    int i, j, k;
+
+    for (i = 0; i < n1; i++)
+        L[i] = A[p + i];
+    for (j = 0; j < n2; j++)
+        R[j] = A[q + j + 1];
+
+    L[n1] = INT_MAX;
+    R[n2] = INT_MAX;
+
+    i = 0;
+    j = 0;
+    for (k = p; k <= r; k++)
+    {
+        if (L[i] <= R[j])
+        {
+            A[k] = L[i];
+            i++;
+        }
+        else
+        {
+            A[k] = R[j];
+            j++;
+        }
+    }
+}
+
+/*--------------OTHER MERGE SORT FUNCTIONS--------------*/
+/*void swap(int* a, int* b) {
     int temp = *a;
     *a = *b;
     *b = temp;
@@ -129,7 +184,7 @@ void parallelMergeSort(int A[], int p, int r, int B[], int s) {
 
         parallelMerge(T, 0, q2 - 1, q2, n - 1, B, s);
     }
-}
+}*/
 
 void* allocateMemory(size_t size) {
     void* memory = malloc(size);
