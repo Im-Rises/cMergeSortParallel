@@ -40,13 +40,13 @@ int main(int argc, char* argv[]) {
     }
 
     /*Method 2*/
-    int* arrayBuffer = malloc(size * sizeof(int));
-    for (i = 0; i < size; i++)
-    {
-        int random = rand() % (INT_MAX + 1 - minNumber) + minNumber;
-        arrayBuffer[i] = random;
-    }
-    fwrite(arrayBuffer, sizeof(int), size, file);
+    /*    int* arrayBuffer = malloc(size * sizeof(int));
+        for (i = 0; i < size; i++)
+        {
+            int random = rand() % (INT_MAX + 1 - minNumber) + minNumber;
+            arrayBuffer[i] = random;
+        }
+        fwrite(arrayBuffer, sizeof(int), size, file);*/
 
     fclose(file);
 

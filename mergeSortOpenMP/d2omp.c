@@ -10,14 +10,14 @@ void mergeSortParallel(int A[], int p, int r);
 void mergeSort(int A[], int p, int r);
 void merge(int A[], int p, int q, int r);
 
+void* allocateMemory(size_t size);
+void printArraySummary(int* array, int arraySize);
+void printArray(const int* array, int begin, int size);
+
 /* void swap(int* a, int* b);
  int binarySearch(int x, int T[], int p, int r);
  void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3);
  void parallelMergeSort(int A[], int p, int r, int B[], int s);*/
-
-void* allocateMemory(size_t size);
-void printArraySummary(int* array, int arraySize);
-void printArray(const int* array, int begin, int size);
 
 int main() {
     /*
@@ -36,7 +36,6 @@ int main() {
 
     /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
-    /*int* outputArray = allocateMemory(arraySize * sizeof(int));*/
 
     /* Copy data from stream to array */
     int i;
@@ -50,32 +49,24 @@ int main() {
     }
 
     /* Print the number of threads */
-    /*    omp_set_num_threads(MAX_THREADS);*/
-    omp_set_num_threads(omp_get_max_threads());
+    /*        omp_set_num_threads(MAX_THREADS);
+        omp_set_num_threads(omp_get_max_threads());*/
     printf("Number of threads: %d\n", omp_get_max_threads());
 
-    clock_t t;
-    t = clock();
+    clock_t clockTimer;
+    clockTimer = clock();
     printf("Merge sort timer starts\n");
-    float time = omp_get_wtime();
-
-    /* Sort array */
-    /*parallelMergeSort(inputArray, 0, arraySize - 1, outputArray, 0);*/
 
     mergeSortParallel(inputArray, 0, arraySize - 1);
-    /*mergeSort(inputArray, 0, arraySize - 1);*/
 
-    t = clock() - t;
-    double time_taken = ((double)t) / CLOCKS_PER_SEC; /*calculate the elapsed time*/
+    clockTimer = clock() - clockTimer;
+    double time_taken = ((double)clockTimer) / CLOCKS_PER_SEC; /*calculate the elapsed time*/
     printf("The merge sort took %f seconds to execute\n", time_taken);
-    printf("The merge sort took %f seconds to execute\n", omp_get_wtime() - time);
 
     /* Print array */
     printArraySummary(inputArray, arraySize);
 
-    /* free memory */
     free(inputArray);
-    /*free(outputArray);*/
 
     return 0;
 }
@@ -83,12 +74,6 @@ int main() {
 void mergeSortParallel(int A[], int p, int r) {
     if (p < r)
     {
-        /*        if (r - p >= 1000)
-                {
-                    mergeSort(A, p, r);
-                }
-                else
-                {*/
         int q = (p + r) / 2;
 
 #pragma omp task shared(A)
@@ -97,7 +82,6 @@ void mergeSortParallel(int A[], int p, int r) {
         mergeSort(A, q + 1, r);
 #pragma omp taskwait
         merge(A, p, q, r);
-        /*}*/
     }
 }
 
@@ -114,8 +98,6 @@ void mergeSort(int A[], int p, int r) {
 void merge(int A[], int p, int q, int r) {
     int n1 = q - p + 1;
     int n2 = r - q;
-    /*    int* L = allocateMemory((n1 + 1) * sizeof(int));
-        int* R = allocateMemory((n2 + 1) * sizeof(int));*/
 
     int L[n1 + 1];
     int R[n2 + 1];
@@ -146,6 +128,41 @@ void merge(int A[], int p, int q, int r) {
         }
     }
 }
+
+void* allocateMemory(size_t size) {
+    void* memory = malloc(size);
+    if (memory == NULL)
+    {
+        printf("Error allocating memory");
+        exit(4);
+    }
+    return memory;
+}
+
+void printArraySummary(int* array, int arraySize) {
+    printf("Array sorted:\n");
+    if (arraySize > 1000)
+    {
+        printf("Array too big to print\n");
+        printf("- First 100 values: \n");
+        printArray(array, 0, 100);
+        printf("...\n");
+        printf("- Last 100 values: \n");
+        printArray(array, arraySize - 100, arraySize);
+    }
+    else
+    {
+        printArray(array, 0, arraySize);
+    }
+}
+
+void printArray(const int* array, const int begin, const int size) {
+    int i;
+    for (i = begin; i < size; i++)
+        printf("%d\n", array[i]);
+    printf("\n");
+}
+
 
 /*--------------OTHER MERGE SORT FUNCTIONS--------------*/
 /*
@@ -186,7 +203,7 @@ void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3) {
         int q2 = binarySearch(T[q1], T, p2, r2);
         int q3 = p3 + (q1 - p1) + (q2 - p2);
         A[q3] = T[q1];
-*/
+        */
 /*#pragma omp parallel sections
       {
 #pragma omp section*/
@@ -220,37 +237,3 @@ parallelMerge(T, p1, q1 - 1, p2, q2 - 1, A, p3);
                  parallelMerge(T, 0, q2 - 1, q2, n - 1, B, s);
              }
          }*/
-
-void* allocateMemory(size_t size) {
-    void* memory = malloc(size);
-    if (memory == NULL)
-    {
-        printf("Error allocating memory");
-        exit(4);
-    }
-    return memory;
-}
-
-void printArraySummary(int* array, int arraySize) {
-    printf("Array sorted:\n");
-    if (arraySize > 1000)
-    {
-        printf("Array too big to print\n");
-        printf("- First 100 values: \n");
-        printArray(array, 0, 100);
-        printf("...\n");
-        printf("- Last 100 values: \n");
-        printArray(array, arraySize - 100, arraySize);
-    }
-    else
-    {
-        printArray(array, 0, arraySize);
-    }
-}
-
-void printArray(const int* array, const int begin, const int size) {
-    int i;
-    for (i = begin; i < size; i++)
-        printf("%d\n", array[i]);
-    printf("\n");
-}
