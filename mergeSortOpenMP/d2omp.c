@@ -17,11 +17,6 @@ void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
 
-/* void swap(int* a, int* b);
- int binarySearch(int x, int T[], int p, int r);
- void parallelMerge(int T[], int p1, int r1, int p2, int r2, int A[], int p3);
- void parallelMergeSort(int A[], int p, int r, int B[], int s);*/
-
 int main() {
     /*
      * Error list:
@@ -29,7 +24,7 @@ int main() {
      * 2 - Error allocating memory
      */
 
-    printf("-----Merge Sort Parallel using OpenMP-----\n\n");
+    printf("|-----Merge Sort Parallel using OpenMP-----|\n\n");
 
     /* Read size of array from stream */
     int arraySize = 0;
@@ -50,17 +45,22 @@ int main() {
         }
     }
 
-    /* Print the number of threads */
-    /*        omp_set_num_threads(MAX_THREADS);
-        omp_set_num_threads(omp_get_max_threads());*/
+    /* Handle and print the number of threads */
+    omp_set_num_threads(MAX_THREADS);
+    /*omp_set_num_threads(omp_get_max_threads());*/
     printf("Number of threads: %d\n", omp_get_max_threads());
+    /*printf("Using %d threads\n", omp_get_max_threads());
+    printf("Using %d threads\n", MAX_THREADS);*/
 
+    /* Create timer */
     clock_t clockTimer;
     clockTimer = clock();
     printf("Merge sort timer starts\n");
 
+    /* Sort array */
     mergeSortParallel(inputArray, 0, arraySize - 1);
 
+    /* Stop timer */
     clockTimer = clock() - clockTimer;
     double time_taken = ((double)clockTimer) / CLOCKS_PER_SEC; /*calculate the elapsed time*/
     printf("The merge sort took %f seconds to execute\n", time_taken);
@@ -68,6 +68,7 @@ int main() {
     /* Print array */
     printArraySummary(inputArray, arraySize);
 
+    /* Free memory */
     free(inputArray);
 
     return 0;

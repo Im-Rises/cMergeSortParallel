@@ -1,9 +1,9 @@
------Merge Sort Parallel using OpenMP-----
+|-----Merge Sort Parallel using OpenMP-----|
 
 - Array size: 1000000
-Number of threads: 12
+Number of threads: 4
 Merge sort timer starts
-The merge sort took 0.039639 seconds to execute
+The merge sort took 0.039666 seconds to execute
 Array sorted:
 Array too big to print
 - First 100 values: 

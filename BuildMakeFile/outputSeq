@@ -1,7 +1,7 @@
 -----Merge Sort Sequential-----
 
 Array size: 1000000
-Merge sort timer startsThe merge sort took 0.134903 seconds to executeArray sorted:
+Merge sort timer startsThe merge sort took 0.133526 seconds to executeArray sorted:
 Array too big to print
 - First 100 values: 
 899
