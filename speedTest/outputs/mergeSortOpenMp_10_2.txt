@@ -1,0 +1,18 @@
+|-----Merge Sort Parallel using OpenMP-----|
+
+- Array size: 10
+Number of threads: 2
+Merge sort timer starts
+The merge sort took 0.000001 seconds to execute
+Is array correctly sorted? Yes
+Array sorted:
+29140598
+31944443
+687984216
+825905784
+1028784040
+1214470197
+1774482354
+1935624680
+2021036902
+2094695891

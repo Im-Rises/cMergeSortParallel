@@ -13,7 +13,7 @@ iterationNumber=$3
 # Merge sort scripts
 mergeSortBuildPath="../buildMakeFile/"
 mergeSortExeNames=("mergeSortSequential" "mergeSortOpenMp" "mergeSortPThread")
-speedTestArraysPath="speedTestArrays"
+speedTestArraysPath="speedTestArrays/"
 outputsPath="outputs/"
 
 # Generate threads number list
@@ -29,7 +29,8 @@ done
 # Generate input array files
 for arraySize in "${arraySizeList[@]}"; do
     echo "Generating array of size $arraySize"
-    ./fileGenerator.sh "$arraySize" "array${arraySize}.txt"
+#    ./fileGenerator.sh "${arraySize}" "${speedTestArraysPath}array_${arraySize}.txt"
+    eval "${mergeSortBuildPath}fileGenerator ${arraySize} ${speedTestArraysPath}array_${arraySize}.txt"
 done
 
 # Run merge sort
@@ -38,7 +39,7 @@ for arraySize in "${arraySizeList[@]}"; do
         echo "Running merge sort with $threadsNumber threads on array of size $arraySize"
         for mergeSortExeName in "${mergeSortExeNames[@]}"; do
             echo "Running $mergeSortExeName with $threadsNumber threads on array of size $arraySize"
-            ./"${mergeSortBuildPath}${mergeSortExeName}" < "${speedTestArraysPath}array_${arraySize}.txt" > "${mergeSortExeName}_${arraySize}_${threadsNumber}.txt" "$threadsNumber"
+            eval "./${mergeSortBuildPath}${mergeSortExeName} < ${speedTestArraysPath}array_${arraySize}.txt > ./${outputsPath}${mergeSortExeName}_${arraySize}_${threadsNumber}.txt $threadsNumber"
         done
     done
 done
