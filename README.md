@@ -169,24 +169,64 @@ For example :
 400
 ```
 
-All the executables take 2 arguments :
+All the executables work the same way, use pipes to redirect the file to the executable.
 
-- the path to the input file (compose of the array to sort)
-- the path to the output file (where the sorted array will be written)
-
-For Linux type:
+For example :
 
 ```bash
 ./mergeSortSequential < ./test_file > ./output_file.txt
 ```
 
-and for windows (use cmder or another terminal not the cmd)
+or
 
 ```bash
-.\mergeSortSequential < .\test_file > .\output_file.txt
+cat  ./test_file.txt | ./mergeSortSequential
+```
+
+You can then redirect the output to a file using `>` or `>>`.
+
+Example :
+
+```bash
+./mergeSortSequential < ./test_file.txt > ./output_file.txt
 ```
 
 The output file will now contain the sorted array.
+
+The parallel versions of the merge sort has an additional argument which is the number of threads to use.
+
+For example :
+
+```bash
+./mergeSortOpenMP < ./test_file > ./output_file.txt 4
+```
+
+The parallel merge sort using OpenMP is started with 4 threads.
+
+## Speed test
+
+The project is set up with some `bash` scripts to test the speed of the different algorithms.
+You can start the test by running the `speedTest.sh` script in the `speedTest` folder.
+
+```bash
+./speedTest.sh <base array size> <multiplier> <iteration number>
+```
+
+Example :
+
+```bash
+./speedTest.sh 10 10 6
+```
+
+It will generate 6 files with 10, 100, 1000, 10000, 100000, 1000000 elements in the array (they will be located in
+the `speedTest/speedTestArrays` folder).
+
+It will then run the different algorithms on the different files and output the results in the `speedTest/outputs`
+folder.
+
+> **Warning**
+> You need to build the project before running the script (check the `compilation` section).
+> You also need to be in the `speedTest` folder to run the script correctly.
 
 ## Project Architecture
 
@@ -206,9 +246,12 @@ ParticleEngine
 │  │   |── stale.yml
 |  ├── labeler.yml
 |  ├── release.yml
-├── BuildMakeFile
+├── buildMakeFile
 |  ├── readme.txt
-|  ├── *
+|  ├── test_file.txt
+├── fileGenerator
+|  ├── CMakelists.txt
+|  ├── fileGenerator.c
 ├── OpenMpVersion
 |  ├── CMakelists.txt
 |  ├── d2omp.c
@@ -218,6 +261,16 @@ ParticleEngine
 ├── sequentialVersion
 |  ├── CMakelists.txt
 |  ├── d2s.c
+├── speedTest
+|  ├── fileGenerator.sh
+|  ├── multithreads_comparison.xlsx
+|  ├── speedTest.sh
+├── test
+|  ├── CMakelists.txt
+|  ├── mergeSortOpenMPTest.c
+|  ├── mergeSortPThreadTest.c
+|  ├── mergeSortSequentialTest.c
+|  ├── sortFunctions.h
 ├── ParticleEngine
 ├── .clang-format
 ├── .clang-tidy
