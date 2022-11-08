@@ -4,7 +4,7 @@
 #include <omp.h>
 #include <time.h>
 
-#define MAX_THREADS 4
+#define THREADS_NUMBER 4
 
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
@@ -46,11 +46,11 @@ int main() {
     }
 
     /* Handle and print the number of threads */
-    omp_set_num_threads(MAX_THREADS);
+    omp_set_num_threads(THREADS_NUMBER);
     /*omp_set_num_threads(omp_get_max_threads());*/
     printf("Number of threads: %d\n", omp_get_max_threads());
     /*printf("Using %d threads\n", omp_get_max_threads());
-    printf("Using %d threads\n", MAX_THREADS);*/
+    printf("Using %d threads\n", THREADS_NUMBER);*/
 
     /* Create timer */
     clock_t clockTimer;
@@ -79,9 +79,9 @@ void mergeSortParallel(int A[], int p, int r) {
     {
         int q = (p + r) / 2;
 
-#pragma omp task shared(A) private(p, r)
+#pragma omp task shared(A) /*firstprivate(p, q, r)*/
         mergeSort(A, p, q);
-#pragma omp task shared(A) private(p, r)
+#pragma omp task shared(A) /*firstprivate(p, q, r)*/
         mergeSort(A, q + 1, r);
 #pragma omp taskwait
         merge(A, p, q, r);
@@ -163,5 +163,4 @@ void printArray(const int* array, const int begin, const int size) {
     int i;
     for (i = begin; i < size; i++)
         printf("%d\n", array[i]);
-    printf("\n");
 }
