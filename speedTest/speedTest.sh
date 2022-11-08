@@ -38,7 +38,7 @@ for arraySize in "${arraySizeList[@]}"; do
         echo "Running merge sort with $threadsNumber threads on array of size $arraySize"
         for mergeSortExeName in "${mergeSortExeNames[@]}"; do
             echo "Running $mergeSortExeName with $threadsNumber threads on array of size $arraySize"
-            ./"${mergeSortBuildPath}${mergeSortExeName}" "${speedTestArraysPath}array_${arraySize}.txt" "$threadsNumber" "${mergeSortExeName}_${arraySize}_${threadsNumber}.txt"
+            ./"${mergeSortBuildPath}${mergeSortExeName}" < "${speedTestArraysPath}array_${arraySize}.txt" > "${mergeSortExeName}_${arraySize}_${threadsNumber}.txt" "$threadsNumber"
         done
     done
 done

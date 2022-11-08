@@ -5,7 +5,7 @@
 #include <time.h>
 #include "../test/sortFunctions.h"
 
-#define THREADS_NUMBER 4
+#define INIT_THREADS_NUMBER 2
 
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
@@ -18,7 +18,7 @@ void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
 
-int main() {
+int main(int argc, char* argv[]) {
     /*
      * Error list:
      * 1 - Error reading line from file
@@ -26,6 +26,11 @@ int main() {
      */
 
     printf("|-----Merge Sort Parallel using OpenMP-----|\n\n");
+
+    /* Read optional parameters */
+    int threadsNumber = INIT_THREADS_NUMBER;
+    if (argc != 1)
+        threadsNumber = atoi(argv[1]);
 
     /* Read size of array from stream */
     int arraySize = 0;
@@ -47,9 +52,9 @@ int main() {
     }
 
     /* Handle and print the number of threads */
-    omp_set_num_threads(THREADS_NUMBER);
-    /*omp_set_num_threads(omp_get_max_threads());*/
+    omp_set_num_threads(threadsNumber);
     printf("Number of threads: %d\n", omp_get_max_threads());
+    /*omp_set_num_threads(omp_get_max_threads());*/
     /*printf("Using %d threads\n", omp_get_max_threads());
     printf("Using %d threads\n", THREADS_NUMBER);*/
 

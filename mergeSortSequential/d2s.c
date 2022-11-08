@@ -18,7 +18,7 @@ void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
 
-int main() {
+int main(int argc, char* argv[]) {
     /*
      * Error list:
      * 1 - Wrong number of arguments

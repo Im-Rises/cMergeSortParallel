@@ -6,7 +6,7 @@
 
 #include "../test/sortFunctions.h"
 
-#define THREADS_NUMBER 2
+#define INIT_THREADS_NUMBER 2
 
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
@@ -19,7 +19,7 @@ struct MergeSortArgs {
     int r;
 };
 
-void mergeSortParallel(int A[], int arraySize);
+void mergeSortParallel(int A[], int arraySize, const int threadsNumber);
 void* mergeSortThread(void* input);
 void mergeSort(int A[], int p, int r);
 void merge(int A[], int p, int q, int r);
@@ -28,7 +28,7 @@ void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
 
-int main() {
+int main(int argc, char* argv[]) {
     /*
      * Error list:
      * 1 - Error reading line from file
@@ -37,6 +37,11 @@ int main() {
      */
 
     printf("|-----Merge Sort Parallel using PThread-----|\n\n");
+
+    /* Read optional parameters */
+    int threadsNumber = INIT_THREADS_NUMBER;
+    if (argc != 1)
+        threadsNumber = atoi(argv[1]);
 
     /* Read size of array from stream */
     int arraySize = 0;
@@ -58,7 +63,7 @@ int main() {
     }
 
     /* Print the number of threads */
-    printf("Number of threads: %d\n", THREADS_NUMBER);
+    printf("Number of threads: %d\n", INIT_THREADS_NUMBER);
 
     /* Create timer */
     clock_t clockTimer;
@@ -66,7 +71,7 @@ int main() {
     printf("Merge sort timer starts\n");
 
     /* Sort array */
-    mergeSortParallel(inputArray, arraySize);
+    mergeSortParallel(inputArray, arraySize, threadsNumber);
 
     /* Stop timer */
     clockTimer = clock() - clockTimer;
@@ -86,31 +91,31 @@ int main() {
 }
 
 
-void mergeSortParallel(int A[], const int arraySize) {
-    pthread_t threads[THREADS_NUMBER];
-    MergeSortArgs threadsArgsArray[THREADS_NUMBER];
-    const int offset = arraySize / THREADS_NUMBER;
+void mergeSortParallel(int A[], const int arraySize, const int threadsNumber) {
+    pthread_t threads[threadsNumber];
+    MergeSortArgs threadsArgsArray[threadsNumber];
+    const int offset = arraySize / threadsNumber;
     int l = 0;
     int i;
 
     /* Init threads args depending on the number of threads (split parts of the array in each threads) */
-    for (i = 0; i < THREADS_NUMBER; i++, l += offset)
+    for (i = 0; i < threadsNumber; i++, l += offset)
     {
         threadsArgsArray[i].A = A;
         threadsArgsArray[i].p = l;
         threadsArgsArray[i].r = l + offset - 1;
-        if (i == (THREADS_NUMBER - 1))
+        if (i == (threadsNumber - 1))
             threadsArgsArray[i].r = arraySize - 1;
     }
 
     /* Merge and sort */
-    for (i = 0; i < THREADS_NUMBER; i++)
+    for (i = 0; i < threadsNumber; i++)
         pthread_create(&threads[i], NULL, mergeSortThread, &threadsArgsArray[i]);
-    for (i = 0; i < THREADS_NUMBER; i++)
+    for (i = 0; i < threadsNumber; i++)
         pthread_join(threads[i], NULL);
 
     /* Merge work from all threads */
-    for (i = 1; i < THREADS_NUMBER; i++)
+    for (i = 1; i < threadsNumber; i++)
     {
         merge(A, threadsArgsArray[0].p, threadsArgsArray[i].p - 1, threadsArgsArray[i].r);
     }
