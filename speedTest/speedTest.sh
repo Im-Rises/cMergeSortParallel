@@ -17,7 +17,7 @@ speedTestArraysPath="speedTestArrays/"
 outputsPath="outputs/"
 
 # Generate threads number list
-threadsNumberList=(1 2 4 8 24 48)
+threadsNumberList=(1 2 4 8 16 24 48)
 
 # Generate array size list
 arraySizeList=()

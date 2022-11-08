@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
     if (argc != 1)
         threadsNumber = atoi(argv[1]);
 
+
     /* Read size of array from stream */
     int arraySize = 0;
     scanf("%d", &arraySize);
@@ -63,7 +64,7 @@ int main(int argc, char* argv[]) {
     }
 
     /* Print the number of threads */
-    printf("Number of threads: %d\n", INIT_THREADS_NUMBER);
+    printf("Number of threads: %d\n", threadsNumber);
 
     /* Create timer */
     clock_t clockTimer;
