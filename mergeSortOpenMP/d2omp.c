@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <omp.h>
 #include <time.h>
+#include "../test/sortFunctions.h"
 
 #define THREADS_NUMBER 4
 
@@ -64,6 +65,9 @@ int main() {
     clockTimer = clock() - clockTimer;
     double time_taken = ((double)clockTimer) / CLOCKS_PER_SEC; /*calculate the elapsed time*/
     printf("The merge sort took %f seconds to execute\n", time_taken);
+
+    /* Print array is sorted */
+    printf("Is array correctly sorted? %s\n", isSorted(inputArray, arraySize) ? "No" : "Yes");
 
     /* Print array */
     printArraySummary(inputArray, arraySize);
@@ -148,10 +152,10 @@ void printArraySummary(int* array, int arraySize) {
     {
         printf("Array too big to print\n");
         printf("- First %d values: \n", MAX_NUMBER_PRINT);
-        printArray(array, 0, 100);
+        printArray(array, 0, MAX_NUMBER_PRINT);
         printf("...\n");
         printf("- Last %d values: \n", MAX_NUMBER_PRINT);
-        printArray(array, arraySize - 100, arraySize);
+        printArray(array, arraySize - MAX_NUMBER_PRINT, arraySize);
     }
     else
     {
