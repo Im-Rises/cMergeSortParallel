@@ -8,17 +8,36 @@
 
 ## Description
 
-This is a simple physics engine written in C++ using Glad, GLFW, OpenGl3 and Dear ImGui.
+Merge Sort algorithm implemented in C available in thre versions:
 
-It is implemented using Fixed Framerate and Component Oriented Programming.
+- Sequential
+- Parallel with OpenMP
+- Parallel with Pthreads (Linux only)
+
+## Results
+
+| Array size | threads | Sequential | OpenMP    | Pthreads  |
+|------------|---------|------------|-----------|-----------|
+| 1 000 000  | 1       | 0.153550s  | 0.153550s | 0.153550s |
+| 1 000 000  | 4       | 0.153550s  | 0.079991s | 0.073561s |      
+
+<!--
+Results for 1 000 000 integers:
+
+- Sequential: 0.153550 seconds
+- OpenMP Parallel: 0.079991 seconds
+- PThread Parallel: 0.073561 seconds
+-->
 
 > **Note**  
-> The project is a work in progress and is not yet complete.
+> The results are indicative and may vary depending on the machine.
 
 ## Quickstart
 
 Depending on you `operating system` you will need to install some libs, they are installed differently depending on your
 system, please follow one of the section below `Windows` or `Linux`.
+
+For an explanation on `How to use` go to the according section.
 
 The different algorithms used are described below.
 
@@ -59,8 +78,13 @@ merge(A,p,q,r)
             j = j + 1
 ```
 
-Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
+Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford
+Stein
 
+The parallel version of the algorithm is implemented using OpenMP and PThreads.
+Depending on the version the results are different.
+
+<!--
 ### Parallel Merge Sort
 
 The parallel algorithm is written using `Cilk` algorithm syntax. 
@@ -113,7 +137,56 @@ binarySearch(x,T,p,r)
 ```
 
 Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
+-->
 
+## How to use
+
+First you need to build the scripts (check the `compilation` section).
+
+Once done you have 2-4 executables :
+
+- fileGenerator
+- PThreadVersion (only for Linux)
+- OpenMPVersion
+- sequentialVersion
+
+The `fileGenerator` one is only used to generate the files that will be used by the other 'merge sort' executables.
+
+If you don't want to use it you can use the file named `test_file.txt` at the root of the project.
+
+A file is composed of several lines:
+
+- the first one is the number of elements in the array
+- the second one is the array
+
+For example :
+
+```
+4
+11 
+2 
+3 
+400
+```
+
+All the executables take 2 arguments :
+
+- the path to the input file (compose of the array to sort)
+- the path to the output file (where the sorted array will be written)
+
+For Linux type:
+
+```bash
+./mergeSortSequential < ./test_file > ./output_file.txt
+```
+
+and for windows (use cmder or another terminal not the cmd)
+
+```bash
+.\mergeSortSequential < .\test_file > .\output_file.txt
+```
+
+The output file will now contain the sorted array.
 
 ## Project Architecture
 
@@ -207,7 +280,6 @@ Then install CMake, type the following command to install it.
 sudo apt-get install cmake
 ```
 
-
 You also need to install the OpenMP lib. Type the following command at the project root.
 
 ```bash
@@ -241,6 +313,7 @@ make <script_name>
 ```
 
 The scripts names are:
+
 - `sequentialVer`
 - `OpenMpVer`
 - `PThreadVer`
@@ -275,6 +348,9 @@ OpenMP:
 
 OpenMp CMake:  
 <https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html>
+
+StackOverflow:  
+<https://stackoverflow.com/questions/52767944/merge-sort-with-pthreads-in-c>
 
 ## Contributors
 

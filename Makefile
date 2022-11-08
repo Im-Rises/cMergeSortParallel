@@ -1,23 +1,28 @@
 all:
-	$(MAKE) clean
+	$(MAKE) mrproper
+	$(MAKE) fileGen
 	$(MAKE) OpenMpVer
 	$(MAKE) PThreadVer
 	$(MAKE) sequentialVer
 	$(MAKE) clean
 
+fileGen:
+	gcc ./fileGenerator/fileGenerator.c -o BuildMakeFile/fileGenerator -std=c90 -pedantic -O2
+
 sequentialVer:
-	gcc ./sequentialVersion/d2s.c -o BuildMakeFile/SquentialVersion -O2
+	gcc ./mergeSortSequential/d2s.c -o BuildMakeFile/mergeSortSequential -fopenmp -std=c90 -pedantic -O2
 
 OpenMpVer:
-	gcc ./OpenMpVersion/d2omp.c -o BuildMakeFile/OpenMpVersion -fopenmp -O2
+	gcc ./mergeSortOpenMp/d2omp.c -o BuildMakeFile/mergeSortOpenMp -fopenmp -std=c90 -pedantic -O2
 
 PThreadVer:
-	gcc ./PThreadVersion/d2p.c -o BuildMakeFile/PThreadVersion -lpthread -O2
+	gcc ./mergeSortPThread/d2p.c -o BuildMakeFile/mergeSortPThread -lpthread -fopenmp -std=c90 -pedantic -O2
 
 clean :
 	rm -rf *.o
 
-#mrproper : clean
-#	rm -rf OpenMpVersion
-#	rm -rf PThreadVersion
-#	rm -rf sequentialVersion
+mrproper : clean
+	rm -f BuildMakeFile/fileGenerator
+	rm -f BuildMakeFile/mergeSortOpenMp
+	rm -f BuildMakeFile/mergeSortPThread
+	rm -f BuildMakeFile/mergeSortSequential
