@@ -13,13 +13,13 @@ typedef struct MergeSortArgs MergeSortArgs;
 
 struct MergeSortArgs {
     int* A;
-    int l;
+    int p;
     int r;
 };
 
-void mergeSortParallel(int A[], int size);
+void mergeSortParallel(int A[], int arraySize);
 void* mergeSortThread(void* input);
-void mergeSort(int A[], int l, int r);
+void mergeSort(int A[], int p, int r);
 void merge(int A[], int p, int q, int r);
 
 void* allocateMemory(size_t size);
@@ -78,46 +78,48 @@ int main() {
 }
 
 
-void mergeSortParallel(int A[], int size) {
+void mergeSortParallel(int A[], const int arraySize) {
     pthread_t threads[THREADS_NUMBER];
-    MergeSortArgs threadsArray[THREADS_NUMBER];
-    int offset = size / THREADS_NUMBER, l = 0;
+    MergeSortArgs threadsArgsArray[THREADS_NUMBER];
+    const int offset = arraySize / THREADS_NUMBER;
+    int l = 0;
     int i;
+
+    /* Init threads args depending on the number of threads (split parts of the array in each threads) */
     for (i = 0; i < THREADS_NUMBER; i++, l += offset)
     {
-        threadsArray[i].A = A;
-        threadsArray[i].l = l;
-        threadsArray[i].r = l+offset-1;
-        if (i == (size - 1))
-            threadsArray[i].r = size - 1;
+        threadsArgsArray[i].A = A;
+        threadsArgsArray[i].p = l;
+        threadsArgsArray[i].r = l + offset - 1;
+        if (i == (arraySize - 1))
+            threadsArgsArray[i].r = arraySize - 1;
     }
+
+    /* Merge and sort */
     for (i = 0; i < THREADS_NUMBER; i++)
-        pthread_create(&threads[i], NULL, mergeSortThread, &threadsArray[i]);
+        pthread_create(&threads[i], NULL, mergeSortThread, &threadsArgsArray[i]);
     for (i = 0; i < THREADS_NUMBER; i++)
         pthread_join(threads[i], NULL);
 
-
+    /* Merge work from all threads */
     for (i = 1; i < THREADS_NUMBER; i++)
     {
-        merge(A, threadsArray[0].l, threadsArray[i].l - 1, threadsArray[i].r);
-        /*merge(A,tsklist[i].l, tsklist[i].l - 1, tsklist[i].r);*/
-        /*merge(A, tsklist[i].l, tsklist[i-1].l, tsklist[i].r);*/
-        /*mergeSort(A, 0, size);*/
+        merge(A, threadsArgsArray[0].p, threadsArgsArray[i].p - 1, threadsArgsArray[i].r);
     }
 }
 
 void* mergeSortThread(void* input) {
-    mergeSort((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).l, (*(MergeSortArgs*)input).r);
+    mergeSort((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).p, (*(MergeSortArgs*)input).r);
     pthread_exit(NULL);
 }
 
-void mergeSort(int A[], int l, int r) {
-    if (l < r)
+void mergeSort(int A[], int p, int r) {
+    if (p < r)
     {
-        int q = (l + r) / 2;
-        mergeSort(A, l, q);
+        int q = (p + r) / 2;
+        mergeSort(A, p, q);
         mergeSort(A, q + 1, r);
-        merge(A, l, q, r);
+        merge(A, p, q, r);
     }
 }
 
@@ -176,7 +178,8 @@ void printArraySummary(int* array, int arraySize) {
         printf("- Last %d values: \n", MAX_NUMBER_PRINT);
         printArray(array, arraySize - 100, arraySize);
     }
-    else { printArray(array, 0, arraySize); }
+    else
+    { printArray(array, 0, arraySize); }
 }
 
 void printArray(const int* array, const int begin, const int size) {
