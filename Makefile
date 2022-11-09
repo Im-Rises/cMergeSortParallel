@@ -1,13 +1,13 @@
 all:
-	$(Make) LinuxVer
-	$(Make) WindowsVer
+	$(MAKE) LinuxVer
+	$(MAKE) WindowsVer
 
 LinuxVer:
-	$(MAKE) mrproper
+	$(MAKE) MrProperLinux
 	$(MAKE) fileGenLinux
+	$(MAKE) sequentialVerLinux
 	$(MAKE) OpenMpVerLinux
 	$(MAKE) PThreadVerLinux
-	$(MAKE) sequentialVer
 	$(MAKE) clean
 
 fileGenLinux:
@@ -23,11 +23,17 @@ PThreadVerLinux:
 	gcc ./mergeSortPThread/d2p.c -o BuildMakeFile/mergeSortPThread -lpthread -std=c90 -Wall -O2
 # -pedantic
 
+MrProperLinux : clean
+	rm -f BuildMakeFile/fileGenerator
+	rm -f BuildMakeFile/mergeSortOpenMp
+	rm -f BuildMakeFile/mergeSortPThread
+	rm -f BuildMakeFile/mergeSortSequential
+
 WindowsVer:
-	$(MAKE) mrproper
+	$(MAKE) MrProperWin
 	$(MAKE) fileGenWin
-	$(MAKE) OpenMpVerWin
 	$(MAKE) sequentialVerWin
+	$(MAKE) OpenMpVerWin
 	$(MAKE) clean
 
 fileGenWin:
@@ -42,8 +48,8 @@ OpenMpVerWin:
 clean :
 	rm -rf *.o
 
-mrproper : clean
-	rm -f BuildMakeFile/fileGenerator
-	rm -f BuildMakeFile/mergeSortOpenMp
-	rm -f BuildMakeFile/mergeSortPThread
-	rm -f BuildMakeFile/mergeSortSequential
+MrProperWin : clean
+	rm -f BuildMakeFile/fileGenerator.exe
+	rm -f BuildMakeFile/mergeSortOpenMp.exe
+	rm -f BuildMakeFile/mergeSortPThread.exe
+	rm -f BuildMakeFile/mergeSortSequential.exe

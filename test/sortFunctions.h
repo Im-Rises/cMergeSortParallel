@@ -13,4 +13,4 @@ int isSorted(const int* array, int arraySize) {
     return 0;
 }
 
-#endif // SORTFUNCTIONS_H
+#endif
