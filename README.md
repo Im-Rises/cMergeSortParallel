@@ -8,7 +8,7 @@
 
 ## Description
 
-Merge Sort algorithm implemented in C available in thre versions:
+Merge Sort algorithm implemented in C available in three versions:
 
 - Sequential
 - Parallel with OpenMP
@@ -94,7 +94,7 @@ parallelMergeSort(A,p,r)
     n = r-p+1
     if n == 1
         B[s] = A[p]
-    else let T[1..n] be a new array
+    else let T[1...n] be a new array
         q = (p+r)/2
         q2 = q-p+1
         spawn parallelMergeSort(A,p,q,T,1)
@@ -297,15 +297,25 @@ To compile the app, the first thing you need to do is install a C++ compiler:
 - Visual Studio (MSVC)
 - Mingw
 - GCC
+- Cmake
+- Make
 - ...
 
-You also need to install Cmake:  
+### Compilation with CMake
+
+First download CMake:  
 <https://cmake.org>
+
+Or install it with your package manager under Linux:
+
+```bash
+sudo apt install cmake
+```
 
 Once your environment is set up, depending on your operating system you'll need to install some libs before compiling
 the project. Refer to the section below `Windows` or `Linux`;
 
-### Windows
+#### Windows
 
 Windows users can directly compile the project by typing the following command at the project root folder:
 
@@ -317,7 +327,7 @@ cmake .
 > If you're using Visual Studio, you can install CMake directly from the IDE (Visual Studio Installer).
 > Then you need to open the Project as a CMake Project, not a Visual Studio Project!
 
-### Linux
+#### Linux
 
 Linux's users need to install some libs before compiling the project:
 
@@ -345,33 +355,74 @@ You are now able to compile the project. Go to the project root and type the fol
 cmake .
 ```
 
+### Compile with Make
+
 You can also use the Makefile to compile the project. Type the following command at the project root:
 
-First you need to install `make`:
+#### Setup
+
+First you need to install `make` and `gcc` for linux users:
+
+For linux:
+
+```shell
+sudo apt-get install gcc
+```
 
 ```bash
 sudo apt-get install make
 ```
 
-Then you can compile the project:
+You also need to install the mingw compiler to compile the Windows version under linux:
+
+```bash
+sudo apt-get install mingw-w64
+```
+
+#### Compilation
+
+##### Compile all the versions
+
+You can compile the project for Linux and Windows:
 
 ```bash
 make
 ```
 
-or if you want to compile only one of the scripts type:
+to compile the project for Linux only.
+
+```bash
+make LinuxVer
+```
+
+and to compile the project for Windows only.
+
+```bash
+make WindowsVer
+```
+
+##### Compile only one script
+
+To compile only one of the scripts type:
 
 ```bash
 make <script_name>
 ```
 
-The scripts names are:
+The Linux scripts names are:
 
-- `sequentialVer`
-- `OpenMpVer`
-- `PThreadVer`
+- `fileGenLinux`
+- `sequentialVerLinux`
+- `OpenMpVerLinux`
+- `PThreadVerLinux`
 
-The executable will be created in the `BuildMakeFile` folder.
+The Windows ones are:
+
+- `fileGenWin`
+- `sequentialVerWin`
+- `OpenMpVerWin`
+
+The executables will be created in the `BuildMakeFile` folder.
 
 ## GitHub Actions
 
