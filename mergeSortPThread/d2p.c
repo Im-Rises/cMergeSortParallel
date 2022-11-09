@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <time.h>
 
-#include "../test/sortFunctions.h"
+#include "../CommonFunctions/sortFunctions.h"
 
 #define INIT_THREADS_NUMBER 2
 
