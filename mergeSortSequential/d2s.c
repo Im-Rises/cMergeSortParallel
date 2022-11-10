@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+#if defined(_OPENMP)
+#include <omp.h>
+#endif
+
 #include "../CommonFunctions/sortFunctions.h"
 
 #define MAX_NUMBER_PRINT 100
@@ -45,24 +49,48 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    /* Start timer */
+    /* Start timers */
     clock_t t;
     t = clock();
-    printf("Merge sort timer starts");
+#ifdef _OPENMP
+    double openMpT = omp_get_wtime();
+#endif
+#ifdef __unix__
+    struct timespec timeSpecStart, timeSpecFinish;
+    double unixTimelapsed;
+    clock_gettime(CLOCK_MONOTONIC, &timeSpecStart);
+#endif
 
     /* Sort array */
     mergeSort(inputArray, 0, arraySize - 1);
 
-    /* Print execution time */
+    /* Stop timers */
     t = clock() - t;
     double time_taken = ((double)t) / CLOCKS_PER_SEC; /* calculate the elapsed time*/
-    printf("The merge sort took %f seconds to execute\n", time_taken);
+#ifdef _OPENMP
+    double openMpTime = (omp_get_wtime() - openMpT);
+#endif
+#ifdef __unix__
+    clock_gettime(CLOCK_MONOTONIC, &timeSpecFinish);
+    unixTimelapsed = (timeSpecFinish.tv_sec - timeSpecStart.tv_sec);
+    unixTimelapsed += (timeSpecFinish.tv_nsec - timeSpecStart.tv_nsec) / 1000000000.0;
+#endif
+
+    /* Print results */
+    printf("Time elapsed:\n");
+    printf(" - Standard Timer: %f s\n", time_taken);
+#ifdef _OPENMP
+    printf(" - OpenMP Timer: %f s\n", openMpTime);
+#endif
+#ifdef __unix__
+    printf(" - Unix Timer: %f s\n", unixTimelapsed);
+#endif
 
     /* Print array is sorted */
     printf("Is array correctly sorted? %s\n", isSorted(inputArray, arraySize) ? "No" : "Yes");
 
     /* Print array */
-    printArraySummary(inputArray, arraySize);
+    /*    printArraySummary(inputArray, arraySize);*/
 
     /* free memory */
     free(inputArray);
@@ -83,8 +111,12 @@ void mergeSort(int A[], int p, int r) {
 void merge(int A[], int p, int q, int r) {
     int n1 = q - p + 1;
     int n2 = r - q;
+
     int* L = allocateMemory((n1 + 1) * sizeof(int));
     int* R = allocateMemory((n2 + 1) * sizeof(int));
+    /*        int L[n1 + 1];
+            int R[n2 + 1];*/
+
     int i, j, k;
 
     for (i = 0; i < n1; i++)
@@ -123,10 +155,10 @@ void* allocateMemory(size_t size) {
 }
 
 void printArraySummary(int* array, int arraySize) {
-    printf("Array sorted:\n");
+    printf("Array sorted: ");
     if (arraySize > COMPLETE_NUMBER_PRINT_THRESHOLD)
     {
-        printf("Array too big to print\n");
+        printf("(Array too big to be printed completely)\n");
         printf("- First %d values: \n", MAX_NUMBER_PRINT);
         printArray(array, 0, MAX_NUMBER_PRINT);
         printf("...\n");
@@ -135,6 +167,7 @@ void printArraySummary(int* array, int arraySize) {
     }
     else
     {
+        printf("\n");
         printArray(array, 0, arraySize);
     }
 }

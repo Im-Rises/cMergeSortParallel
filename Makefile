@@ -14,13 +14,13 @@ fileGenLinux:
 	gcc ./fileGenerator/fileGenerator.c -o BuildMakeFile/fileGenerator -std=c90 -Wall -O2
 
 sequentialVerLinux:
-	gcc ./mergeSortSequential/d2s.c -o BuildMakeFile/mergeSortSequential -std=c90 -Wall -O2
+	gcc ./mergeSortSequential/d2s.c -o BuildMakeFile/mergeSortSequential -fopenmp -std=c90 -Wall -O2
 
 OpenMpVerLinux:
 	gcc ./mergeSortOpenMp/d2omp.c -o BuildMakeFile/mergeSortOpenMp -fopenmp -std=c90 -Wall -O2
 
 PThreadVerLinux:
-	gcc ./mergeSortPThread/d2p.c -o BuildMakeFile/mergeSortPThread -lpthread -std=c90 -Wall -O2
+	gcc ./mergeSortPThread/d2p.c -o BuildMakeFile/mergeSortPThread -lpthread -fopenmp -std=c90 -Wall -O2
 # -pedantic
 
 MrProperLinux : clean

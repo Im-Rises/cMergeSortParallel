@@ -5,7 +5,7 @@
 #include <time.h>
 #include "../CommonFunctions/sortFunctions.h"
 
-#define INIT_THREADS_NUMBER 2
+#define INIT_THREADS_NUMBER 4
 
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
@@ -61,7 +61,12 @@ int main(int argc, char* argv[]) {
     /* Create timer */
     clock_t clockTimer;
     clockTimer = clock();
-    printf("Merge sort timer starts\n");
+    double openMpT = omp_get_wtime();
+#ifdef __unix__
+    struct timespec timeSpecStart, timeSpecFinish;
+    double unixTimelapsed;
+    clock_gettime(CLOCK_MONOTONIC, &timeSpecStart);
+#endif
 
     /* Sort array */
     mergeSortParallel(inputArray, 0, arraySize - 1);
@@ -69,13 +74,26 @@ int main(int argc, char* argv[]) {
     /* Stop timer */
     clockTimer = clock() - clockTimer;
     double time_taken = ((double)clockTimer) / CLOCKS_PER_SEC; /*calculate the elapsed time*/
-    printf("The merge sort took %f seconds to execute\n", time_taken);
+    double openMpTime = (omp_get_wtime() - openMpT);
+#ifdef __unix__
+    clock_gettime(CLOCK_MONOTONIC, &timeSpecFinish);
+    unixTimelapsed = (timeSpecFinish.tv_sec - timeSpecStart.tv_sec);
+    unixTimelapsed += (timeSpecFinish.tv_nsec - timeSpecStart.tv_nsec) / 1000000000.0;
+#endif
+
+    /* Print results */
+    printf("Time elapsed:\n");
+    printf(" - Standard Timer: %f s\n", time_taken);
+    printf(" - OpenMP Timer: %f s\n", openMpTime);
+#ifdef __unix__
+    printf(" - Unix Timer: %f s\n", unixTimelapsed);
+#endif
 
     /* Print array is sorted */
     printf("Is array correctly sorted? %s\n", isSorted(inputArray, arraySize) ? "No" : "Yes");
 
     /* Print array */
-    printArraySummary(inputArray, arraySize);
+    /*    printArraySummary(inputArray, arraySize);*/
 
     /* Free memory */
     free(inputArray);
@@ -88,9 +106,9 @@ void mergeSortParallel(int A[], int p, int r) {
     {
         int q = (p + r) / 2;
 
-#pragma omp task shared(A) /*firstprivate(p, q, r)*/
+#pragma omp task firstprivate(p, q, r)
         mergeSort(A, p, q);
-#pragma omp task shared(A) /*firstprivate(p, q, r)*/
+#pragma omp task firstprivate(p, q, r)
         mergeSort(A, q + 1, r);
 #pragma omp taskwait
         merge(A, p, q, r);
@@ -113,8 +131,10 @@ void merge(int A[], int p, int q, int r) {
     int n1 = q - p + 1;
     int n2 = r - q;
 
-    int L[n1 + 1];
-    int R[n2 + 1];
+    int* L = allocateMemory((n1 + 1) * sizeof(int));
+    int* R = allocateMemory((n2 + 1) * sizeof(int));
+    /* int L[n1 + 1];
+       int R[n2 + 1];*/
 
     for (i = 0; i < n1; i++)
         L[i] = A[p + i];
@@ -152,10 +172,10 @@ void* allocateMemory(size_t size) {
 }
 
 void printArraySummary(int* array, int arraySize) {
-    printf("Array sorted:\n");
+    printf("Array sorted: ");
     if (arraySize > COMPLETE_NUMBER_PRINT_THRESHOLD)
     {
-        printf("Array too big to print\n");
+        printf("(Array too big to be printed completely)\n");
         printf("- First %d values: \n", MAX_NUMBER_PRINT);
         printArray(array, 0, MAX_NUMBER_PRINT);
         printf("...\n");
@@ -164,6 +184,7 @@ void printArraySummary(int* array, int arraySize) {
     }
     else
     {
+        printf("\n");
         printArray(array, 0, arraySize);
     }
 }
