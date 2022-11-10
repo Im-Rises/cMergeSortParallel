@@ -17,8 +17,9 @@ jobs:
         run: |
           sudo apt-get install make
           sudo apt-get install gcc
-#      - name: configure
-#        run: ./configure
+          sudo apt-get install mingw-w64
+      #      - name: configure
+      #        run: ./configure
       - name: make
         run: make
       #    - name: make check
