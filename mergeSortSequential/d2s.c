@@ -7,17 +7,19 @@
 #include <omp.h>
 #endif
 
-#include "../CommonFunctions/sortFunctions.h"
-
 #define MAX_NUMBER_PRINT 100
+
+
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
 
 void mergeSort(int A[], int p, int r);
-void merge(int A[], int p, int q, int r);
 
+void merge(int A[], int p, int q, int r);
 void* allocateMemory(size_t size);
+
 void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
+int isSorted(const int* array, int arraySize);
 
 int main(int argc, char* argv[]) {
     /*
@@ -176,4 +178,16 @@ void printArray(const int* array, const int begin, const int size) {
     int i;
     for (i = begin; i < size; i++)
         printf("%d\n", array[i]);
+}
+
+int isSorted(const int* array, int arraySize) {
+    int i;
+    for (i = 0; i < arraySize - 1; i++)
+    {
+        if (array[i] > array[i + 1])
+        {
+            return 1;
+        }
+    }
+    return 0;
 }

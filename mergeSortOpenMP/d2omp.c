@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <omp.h>
 #include <time.h>
-#include "../CommonFunctions/sortFunctions.h"
 
 #define INIT_THREADS_NUMBER 4
 
@@ -17,6 +16,7 @@ void merge(int A[], int p, int q, int r);
 void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
+int isSorted(const int* array, int arraySize);
 
 int main(int argc, char* argv[]) {
     /*
@@ -53,10 +53,9 @@ int main(int argc, char* argv[]) {
 
     /* Handle and print the number of threads */
     omp_set_num_threads(threadsNumber);
-    printf("Number of threads: %d\n", omp_get_max_threads());
     /*omp_set_num_threads(omp_get_max_threads());*/
-    /*printf("Using %d threads\n", omp_get_max_threads());
-    printf("Using %d threads\n", THREADS_NUMBER);*/
+    /*printf("Using %d threads\n", omp_get_max_threads());*/
+    printf("Number of threads: %d\n", omp_get_max_threads());
 
     /* Create timer */
     clock_t clockTimer;
@@ -106,12 +105,21 @@ void mergeSortParallel(int A[], int p, int r) {
     {
         int q = (p + r) / 2;
 
-#pragma omp task firstprivate(p, q, r)
-        mergeSort(A, p, q);
-#pragma omp task firstprivate(p, q, r)
-        mergeSort(A, q + 1, r);
-#pragma omp taskwait
+#pragma omp parallel sections
+        {
+#pragma omp section
+            mergeSort(A, p, q);
+#pragma omp section
+            mergeSort(A, q + 1, r);
+        }
         merge(A, p, q, r);
+
+        /*#pragma omp task
+                mergeSort(A, p, q);
+        #pragma omp task
+                mergeSort(A, q + 1, r);
+        #pragma omp taskwait
+                merge(A, p, q, r);*/
     }
 }
 
@@ -193,4 +201,16 @@ void printArray(const int* array, const int begin, const int size) {
     int i;
     for (i = begin; i < size; i++)
         printf("%d\n", array[i]);
+}
+
+int isSorted(const int* array, int arraySize) {
+    int i;
+    for (i = 0; i < arraySize - 1; i++)
+    {
+        if (array[i] > array[i + 1])
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
