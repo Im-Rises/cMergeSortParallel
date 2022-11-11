@@ -46,7 +46,7 @@ The different algorithms used are described below.
 - [x] Merge Sort
 - [x] Parallel Merge Sort
 
-### Merge Sort
+### Merge Sort V1
 
 ```algorithm
 mergeSort(A,p,r)
@@ -84,10 +84,9 @@ Stein
 The parallel version of the algorithm is implemented using OpenMP and PThreads.
 Depending on the version the results are different.
 
-<!--
-### Parallel Merge Sort
+### Merge Sort V2
 
-The parallel algorithm is written using `Cilk` algorithm syntax. 
+The parallel algorithm is written using `Cilk` algorithm syntax.
 
 ```algorithm
 parallelMergeSort(A,p,r)
@@ -136,8 +135,12 @@ binarySearch(x,T,p,r)
     return high
 ```
 
-Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
--->
+Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford
+Stein
+
+### Parallel Merge Sort
+
+PLACEHOLDER
 
 ## How to use
 
