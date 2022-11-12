@@ -457,7 +457,11 @@ OpenMp CMake:
 <https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html>
 
 StackOverflow:  
-<https://stackoverflow.com/questions/52767944/merge-sort-with-pthreads-in-c>
+<https://stackoverflow.com/questions/52767944/merge-sort-with-pthreads-in-c>  
+<https://stackoverflow.com/questions/67131148/how-to-do-merge-sort-without-using-additional-arrays-for-splitting-the-initial-a>
+
+cliutils:  
+<https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html>
 
 ## Contributors
 

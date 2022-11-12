@@ -9,9 +9,11 @@
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
 
-void mergeSortParallel(int A[], int p, int r);
-void mergeSort(int A[], int p, int r);
-void merge(int A[], int p, int q, int r);
+#define MULTITHREAD_THRESHOLD 1000
+
+void mergeSortParallel(int A[], int left, int right, int* B);
+void mergeSort(int A[], int left, int right, int* B);
+void merge(int A[], int left, int mid, int right, int* B);
 
 void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
@@ -39,6 +41,7 @@ int main(int argc, char* argv[]) {
 
     /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
+    int* outputArray = allocateMemory(arraySize * sizeof(int));
 
     /* Copy data from stream to array */
     int i;
@@ -67,8 +70,7 @@ int main(int argc, char* argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &timeSpecStart);
 #endif
 
-    /* Sort array */
-    mergeSortParallel(inputArray, 0, arraySize - 1);
+    mergeSortParallel(inputArray, 0, arraySize - 1, outputArray);
 
     /* Stop timer */
     clockTimer = clock() - clockTimer;
@@ -89,84 +91,87 @@ int main(int argc, char* argv[]) {
 #endif
 
     /* Print array is sorted */
-    printf("Is array correctly sorted? %s\n", isSorted(inputArray, arraySize) ? "No" : "Yes");
+    printf("Is array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");
 
     /* Print array */
-    /*    printArraySummary(inputArray, arraySize);*/
+    printArraySummary(outputArray, arraySize);
 
     /* Free memory */
     free(inputArray);
+    free(outputArray);
 
     return 0;
 }
 
-void mergeSortParallel(int A[], int p, int r) {
-    if (p < r)
+void mergeSortParallel(int A[], int left, int right, int* B) {
+    if (left < right)
     {
-        int q = (p + r) / 2;
-
-#pragma omp parallel sections
+        if (right - left < MULTITHREAD_THRESHOLD)
         {
-#pragma omp section
-            mergeSort(A, p, q);
-#pragma omp section
-            mergeSort(A, q + 1, r);
-        }
-        merge(A, p, q, r);
-
-        /*#pragma omp task
-                mergeSort(A, p, q);
-        #pragma omp task
-                mergeSort(A, q + 1, r);
-        #pragma omp taskwait
-                merge(A, p, q, r);*/
-    }
-}
-
-void mergeSort(int A[], int p, int r) {
-    if (p < r)
-    {
-        int q = (p + r) / 2;
-        mergeSort(A, p, q);
-        mergeSort(A, q + 1, r);
-        merge(A, p, q, r);
-    }
-}
-
-void merge(int A[], int p, int q, int r) {
-    int i, j, k;
-
-    int n1 = q - p + 1;
-    int n2 = r - q;
-
-    int* L = allocateMemory((n1 + 1) * sizeof(int));
-    int* R = allocateMemory((n2 + 1) * sizeof(int));
-    /* int L[n1 + 1];
-       int R[n2 + 1];*/
-
-    for (i = 0; i < n1; i++)
-        L[i] = A[p + i];
-    for (j = 0; j < n2; j++)
-        R[j] = A[q + j + 1];
-
-    L[n1] = INT_MAX;
-    R[n2] = INT_MAX;
-
-    i = 0;
-    j = 0;
-    for (k = p; k <= r; k++)
-    {
-        if (L[i] <= R[j])
-        {
-            A[k] = L[i];
-            i++;
+            mergeSort(A, left, right, B);
         }
         else
         {
-            A[k] = R[j];
-            j++;
+            int mid = (left + right) / 2;
+
+#pragma omp parallel
+            {
+#pragma omp single
+                {
+#pragma omp task
+                    mergeSortParallel(A, left, mid, B);
+#pragma omp task
+                    mergeSortParallel(A, mid + 1, right, B);
+#pragma omp taskwait
+                    merge(A, left, mid, right, B);
+                }
+            }
         }
     }
+}
+
+
+void mergeSort(int A[], int left, int right, int* B) {
+    if (left < right)
+    {
+        int mid = (left + right) / 2;
+        mergeSort(A, left, mid, B);
+        mergeSort(A, mid + 1, right, B);
+        merge(A, left, mid, right, B);
+    }
+}
+
+void merge(int A[], int left, int mid, int right, int* B) {
+
+    int i = left,
+        j = mid + 1,
+        k = 0;
+
+    int Ai = A[i];
+    int Aj = A[j];
+
+    while (i <= mid && j <= right)
+    {
+        if (Ai <= Aj)
+        {
+            B[k++] = Ai;
+            Ai = A[++i];
+        }
+        else
+        {
+            B[k++] = Aj;
+            Aj = A[++j];
+        }
+    }
+
+    while (i <= mid)
+        B[k++] = A[i++];
+
+    while (j <= right)
+        B[k++] = A[j++];
+
+    for (i = left; i <= right; ++i)
+        A[i] = B[i - left];
 }
 
 void* allocateMemory(size_t size) {

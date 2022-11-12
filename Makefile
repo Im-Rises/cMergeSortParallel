@@ -33,7 +33,7 @@ WindowsVer:
 	$(MAKE) MrProperWin
 	$(MAKE) fileGenWin
 	$(MAKE) sequentialVerWin
-	$(MAKE) OpenMpVerWin
+#	$(MAKE) OpenMpVerWin
 	$(MAKE) clean
 
 fileGenWin:
@@ -42,8 +42,8 @@ fileGenWin:
 sequentialVerWin:
 	x86_64-w64-mingw32-gcc ./mergeSortSequential/d2s.c -o BuildMakeFile/mergeSortSequential.exe -std=c90 -Wall -O2
 
-OpenMpVerWin:
-	x86_64-w64-mingw32-gcc ./mergeSortOpenMp/d2omp.c -o BuildMakeFile/mergeSortOpenMp.exe -fopenmp -std=c90 -Wall -O2
+#OpenMpVerWin:
+#	x86_64-w64-mingw32-gcc ./mergeSortOpenMp/d2omp.c -o BuildMakeFile/mergeSortOpenMp.exe -fopenmp=libomp5 -std=c90 -Wall -O2
 
 clean :
 	rm -rf *.o

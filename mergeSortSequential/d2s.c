@@ -8,15 +8,12 @@
 #endif
 
 #define MAX_NUMBER_PRINT 100
-
-
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
 
-void mergeSort(int A[], int p, int r);
+void mergeSort(int A[], int left, int right, int* B);
+void merge(int A[], int left, int mid, int right, int* B);
 
-void merge(int A[], int p, int q, int r);
 void* allocateMemory(size_t size);
-
 void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
 int isSorted(const int* array, int arraySize);
@@ -38,7 +35,7 @@ int main(int argc, char* argv[]) {
 
     /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
-    /*int* outputArray = allocateMemory(arraySize * sizeof(int));*/
+    int* outputArray = allocateMemory(arraySize * sizeof(int));
 
     /* Copy data from stream to array */
     int i;
@@ -64,7 +61,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     /* Sort array */
-    mergeSort(inputArray, 0, arraySize - 1);
+    mergeSort(inputArray, 0, arraySize - 1, outputArray);
 
     /* Stop timers */
     t = clock() - t;
@@ -89,61 +86,59 @@ int main(int argc, char* argv[]) {
 #endif
 
     /* Print array is sorted */
-    printf("Is array correctly sorted? %s\n", isSorted(inputArray, arraySize) ? "No" : "Yes");
+    printf("Is array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");
 
     /* Print array */
-    /*    printArraySummary(inputArray, arraySize);*/
+    printArraySummary(outputArray, arraySize);
 
     /* free memory */
     free(inputArray);
+    free(outputArray);
 
     return 0;
 }
 
-void mergeSort(int A[], int p, int r) {
-    if (p < r)
+void mergeSort(int A[], int left, int right, int* B) {
+    if (left < right)
     {
-        int q = (p + r) / 2;
-        mergeSort(A, p, q);
-        mergeSort(A, q + 1, r);
-        merge(A, p, q, r);
+        int mid = (left + right) / 2;
+        mergeSort(A, left, mid, B);
+        mergeSort(A, mid + 1, right, B);
+        merge(A, left, mid, right, B);
     }
 }
 
-void merge(int A[], int p, int q, int r) {
-    int n1 = q - p + 1;
-    int n2 = r - q;
+void merge(int A[], int left, int mid, int right, int* B) {
 
-    int* L = allocateMemory((n1 + 1) * sizeof(int));
-    int* R = allocateMemory((n2 + 1) * sizeof(int));
-    /*        int L[n1 + 1];
-            int R[n2 + 1];*/
+    int i = left,
+        j = mid + 1,
+        k = 0;
 
-    int i, j, k;
+    int Ai = A[i];
+    int Aj = A[j];
 
-    for (i = 0; i < n1; i++)
-        L[i] = A[p + i];
-    for (j = 0; j < n2; j++)
-        R[j] = A[q + j + 1];
-
-    L[n1] = INT_MAX;
-    R[n2] = INT_MAX;
-
-    i = 0;
-    j = 0;
-    for (k = p; k <= r; k++)
+    while (i <= mid && j <= right)
     {
-        if (L[i] <= R[j])
+        if (Ai <= Aj)
         {
-            A[k] = L[i];
-            i++;
+            B[k++] = Ai;
+            Ai = A[++i];
         }
         else
         {
-            A[k] = R[j];
-            j++;
+            B[k++] = Aj;
+            Aj = A[++j];
         }
     }
+
+    while (i <= mid)
+        B[k++] = A[i++];
+
+    while (j <= right)
+        B[k++] = A[j++];
+
+    for (i = left; i <= right; ++i)
+        A[i] = B[i - left];
 }
 
 void* allocateMemory(size_t size) {
