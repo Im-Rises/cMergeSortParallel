@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     /* Read size of array from stream */
     int arraySize = 0;
     scanf("%d", &arraySize);
-    printf("- Array size: %d\n", arraySize);
+    printf("Array size: %d\n", arraySize);
 
     /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
