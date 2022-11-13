@@ -1,32 +1,41 @@
-#include <stdio.h>
-#include <limits.h>
 #include <stdlib.h>
-#include <time.h>
-
-#if defined(_OPENMP)
+#ifdef _OPENMP
 #include <omp.h>
 #endif
+#include <time.h>
+#include <stdio.h>
+#include <string.h>
+
+#define INIT_THREADS_NUMBER 4
 
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
 
-void mergeSort(int A[], int left, int right, int* B);
-void merge(int A[], int left, int mid, int right, int* B);
+void mergeSort(int* X, int n, int* tmp);
+void merge(int* X, int n, int* tmp);
 
 void* allocateMemory(size_t size);
-void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
+void printArraySummary(int* array, int arraySize);
 int isSorted(const int* array, int arraySize);
 
 int main(int argc, char* argv[]) {
     /*
      * Error list:
-     * 1 - Wrong number of arguments
-     * 2 - Error opening file
-     * 3 - Error reading line from file
-     * 4 - Error allocating memory
+     * 1 - Error reading line from file
+     * 2 - Error allocating memory
      */
-    printf("-----Merge Sort Sequential-----\n\n");
+
+    printf("|-----Merge Sort Sequential-----|\n\n");
+
+#ifndef _OPENMP
+    printf("You can compile the project with the -fopenmp flag to get elapsed time using OpenMP.\n\n");
+#endif
+
+    /* Read optional parameters */
+    int threadsNumber = INIT_THREADS_NUMBER;
+    if (argc != 1)
+        threadsNumber = atoi(argv[1]);
 
     /* Read size of array from stream */
     int arraySize = 0;
@@ -43,14 +52,14 @@ int main(int argc, char* argv[]) {
     {
         if (scanf("%d", &inputArray[i]) != 1)
         {
-            printf("Error reading line from stream");
-            return 3;
+            fprintf(stderr, "Error reading line from stream");
+            return 1;
         }
     }
 
-    /* Start timers */
-    clock_t t;
-    t = clock();
+    /* Create timer */
+    clock_t clockTimer;
+    clockTimer = clock();
 #ifdef _OPENMP
     double openMpT = omp_get_wtime();
 #endif
@@ -60,12 +69,11 @@ int main(int argc, char* argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &timeSpecStart);
 #endif
 
-    /* Sort array */
-    mergeSort(inputArray, 0, arraySize - 1, outputArray);
+    mergeSort(inputArray, arraySize, outputArray);
 
-    /* Stop timers */
-    t = clock() - t;
-    double time_taken = ((double)t) / CLOCKS_PER_SEC; /* calculate the elapsed time*/
+    /* Stop timer */
+    clockTimer = clock() - clockTimer;
+    double time_taken = ((double)clockTimer) / CLOCKS_PER_SEC; /*calculate the elapsed time*/
 #ifdef _OPENMP
     double openMpTime = (omp_get_wtime() - openMpT);
 #endif
@@ -91,64 +99,70 @@ int main(int argc, char* argv[]) {
     /* Print array */
     printArraySummary(outputArray, arraySize);
 
-    /* free memory */
+    /* Free memory */
     free(inputArray);
     free(outputArray);
 
     return 0;
 }
 
-void mergeSort(int A[], int left, int right, int* B) {
-    if (left < right)
-    {
-        int mid = (left + right) / 2;
-        mergeSort(A, left, mid, B);
-        mergeSort(A, mid + 1, right, B);
-        merge(A, left, mid, right, B);
-    }
+void mergeSort(int* X, int n, int* tmp) {
+    if (n < 2)
+        return;
+    mergeSort(X, n / 2, tmp);
+    mergeSort(X + n / 2, n - n / 2, tmp);
+    merge(X, n, tmp);
 }
 
-void merge(int A[], int left, int mid, int right, int* B) {
+void merge(int* X, int n, int* tmp) {
+    int i = 0;
+    int j = n / 2;
+    int ti = 0;
 
-    int i = left,
-        j = mid + 1,
-        k = 0;
-
-    int Ai = A[i];
-    int Aj = A[j];
-
-    while (i <= mid && j <= right)
+    while (i < n / 2 && j < n)
     {
-        if (Ai <= Aj)
+        if (X[i] < X[j])
         {
-            B[k++] = Ai;
-            Ai = A[++i];
+            tmp[ti] = X[i];
+            ti++;
+            i++;
         }
         else
         {
-            B[k++] = Aj;
-            Aj = A[++j];
+            tmp[ti] = X[j];
+            ti++;
+            j++;
         }
     }
-
-    while (i <= mid)
-        B[k++] = A[i++];
-
-    while (j <= right)
-        B[k++] = A[j++];
-
-    for (i = left; i <= right; ++i)
-        A[i] = B[i - left];
+    while (i < n / 2)
+    { /* finish up lower half */
+        tmp[ti] = X[i];
+        ti++;
+        i++;
+    }
+    while (j < n)
+    { /* finish up upper half */
+        tmp[ti] = X[j];
+        ti++;
+        j++;
+    }
+    memcpy(X, tmp, n * sizeof(int));
 }
 
 void* allocateMemory(size_t size) {
     void* memory = malloc(size);
     if (memory == NULL)
     {
-        printf("Error allocating memory");
-        exit(4);
+        fprintf(stderr, "Error allocating memory");
+        exit(2);
     }
     return memory;
+}
+
+void printArray(const int* array, const int begin, const int size) {
+    int i;
+    for (i = begin; i < size; i++)
+        printf("%d\n", array[i]);
 }
 
 void printArraySummary(int* array, int arraySize) {
@@ -167,12 +181,6 @@ void printArraySummary(int* array, int arraySize) {
         printf("\n");
         printArray(array, 0, arraySize);
     }
-}
-
-void printArray(const int* array, const int begin, const int size) {
-    int i;
-    for (i = begin; i < size; i++)
-        printf("%d\n", array[i]);
 }
 
 int isSorted(const int* array, int arraySize) {

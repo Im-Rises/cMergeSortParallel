@@ -1,8 +1,8 @@
-#include <stdio.h>
-#include <limits.h>
 #include <stdlib.h>
 #include <omp.h>
 #include <time.h>
+#include <stdio.h>
+#include <string.h>
 
 #define INIT_THREADS_NUMBER 4
 
@@ -11,13 +11,14 @@
 
 #define MULTITHREAD_THRESHOLD 1000
 
-void mergeSortParallel(int A[], int left, int right, int* B);
-void mergeSort(int A[], int left, int right, int* B);
-void merge(int A[], int left, int mid, int right, int* B);
+void mergeSortParallel(int a[], int size, int temp[]);
+void mergeSortParallelOmp(int a[], int size, int temp[]);
+void mergeSort(int* X, int n, int* tmp);
+void merge(int* X, int n, int* tmp);
 
 void* allocateMemory(size_t size);
-void printArraySummary(int* array, int arraySize);
 void printArray(const int* array, int begin, int size);
+void printArraySummary(int* array, int arraySize);
 int isSorted(const int* array, int arraySize);
 
 int main(int argc, char* argv[]) {
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]) {
     /* Read size of array from stream */
     int arraySize = 0;
     scanf("%d", &arraySize);
-    printf("- Array size: %d\n", arraySize);
+    printf("Array size: %d\n", arraySize);
 
     /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
@@ -70,7 +71,7 @@ int main(int argc, char* argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &timeSpecStart);
 #endif
 
-    mergeSortParallel(inputArray, 0, arraySize - 1, outputArray);
+    mergeSortParallel(inputArray, arraySize, outputArray);
 
     /* Stop timer */
     clockTimer = clock() - clockTimer;
@@ -103,75 +104,68 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-void mergeSortParallel(int A[], int left, int right, int* B) {
-    if (left < right)
-    {
-        if (right - left < MULTITHREAD_THRESHOLD)
-        {
-            mergeSort(A, left, right, B);
-        }
-        else
-        {
-            int mid = (left + right) / 2;
-
+void mergeSortParallel(int a[], int size, int temp[]) {
 #pragma omp parallel
-            {
 #pragma omp single
-                {
+    mergeSortParallelOmp(a, size, temp);
+}
+
+void mergeSortParallelOmp(int a[], int size, int temp[]) {
+    if (size < MULTITHREAD_THRESHOLD)
+    {
+        mergeSort(a, size, temp);
+        return;
+    }
 #pragma omp task
-                    mergeSortParallel(A, left, mid, B);
-#pragma omp task
-                    mergeSortParallel(A, mid + 1, right, B);
+    mergeSortParallelOmp(a, size / 2, temp);
+
+    mergeSortParallelOmp(a + size / 2, size - size / 2, temp + size / 2);
+
 #pragma omp taskwait
-                    merge(A, left, mid, right, B);
-                }
-            }
-        }
-    }
+    merge(a, size, temp);
 }
 
-
-void mergeSort(int A[], int left, int right, int* B) {
-    if (left < right)
-    {
-        int mid = (left + right) / 2;
-        mergeSort(A, left, mid, B);
-        mergeSort(A, mid + 1, right, B);
-        merge(A, left, mid, right, B);
-    }
+void mergeSort(int* X, int n, int* tmp) {
+    if (n < 2)
+        return;
+    mergeSort(X, n / 2, tmp);
+    mergeSort(X + n / 2, n - n / 2, tmp);
+    merge(X, n, tmp);
 }
 
-void merge(int A[], int left, int mid, int right, int* B) {
+void merge(int* X, int n, int* tmp) {
+    int i = 0;
+    int j = n / 2;
+    int ti = 0;
 
-    int i = left,
-        j = mid + 1,
-        k = 0;
-
-    int Ai = A[i];
-    int Aj = A[j];
-
-    while (i <= mid && j <= right)
+    while (i < n / 2 && j < n)
     {
-        if (Ai <= Aj)
+        if (X[i] < X[j])
         {
-            B[k++] = Ai;
-            Ai = A[++i];
+            tmp[ti] = X[i];
+            ti++;
+            i++;
         }
         else
         {
-            B[k++] = Aj;
-            Aj = A[++j];
+            tmp[ti] = X[j];
+            ti++;
+            j++;
         }
     }
-
-    while (i <= mid)
-        B[k++] = A[i++];
-
-    while (j <= right)
-        B[k++] = A[j++];
-
-    for (i = left; i <= right; ++i)
-        A[i] = B[i - left];
+    while (i < n / 2)
+    { /* finish up lower half */
+        tmp[ti] = X[i];
+        ti++;
+        i++;
+    }
+    while (j < n)
+    { /* finish up upper half */
+        tmp[ti] = X[j];
+        ti++;
+        j++;
+    }
+    memcpy(X, tmp, n * sizeof(int));
 }
 
 void* allocateMemory(size_t size) {
@@ -182,6 +176,12 @@ void* allocateMemory(size_t size) {
         exit(2);
     }
     return memory;
+}
+
+void printArray(const int* array, const int begin, const int size) {
+    int i;
+    for (i = begin; i < size; i++)
+        printf("%d\n", array[i]);
 }
 
 void printArraySummary(int* array, int arraySize) {
@@ -200,12 +200,6 @@ void printArraySummary(int* array, int arraySize) {
         printf("\n");
         printArray(array, 0, arraySize);
     }
-}
-
-void printArray(const int* array, const int begin, const int size) {
-    int i;
-    for (i = begin; i < size; i++)
-        printf("%d\n", array[i]);
 }
 
 int isSorted(const int* array, int arraySize) {

@@ -23,8 +23,10 @@ struct MergeSortArgs {
 
 void mergeSortParallel(int A[], int arraySize, const int threadsNumber);
 void* mergeSortThread(void* input);
-void mergeSort(int A[], int p, int r);
-void merge(int A[], int p, int q, int r);
+void mergeSort(int* X, int n, int* tmp);
+void merge(int* X, int n, int* tmp);
+// void mergeSort(int A[], int p, int r);
+// void merge(int A[], int p, int q, int r);
 
 void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
@@ -40,6 +42,11 @@ int main(int argc, char* argv[]) {
      */
 
     printf("|-----Merge Sort Parallel using PThread-----|\n\n");
+
+#ifndef _OPENMP
+    printf("You can compile the project with the -fopenmp flag to get elapsed time using OpenMP.\n\n");
+#endif
+
     float start = 0;
 
     /* Read optional parameters */
@@ -150,51 +157,94 @@ void* mergeSortThread(void* input) {
     pthread_exit(NULL);
 }
 
-void mergeSort(int A[], int p, int r) {
-    if (p < r)
-    {
-        int q = (p + r) / 2;
-        mergeSort(A, p, q);
-        mergeSort(A, q + 1, r);
-        merge(A, p, q, r);
-    }
+void mergeSort(int* X, int n, int* tmp) {
+    if (n < 2)
+        return;
+    mergeSort(X, n / 2, tmp);
+    mergeSort(X + n / 2, n - n / 2, tmp);
+    merge(X, n, tmp);
 }
 
-void merge(int A[], int p, int q, int r) {
-    int i, j, k;
+void merge(int* X, int n, int* tmp) {
+    int i = 0;
+    int j = n / 2;
+    int ti = 0;
 
-    int n1 = q - p + 1;
-    int n2 = r - q;
-
-    int* L = allocateMemory((n1 + 1) * sizeof(int));
-    int* R = allocateMemory((n2 + 1) * sizeof(int));
-    /*    int L[n1 + 1];
-        int R[n2 + 1];*/
-
-    for (i = 0; i < n1; i++)
-        L[i] = A[p + i];
-    for (j = 0; j < n2; j++)
-        R[j] = A[q + j + 1];
-
-    L[n1] = INT_MAX;
-    R[n2] = INT_MAX;
-
-    i = 0;
-    j = 0;
-    for (k = p; k <= r; k++)
+    while (i < n / 2 && j < n)
     {
-        if (L[i] <= R[j])
+        if (X[i] < X[j])
         {
-            A[k] = L[i];
+            tmp[ti] = X[i];
+            ti++;
             i++;
         }
         else
         {
-            A[k] = R[j];
+            tmp[ti] = X[j];
+            ti++;
             j++;
         }
     }
+    while (i < n / 2)
+    { /* finish up lower half */
+        tmp[ti] = X[i];
+        ti++;
+        i++;
+    }
+    while (j < n)
+    { /* finish up upper half */
+        tmp[ti] = X[j];
+        ti++;
+        j++;
+    }
+    memcpy(X, tmp, n * sizeof(int));
 }
+
+// void mergeSort(int A[], int p, int r) {
+//     if (p < r)
+//     {
+//         int q = (p + r) / 2;
+//         mergeSort(A, p, q);
+//         mergeSort(A, q + 1, r);
+//         merge(A, p, q, r);
+//     }
+// }
+//
+// void merge(int A[], int p, int q, int r) {
+//     int i, j, k;
+//
+//     int n1 = q - p + 1;
+//     int n2 = r - q;
+//
+//     int* L = allocateMemory((n1 + 1) * sizeof(int));
+//     int* R = allocateMemory((n2 + 1) * sizeof(int));
+//     /*    int L[n1 + 1];
+//         int R[n2 + 1];*/
+//
+//     for (i = 0; i < n1; i++)
+//         L[i] = A[p + i];
+//     for (j = 0; j < n2; j++)
+//         R[j] = A[q + j + 1];
+//
+//     L[n1] = INT_MAX;
+//     R[n2] = INT_MAX;
+//
+//     i = 0;
+//     j = 0;
+//     for (k = p; k <= r; k++)
+//     {
+//         if (L[i] <= R[j])
+//         {
+//             A[k] = L[i];
+//             i++;
+//         }
+//         else
+//         {
+//             A[k] = R[j];
+//             j++;
+//         }
+//     }
+// }
 
 void* allocateMemory(size_t size) {
     void* memory = malloc(size);
