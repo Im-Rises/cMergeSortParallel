@@ -147,14 +147,14 @@ void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber) {
 }
 
 void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber) {
-    // if array is too small do monothread merge sort
+    /*     if array is too small do monothread merge sort*/
     if (arraySize < MULTITHREAD_THRESHOLD)
     {
         mergeSort(A, arraySize, B);
         return;
     }
 
-    // if a thread is available use it
+    /*     if a thread is available use it*/
     int i;
     for (i = 0; i < threadsNumber; i++)
     {
@@ -166,28 +166,28 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
             args.size = arraySize / 2;
             args.B = B;
 
-            // create thread
+            /*             create thread*/
             if (pthread_create(&threads[i].thread, NULL, mergeSortThread, &args) != 0)
             {
                 fprintf(stderr, "Error creating thread");
                 exit(3);
             }
 
-            // sort the other half of the array
+            /*             sort the other half of the array*/
             mergeSort(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2);
 
-            // wait for the thread to finish
+            /*             wait for the thread to finish*/
             pthread_join(threads[i].thread, NULL);
             threads[i].isUsed = 0;
 
-            // merge the two sorted arrays
+            /*             merge the two sorted arrays*/
             merge(A, arraySize, B);
 
             return;
         }
     }
 
-    // if no thread is available do monothread merge sort
+    /*     if no thread is available do monothread merge sort*/
     mergeSort(A, arraySize, B);
 }
 

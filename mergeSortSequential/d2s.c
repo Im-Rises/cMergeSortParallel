@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define INIT_THREADS_NUMBER 4
-
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
 
@@ -31,11 +29,6 @@ int main(int argc, char* argv[]) {
 #ifndef _OPENMP
     printf("You can compile the project with the -fopenmp flag to get elapsed time using OpenMP.\n\n");
 #endif
-
-    /* Read optional parameters */
-    int threadsNumber = INIT_THREADS_NUMBER;
-    if (argc != 1)
-        threadsNumber = atoi(argv[1]);
 
     /* Read size of array from stream */
     int arraySize = 0;
