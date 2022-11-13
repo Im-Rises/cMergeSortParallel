@@ -14,6 +14,14 @@
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
 
+#define MULTITHREAD_THRESHOLD 1000
+
+typedef struct ThreadState ThreadState;
+struct ThreadState {
+    pthread_t thread;
+    int isUsed;
+};
+
 typedef struct MergeSortArgs MergeSortArgs;
 
 struct MergeSortArgs {
@@ -23,6 +31,7 @@ struct MergeSortArgs {
 };
 
 void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber);
+void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber);
 void* mergeSortThread(void* input);
 void mergeSort(int* X, int n, int* tmp);
 void merge(int* X, int n, int* tmp);
@@ -53,6 +62,8 @@ int main(int argc, char* argv[]) {
     if (argc != 1)
         threadsNumber = atoi(argv[1]);
 
+    threadsNumber--;
+
 
     /* Read size of array from stream */
     int arraySize = 0;
@@ -75,7 +86,7 @@ int main(int argc, char* argv[]) {
     }
 
     /* Print the number of threads */
-    printf("Number of threads: %d\n", threadsNumber);
+    printf("Number of threads: %d\n", threadsNumber + 1);
 
     /* Create timer */
     clock_t clockTimer;
@@ -124,47 +135,60 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-
 void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber) {
-    pthread_t threads[threadsNumber];
-    MergeSortArgs threadsArgsArray[threadsNumber];
-    const int offset = arraySize / threadsNumber;
-    int l = 0;
+    ThreadState threads[threadsNumber];
+    int i = 0;
+    for (i = 0; i < threadsNumber; i++)
+    {
+        threads[i].isUsed = 0;
+    }
+
+    mergeSortParallelPthread(A, arraySize, B, threads, threadsNumber);
+}
+
+void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber) {
+    // if array is too small do monothread merge sort
+    if (arraySize < MULTITHREAD_THRESHOLD)
+    {
+        mergeSort(A, arraySize, B);
+        return;
+    }
+
+    // if a thread is available use it
     int i;
-
-    /* Init threads args depending on the number of threads (split parts of the array in each thread) */
-    for (i = 0; i < threadsNumber; i++, l += offset)
+    for (i = 0; i < threadsNumber; i++)
     {
-        threadsArgsArray[i].A = A + l;
-        threadsArgsArray[i].B = B + l;
-        threadsArgsArray[i].size = offset;
-        if (i == threadsNumber - 1)
-            threadsArgsArray[i].size += arraySize % threadsNumber;
-    }
-
-    /* Merge and sort */
-    for (i = 0; i < threadsNumber; i++)
-        pthread_create(&threads[i], NULL, mergeSortThread, &threadsArgsArray[i]);
-    for (i = 0; i < threadsNumber; i++)
-        pthread_join(threads[i], NULL);
-
-    /* Merge work from all threads */
-    /*        for (i = 1; i < threadsNumber; i++)
-            {
-                merge(A, threadsArgsArray[0].p, threadsArgsArray[i].p - 1, threadsArgsArray[i].r);
-            }*/
-
-    /*    for (i = 1; i < threadsNumber; i++)
+        if (threads[i].isUsed == 0)
         {
-            merge(threadsArgsArray[0].B, threadsArgsArray[i].size * 2, threadsArgsArray[i].B);
-        }*/
+            threads[i].isUsed = 1;
+            MergeSortArgs args;
+            args.A = A;
+            args.size = arraySize / 2;
+            args.B = B;
 
-    /*    mergeSort(A, arraySize, B);*/
+            // create thread
+            if (pthread_create(&threads[i].thread, NULL, mergeSortThread, &args) != 0)
+            {
+                fprintf(stderr, "Error creating thread");
+                exit(3);
+            }
 
-    for (i = 1; i < threadsNumber; i++)
-    {
-        merge(threadsArgsArray[0].B, threadsArgsArray[i].size, threadsArgsArray[i].B);
+            // sort the other half of the array
+            mergeSort(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2);
+
+            // wait for the thread to finish
+            pthread_join(threads[i].thread, NULL);
+            threads[i].isUsed = 0;
+
+            // merge the two sorted arrays
+            merge(A, arraySize, B);
+
+            return;
+        }
     }
+
+    // if no thread is available do monothread merge sort
+    mergeSort(A, arraySize, B);
 }
 
 void* mergeSortThread(void* input) {
