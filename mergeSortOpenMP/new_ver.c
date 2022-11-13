@@ -9,117 +9,17 @@
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
 
-#define MULTITHREAD_THRESHOLD 1000
+#define MULTITHREAD_THRESHOLD 1000g
 
-void merge(int* X, int n, int* tmp) {
-    int i = 0;
-    int j = n / 2;
-    int ti = 0;
+void mergeSortParallel(int a[], int size, int temp[]);
+void mergeSortParallelOmp(int a[], int size, int temp[]);
+void mergesort(int* X, int n, int* tmp);
+void merge(int* X, int n, int* tmp);
 
-    while (i < n / 2 && j < n)
-    {
-        if (X[i] < X[j])
-        {
-            tmp[ti] = X[i];
-            ti++;
-            i++;
-        }
-        else
-        {
-            tmp[ti] = X[j];
-            ti++;
-            j++;
-        }
-    }
-    while (i < n / 2)
-    { /* finish up lower half */
-        tmp[ti] = X[i];
-        ti++;
-        i++;
-    }
-    while (j < n)
-    { /* finish up upper half */
-        tmp[ti] = X[j];
-        ti++;
-        j++;
-    }
-    memcpy(X, tmp, n * sizeof(int));
-}
-
-void mergesort(int* X, int n, int* tmp) {
-    if (n < 2)
-        return;
-    mergesort(X, n / 2, tmp);
-    mergesort(X + n / 2, n - n / 2, tmp);
-    merge(X, n, tmp);
-}
-
-void mergeSortParallelOmp(int a[], int size, int temp[]) {
-    if (size < MULTITHREAD_THRESHOLD)
-    {
-        mergesort(a, size, temp);
-        return;
-    }
-#pragma omp task
-    mergeSortParallelOmp(a, size / 2, temp);
-
-    mergeSortParallelOmp(a + size / 2, size - size / 2, temp + size / 2);
-
-#pragma omp taskwait
-    merge(a, size, temp);
-}
-
-void mergeSortParallel(int a[], int size, int temp[]) {
-#pragma omp parallel
-#pragma omp single
-    mergeSortParallelOmp(a, size, temp);
-}
-
-void* allocateMemory(size_t size) {
-    void* memory = malloc(size);
-    if (memory == NULL)
-    {
-        fprintf(stderr, "Error allocating memory");
-        exit(2);
-    }
-    return memory;
-}
-
-void printArray(const int* array, const int begin, const int size) {
-    int i;
-    for (i = begin; i < size; i++)
-        printf("%d\n", array[i]);
-}
-
-void printArraySummary(int* array, int arraySize) {
-    printf("Array sorted: ");
-    if (arraySize > COMPLETE_NUMBER_PRINT_THRESHOLD)
-    {
-        printf("(Array too big to be printed completely)\n");
-        printf("- First %d values: \n", MAX_NUMBER_PRINT);
-        printArray(array, 0, MAX_NUMBER_PRINT);
-        printf("...\n");
-        printf("- Last %d values: \n", MAX_NUMBER_PRINT);
-        printArray(array, arraySize - MAX_NUMBER_PRINT, arraySize);
-    }
-    else
-    {
-        printf("\n");
-        printArray(array, 0, arraySize);
-    }
-}
-
-int isSorted(const int* array, int arraySize) {
-    int i;
-    for (i = 0; i < arraySize - 1; i++)
-    {
-        if (array[i] > array[i + 1])
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
+void* allocateMemory(size_t size);
+void printArray(const int* array, const int begin, const int size);
+void printArraySummary(int* array, int arraySize);
+int isSorted(const int* array, int arraySize);
 
 int main(int argc, char* argv[]) {
     /*
@@ -201,5 +101,115 @@ int main(int argc, char* argv[]) {
     free(inputArray);
     free(outputArray);
 
+    return 0;
+}
+
+void mergeSortParallel(int a[], int size, int temp[]) {
+#pragma omp parallel
+#pragma omp single
+    mergeSortParallelOmp(a, size, temp);
+}
+
+void mergeSortParallelOmp(int a[], int size, int temp[]) {
+    if (size < MULTITHREAD_THRESHOLD)
+    {
+        mergesort(a, size, temp);
+        return;
+    }
+#pragma omp task
+    mergeSortParallelOmp(a, size / 2, temp);
+
+    mergeSortParallelOmp(a + size / 2, size - size / 2, temp + size / 2);
+
+#pragma omp taskwait
+    merge(a, size, temp);
+}
+
+void mergesort(int* X, int n, int* tmp) {
+    if (n < 2)
+        return;
+    mergesort(X, n / 2, tmp);
+    mergesort(X + n / 2, n - n / 2, tmp);
+    merge(X, n, tmp);
+}
+
+void merge(int* X, int n, int* tmp) {
+    int i = 0;
+    int j = n / 2;
+    int ti = 0;
+
+    while (i < n / 2 && j < n)
+    {
+        if (X[i] < X[j])
+        {
+            tmp[ti] = X[i];
+            ti++;
+            i++;
+        }
+        else
+        {
+            tmp[ti] = X[j];
+            ti++;
+            j++;
+        }
+    }
+    while (i < n / 2)
+    { /* finish up lower half */
+        tmp[ti] = X[i];
+        ti++;
+        i++;
+    }
+    while (j < n)
+    { /* finish up upper half */
+        tmp[ti] = X[j];
+        ti++;
+        j++;
+    }
+    memcpy(X, tmp, n * sizeof(int));
+}
+
+void* allocateMemory(size_t size) {
+    void* memory = malloc(size);
+    if (memory == NULL)
+    {
+        fprintf(stderr, "Error allocating memory");
+        exit(2);
+    }
+    return memory;
+}
+
+void printArray(const int* array, const int begin, const int size) {
+    int i;
+    for (i = begin; i < size; i++)
+        printf("%d\n", array[i]);
+}
+
+void printArraySummary(int* array, int arraySize) {
+    printf("Array sorted: ");
+    if (arraySize > COMPLETE_NUMBER_PRINT_THRESHOLD)
+    {
+        printf("(Array too big to be printed completely)\n");
+        printf("- First %d values: \n", MAX_NUMBER_PRINT);
+        printArray(array, 0, MAX_NUMBER_PRINT);
+        printf("...\n");
+        printf("- Last %d values: \n", MAX_NUMBER_PRINT);
+        printArray(array, arraySize - MAX_NUMBER_PRINT, arraySize);
+    }
+    else
+    {
+        printf("\n");
+        printArray(array, 0, arraySize);
+    }
+}
+
+int isSorted(const int* array, int arraySize) {
+    int i;
+    for (i = 0; i < arraySize - 1; i++)
+    {
+        if (array[i] > array[i + 1])
+        {
+            return 1;
+        }
+    }
     return 0;
 }
