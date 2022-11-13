@@ -154,13 +154,13 @@ void merge(int* X, int n, int* tmp) {
         }
     }
     while (i < n / 2)
-    { /* finish up lower half */
+    {
         tmp[ti] = X[i];
         ti++;
         i++;
     }
     while (j < n)
-    { /* finish up upper half */
+    {
         tmp[ti] = X[j];
         ti++;
         j++;
