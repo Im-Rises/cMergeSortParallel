@@ -123,11 +123,9 @@ int main(int argc, char* argv[]) {
     printf(" - Unix Timer: %f s\n", unixTimelapsed);
 
     /* Print array is sorted */
-    printf("Is input array correctly sorted? %s\n", isSorted(inputArray, arraySize) ? "No" : "Yes");
     printf("Is output array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");
 
     /* Print array */
-    /*printArraySummary(inputArray, arraySize);*/
     printArraySummary(outputArray, arraySize);
 
     /* Free memory */
@@ -139,7 +137,7 @@ int main(int argc, char* argv[]) {
 
 void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber) {
     ThreadState threads[threadsNumber];
-    int i = 0;
+    int i;
     for (i = 0; i < threadsNumber; i++)
     {
         threads[i].isUsed = 0;
@@ -149,19 +147,20 @@ void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber) {
 }
 
 void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber) {
-    /*     if array is too small do monothread merge sort*/
+    /* if array is too small do mono-thread merge sort*/
     if (arraySize < MULTITHREAD_THRESHOLD)
     {
         mergeSort(A, arraySize, B);
         return;
     }
 
-    /*     if a thread is available use it*/
+    /* if a thread is available use it*/
     int i;
     for (i = 0; i < threadsNumber; i++)
     {
         if (threads[i].isUsed == 0)
         {
+            /* Set the arguments for the thread */
             threads[i].isUsed = 1;
             MergeSortArgs args;
             args.A = A;
@@ -170,32 +169,31 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
             args.threads = threads;
             args.threadsNumber = threadsNumber;
 
-            /*             create thread*/
+            /* create thread*/
             if (pthread_create(&threads[i].thread, NULL, mergeSortParallelPthreadThread, &args) != 0)
             {
                 fprintf(stderr, "Error creating thread");
                 exit(3);
             }
 
-            /*             sort the other half of the array*/
-            /*mergeSort(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2);*/
+            /* sort the other half of the array*/
             mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber);
 
-            /*             wait for the thread to finish*/
+            /* wait for the thread to finish*/
             pthread_join(threads[i].thread, NULL);
             threads[i].isUsed = 0;
 
-            /*             merge the two sorted arrays*/
+            /* merge the two sorted arrays*/
             merge(A, arraySize, B);
 
+            // exit function
             return;
         }
     }
 
-    /*     if no thread is available do monothread merge sort*/
+    /* if no thread is available do mono-thread merge sort*/
     mergeSort(A, arraySize, B);
-    //
-    //    mergeSortParallelPthread(A, arraySize, B, threads, threadsNumber);
+    /* mergeSortParallelPthread(A, arraySize, B, threads, threadsNumber);*/
 }
 
 void* mergeSortParallelPthreadThread(void* input) {
