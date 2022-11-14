@@ -4,12 +4,14 @@
 #include <pthread.h>
 #include <string.h>
 
-#if __STDC_VERSION__ >= 199901L
+/* Enable POSIX for unix timer*/
+/*#if __STDC_VERSION__ >= 199901L
 #define _XOPEN_SOURCE 600
 #else
 #define _XOPEN_SOURCE 500
-#endif /* __STDC_VERSION__ */
-#include <time.h>
+#endif */
+/* __STDC_VERSION__ */ /*
+#include <time.h>*/
 
 #if defined(_OPENMP)
 #include <omp.h>
