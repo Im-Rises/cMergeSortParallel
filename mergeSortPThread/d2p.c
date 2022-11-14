@@ -162,15 +162,18 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
         mergeSort(A, arraySize, B);
         return;
     }
-
+    int threadIndex = -1;
     pthread_mutex_lock(myMutex);
     /* if a thread is available use it*/
-    int threadIndex = checkThreadsAvailable(threads, threadsNumber);
+    threadIndex = checkThreadsAvailable(threads, threadsNumber);
+    if (threadIndex != -1)
+    {
+        threads[threadIndex].isUsed = True;
+    }
     pthread_mutex_unlock(myMutex);
 
     if (threadIndex != -1)
     {
-        threads[threadIndex].isUsed = True;
         MergeSortArgs args = {
             A,
             arraySize / 2,
@@ -192,6 +195,7 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
 
         /* wait for the thread to finish*/
         pthread_join(threads[threadIndex].thread, NULL);
+
         threads[threadIndex].isUsed = False;
 
         /* merge the two sorted arrays*/
