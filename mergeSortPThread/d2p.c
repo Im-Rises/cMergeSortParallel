@@ -3,26 +3,15 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <string.h>
-
-/* Enable POSIX for unix timer*/
-/*#if __STDC_VERSION__ >= 199901L
-#define _XOPEN_SOURCE 600
-#else
-#define _XOPEN_SOURCE 500
-#endif */
-/* __STDC_VERSION__ */ /*
-#include <time.h>*/
-
+#include <time.h>
 #if defined(_OPENMP)
 #include <omp.h>
 #endif
 
 #define INIT_THREADS_NUMBER 4
-
+#define MULTITHREAD_THRESHOLD 1000
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000
-
-#define MULTITHREAD_THRESHOLD 1000
 
 /*typedef enum Boolean Boolean;*/
 enum Boolean {
