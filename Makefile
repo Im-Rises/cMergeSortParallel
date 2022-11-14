@@ -21,7 +21,6 @@ OpenMpVerLinux:
 
 PThreadVerLinux:
 	gcc ./mergeSortPThread/d2p.c -o buildMakeFile/mergeSortPThread -lpthread -fopenmp -std=c90 -Wall -O2
-# -pedantic
 
 MrProperLinux : clean
 	rm -f buildMakeFile/fileGenerator
