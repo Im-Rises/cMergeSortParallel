@@ -35,10 +35,11 @@ struct MergeSortArgs {
     int* B;
     ThreadState* threads;
     int threadsNumber;
+    pthread_mutex_t* myMutex;
 };
 
 void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber);
-void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber);
+void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
 void* mergeSortParallelPthreadThread(void* input);
 void mergeSort(int* X, int n, int* tmp);
 void merge(int* X, int n, int* tmp);
@@ -150,10 +151,12 @@ void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber) {
         threads[i].isUsed = False;
     }
 
-    mergeSortParallelPthread(A, arraySize, B, threads, threadsNumber);
+    pthread_mutex_t myMutex = PTHREAD_MUTEX_INITIALIZER;
+
+    mergeSortParallelPthread(A, arraySize, B, threads, threadsNumber, &myMutex);
 }
 
-void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber) {
+void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex) {
     /* if array is too small do mono-thread merge sort*/
     if (arraySize < MULTITHREAD_THRESHOLD)
     {
@@ -161,8 +164,10 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
         return;
     }
 
+    pthread_mutex_lock(myMutex);
     /* if a thread is available use it*/
     int threadIndex = checkThreadsAvailable(threads, threadsNumber);
+    pthread_mutex_unlock(myMutex);
 
     if (threadIndex != -1)
     {
@@ -172,7 +177,8 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
             arraySize / 2,
             B,
             threads,
-            threadsNumber
+            threadsNumber,
+            myMutex
         };
 
         /* create thread*/
@@ -183,7 +189,7 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
         }
 
         /* sort the other half of the array*/
-        mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber);
+        mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber, myMutex);
 
         /* wait for the thread to finish*/
         pthread_join(threads[threadIndex].thread, NULL);
@@ -195,8 +201,8 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
     else
     {
         /* if no thread is available do mono-thread merge sort*/
-        mergeSortParallelPthread(A, arraySize / 2, B, threads, threadsNumber);
-        mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber);
+        mergeSortParallelPthread(A, arraySize / 2, B, threads, threadsNumber, myMutex);
+        mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber, myMutex);
         merge(A, arraySize, B);
     }
 }
@@ -212,7 +218,7 @@ int checkThreadsAvailable(ThreadState* threads, int threadsNumber) {
 }
 
 void* mergeSortParallelPthreadThread(void* input) {
-    mergeSortParallelPthread((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).size, (*(MergeSortArgs*)input).B, (*(MergeSortArgs*)input).threads, (*(MergeSortArgs*)input).threadsNumber);
+    mergeSortParallelPthread((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).size, (*(MergeSortArgs*)input).B, (*(MergeSortArgs*)input).threads, (*(MergeSortArgs*)input).threadsNumber, (*(MergeSortArgs*)input).myMutex);
     pthread_exit(NULL);
 }
 
