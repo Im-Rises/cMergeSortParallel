@@ -167,12 +167,13 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
     if (threadIndex != -1)
     {
         threads[threadIndex].isUsed = True;
-        MergeSortArgs args;
-        args.A = A;
-        args.size = arraySize / 2;
-        args.B = B;
-        args.threads = threads;
-        args.threadsNumber = threadsNumber;
+        MergeSortArgs args = {
+            A,
+            arraySize / 2,
+            B,
+            threads,
+            threadsNumber
+        };
 
         /* create thread*/
         if (pthread_create(&threads[threadIndex].thread, NULL, mergeSortParallelPthreadThread, &args) != 0)
