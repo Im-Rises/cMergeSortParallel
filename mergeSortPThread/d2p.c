@@ -16,14 +16,19 @@
 
 #define MULTITHREAD_THRESHOLD 1000
 
+typedef enum Boolean Boolean;
+enum Boolean {
+    False = 0,
+    True = 1
+};
+
 typedef struct ThreadState ThreadState;
 struct ThreadState {
     pthread_t thread;
-    int isUsed;
+    Boolean isUsed;
 };
 
 typedef struct MergeSortArgs MergeSortArgs;
-
 struct MergeSortArgs {
     int* A;
     int size;
@@ -37,6 +42,8 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
 void* mergeSortParallelPthreadThread(void* input);
 void mergeSort(int* X, int n, int* tmp);
 void merge(int* X, int n, int* tmp);
+
+int checkThreadsAvailable(ThreadState* threads, int threadsNumber);
 
 void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
@@ -140,7 +147,7 @@ void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber) {
     int i;
     for (i = 0; i < threadsNumber; i++)
     {
-        threads[i].isUsed = 0;
+        threads[i].isUsed = False;
     }
 
     mergeSortParallelPthread(A, arraySize, B, threads, threadsNumber);
@@ -155,45 +162,52 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
     }
 
     /* if a thread is available use it*/
-    int i;
-    for (i = 0; i < threadsNumber; i++)
+    int threadIndex = checkThreadsAvailable(threads, threadsNumber);
+
+    if (threadIndex != -1)
     {
-        if (threads[i].isUsed == 0)
+        threads[threadIndex].isUsed = True;
+        MergeSortArgs args;
+        args.A = A;
+        args.size = arraySize / 2;
+        args.B = B;
+        args.threads = threads;
+        args.threadsNumber = threadsNumber;
+
+        /* create thread*/
+        if (pthread_create(&threads[threadIndex].thread, NULL, mergeSortParallelPthreadThread, &args) != 0)
         {
-            /* Set the arguments for the thread */
-            threads[i].isUsed = 1;
-            MergeSortArgs args;
-            args.A = A;
-            args.size = arraySize / 2;
-            args.B = B;
-            args.threads = threads;
-            args.threadsNumber = threadsNumber;
-
-            /* create thread*/
-            if (pthread_create(&threads[i].thread, NULL, mergeSortParallelPthreadThread, &args) != 0)
-            {
-                fprintf(stderr, "Error creating thread");
-                exit(3);
-            }
-
-            /* sort the other half of the array*/
-            mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber);
-
-            /* wait for the thread to finish*/
-            pthread_join(threads[i].thread, NULL);
-            threads[i].isUsed = 0;
-
-            /* merge the two sorted arrays*/
-            merge(A, arraySize, B);
-
-            // exit function
-            return;
+            fprintf(stderr, "Error creating thread");
+            exit(3);
         }
-    }
 
-    /* if no thread is available do mono-thread merge sort*/
-    mergeSort(A, arraySize, B);
-    /* mergeSortParallelPthread(A, arraySize, B, threads, threadsNumber);*/
+        //* sort the other half of the array*/
+        mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber);
+
+        /* wait for the thread to finish*/
+        pthread_join(threads[threadIndex].thread, NULL);
+        threads[threadIndex].isUsed = False;
+
+        /* merge the two sorted arrays*/
+        merge(A, arraySize, B);
+    }
+    else
+    {
+        /* if no thread is available do mono-thread merge sort*/
+        mergeSortParallelPthread(A, arraySize / 2, B, threads, threadsNumber);
+        mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber);
+        merge(A, arraySize, B);
+    }
+}
+
+int checkThreadsAvailable(ThreadState* threads, int threadsNumber) {
+    int index;
+    for (index = 0; index < threadsNumber; index++)
+    {
+        if (threads[index].isUsed == False)
+            return index;
+    }
+    return -1;
 }
 
 void* mergeSortParallelPthreadThread(void* input) {
