@@ -515,6 +515,12 @@ You also need to install the mingw compiler to compile the Windows version under
 sudo apt-get install mingw-w64
 ```
 
+You also need the LLVM OpenMP lib. Type the following command at the project root.
+
+```shell
+sudo apt-get install libomp-12-dev
+```
+
 #### Compilation
 
 ##### Compile all the versions

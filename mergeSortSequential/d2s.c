@@ -2,9 +2,17 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-#include <time.h>
 #include <stdio.h>
 #include <string.h>
+
+#ifdef __unix__
+#if __STDC_VERSION__ >= 199901L
+#define _XOPEN_SOURCE 600
+#else
+#define _XOPEN_SOURCE 500
+#endif /* __STDC_VERSION__ */
+#endif
+#include <time.h>
 
 #define MAX_NUMBER_PRINT 100
 #define COMPLETE_NUMBER_PRINT_THRESHOLD 1000

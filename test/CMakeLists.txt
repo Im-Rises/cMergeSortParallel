@@ -1,7 +1,7 @@
 set(SRCS_TEST mergeSortSequentialTest.c mergeSortOpenMPTest.c mergeSortPThreadTest.c)
 
-set(SRCS)
-set(HEADERS)
+set(HEADERS mergeSortSequential.h mergeSortOpenMP.h mergeSortPThread.h)
+set(SRCS mergeSortSequential.c mergeSortOpenMP.c mergeSortPThread.c)
 
 enable_testing()
 

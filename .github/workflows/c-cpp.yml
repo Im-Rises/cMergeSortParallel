@@ -18,6 +18,7 @@ jobs:
           sudo apt-get install make
           sudo apt-get install gcc
           sudo apt-get install mingw-w64
+          sudo apt-get install libomp-12-dev
       #      - name: configure
       #        run: ./configure
       - name: make
