@@ -14,6 +14,9 @@ Merge Sort algorithm implemented in C available in three versions:
 - Parallel with OpenMP
 - Parallel with Pthreads (Linux only)
 
+Merge sort is a divide and conquer algorithm that was invented by John von Neumann in 1945. A detailed description of
+the algorithm can be found [here](https://en.wikipedia.org/wiki/Merge_sort).
+
 ## Results
 
 | Array size | threads | Sequential | OpenMP    | Pthreads  |
@@ -21,13 +24,62 @@ Merge Sort algorithm implemented in C available in three versions:
 | 1 000 000  | 1       | 0.153550s  | 0.153550s | 0.153550s |
 | 1 000 000  | 4       | 0.153550s  | 0.079991s | 0.073561s |      
 
-<!--
-Results for 1 000 000 integers:
+<details>
+<summary>Click here to get the details for an array of 10 to 10 000 000 ints.</summary>
 
-- Sequential: 0.153550 seconds
-- OpenMP Parallel: 0.079991 seconds
-- PThread Parallel: 0.073561 seconds
--->
+| Number of int (Array size) | Number of threads | Sequential time (Work) (s) | Parallel OpenMP time (s) | Parallel Pthread time (s) |
+|----------------------------|-------------------|----------------------------|--------------------------|---------------------------|
+| 10                         | 1                 | 0.000023                   | 0.000079                 | 0.000012                  |
+| 10                         | 2                 | 0.000023                   | 0.000216                 | 0.000011                  |
+| 10                         | 4                 | 0.000023                   | 0.000439                 | 0.000011                  |
+| 10                         | 8                 | 0.000023                   | 0.007493                 | 0.000011                  |
+| 10                         | 16                | 0.000023                   | 0.000752                 | 0.000012                  |
+| 10                         | 24                | 0.000023                   | 0.000861                 | 0.000012                  |
+| 10                         | 48                | 0.000023                   | 0.001780                 | 0.000012                  |
+| 100                        | 1                 | 0.000034                   | 0.000039                 | 0.000025                  |
+| 100                        | 2                 | 0.000034                   | 0.000228                 | 0.000025                  |
+| 100                        | 4                 | 0.000034                   | 0.000211                 | 0.000032                  |
+| 100                        | 8                 | 0.000034                   | 0.005617                 | 0.000025                  |
+| 100                        | 16                | 0.000034                   | 0.000866                 | 0.000025                  |
+| 100                        | 24                | 0.000034                   | 0.001311                 | 0.000025                  |
+| 100                        | 48                | 0.000034                   | 0.002728                 | 0.000026                  |
+| 1000                       | 1                 | 0.000383                   | 0.000387                 | 0.000159                  |
+| 1000                       | 2                 | 0.000383                   | 0.00411                  | 0.001905                  |
+| 1000                       | 4                 | 0.000383                   | 0.000531                 | 0.000493                  |
+| 1000                       | 8                 | 0.000383                   | 0.007541                 | 0.000425                  |
+| 1000                       | 16                | 0.000383                   | 0.000808                 | 0.000354                  |
+| 1000                       | 24                | 0.000383                   | 0.001013                 | 0.000369                  |
+| 1000                       | 48                | 0.000383                   | 0.002234                 | 0.000368                  |
+| 10000                      | 1                 | 0.003015                   | 0.001617                 | 0.002020                  |
+| 10000                      | 2                 | 0.003015                   | 0.002415                 | 0.001964                  |
+| 10000                      | 4                 | 0.003015                   | 0.002049                 | 0.002111                  |
+| 10000                      | 8                 | 0.003015                   | 0.003257                 | 0.001249                  |
+| 10000                      | 16                | 0.003015                   | 0.003079                 | 0.003737                  |
+| 10000                      | 24                | 0.003015                   | 0.003156                 | 0.003423                  |
+| 10000                      | 48                | 0.003015                   | 0.005440                 | 0.002940                  |
+| 100000                     | 1                 | 0.018540                   | 0.018547                 | 0.199000                  |
+| 100000                     | 2                 | 0.018540                   | 0.021651                 | 0.015189                  |
+| 100000                     | 4                 | 0.018540                   | 0.016880                 | 0.008408                  |
+| 100000                     | 8                 | 0.018540                   | 0.018882                 | 0.016060                  |
+| 100000                     | 16                | 0.018540                   | 0.013631                 | 0.016771                  |
+| 100000                     | 24                | 0.018540                   | 0.016659                 | 0.022960                  |
+| 100000                     | 48                | 0.018540                   | 0.022700                 | 0.035204                  |
+| 1000000                    | 1                 | 0.219678                   | 0.219410                 | 0.236360                  |
+| 1000000                    | 2                 | 0.219678                   | 0.140376                 | 0.137846                  |
+| 1000000                    | 4                 | 0.219678                   | 0.1255587                | 0.103484                  |
+| 1000000                    | 8                 | 0.219678                   | 0.102441                 | 0.133948                  |
+| 1000000                    | 16                | 0.219678                   | 0.082464                 | 0.092748                  |
+| 1000000                    | 24                | 0.219678                   | 0.088869                 | 0.294837                  |
+| 1000000                    | 48                | 0.219678                   | 0.077861                 | 0.131344                  |
+| 10000000                   | 1                 | 2.568292                   | 2.564808                 | 2.768002                  |
+| 10000000                   | 2                 | 2.568292                   | 1.473908                 | 1.470160                  |
+| 10000000                   | 4                 | 2.568292                   | 1.177107                 | 1.085150                  |
+| 10000000                   | 8                 | 2.568292                   | 0.892717                 | 1.117797                  |
+| 10000000                   | 16                | 2.568292                   | 0.754185                 | 0.924634                  |
+| 10000000                   | 24                | 2.568292                   | 0.738589                 | 0.786672                  |
+| 10000000                   | 48                | 2.568292                   | 0.714466                 | 0.709331                  |
+
+</details>
 
 > **Note**  
 > The results are indicative and may vary depending on the machine.
@@ -45,7 +97,86 @@ The different algorithms used are described below.
 
 - [x] Merge Sort
 - [x] Parallel Merge Sort
+- [x] Parallel Merge Sort using OpenMP
+- [x] Parallel Merge Sort using PThread
 
+### Merge Sort
+
+```algorithm
+merge_sort(A, n, temp)
+    if n > 1
+        merge_sort(A, n/2, temp)
+        merge_sort(A + n/2, n - n/2, temp)
+        merge(A, n, temp)
+```
+
+```algorithm
+merge(A, n, temp)
+    i = 0
+    j = n/2
+    k = 0
+    while i < n/2 and j < n
+        if A[i] < A[j]
+            temp[k] = A[i]
+            i++
+        else
+            temp[k] = A[j]
+            j++
+        k++
+    while i < n/2
+        temp[k] = A[i]
+        i++
+        k++
+    while j < n
+        temp[k] = A[j]
+        j++
+        k++
+    for i = 0 to n
+        A[i] = temp[i]
+```
+
+### Parallel Merge Sort
+
+The parallel merge sort is a simple implementation of the merge sort algorithm, it uses the `fork` system call to create
+a new process for each recursive call.
+The `merge` function is the same as the one used in the sequential merge sort.
+The algorithm is written using `Cilk` syntax:
+
+```algorithm
+parallel_merge_sort(A, n, temp)
+    if n > 1
+        spawn parallel_merge_sort(A, n/2, temp)
+        parallel_merge_sort(A + n/2, n - n/2, temp)
+        sync
+        parallel_merge(A, n, temp)
+```
+
+```algorithm
+parallel_merge(A, n, temp)
+    i = 0
+    j = n/2
+    k = 0
+    while i < n/2 and j < n
+        if A[i] < A[j]
+            temp[k] = A[i]
+            i++
+        else
+            temp[k] = A[j]
+            j++
+        k++
+    while i < n/2
+        temp[k] = A[i]
+        i++
+        k++
+    while j < n
+        temp[k] = A[j]
+        j++
+        k++
+    for i = 0 to n
+        A[i] = temp[i]
+```
+
+<!--
 ### Merge Sort V1
 
 ```algorithm
@@ -83,6 +214,7 @@ Stein
 
 The parallel version of the algorithm is implemented using OpenMP and PThreads.
 Depending on the version the results are different.
+
 
 ### Merge Sort V2
 
@@ -141,6 +273,7 @@ Stein
 ### Parallel Merge Sort
 
 PLACEHOLDER
+-->
 
 ## How to use
 
@@ -172,7 +305,7 @@ For example :
 400
 ```
 
-All the executables work the same way, use pipes to redirect the file to the executable.
+All the executables work the same way, use pipes to redirect the input file to the executable.
 
 For example :
 

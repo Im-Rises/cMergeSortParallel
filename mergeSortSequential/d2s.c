@@ -110,33 +110,33 @@ void mergeSort(int* X, int n, int* tmp) {
 void merge(int* X, int n, int* tmp) {
     int i = 0;
     int j = n / 2;
-    int ti = 0;
+    int k = 0;
 
     while (i < n / 2 && j < n)
     {
         if (X[i] < X[j])
         {
-            tmp[ti] = X[i];
-            ti++;
+            tmp[k] = X[i];
+            k++;
             i++;
         }
         else
         {
-            tmp[ti] = X[j];
-            ti++;
+            tmp[k] = X[j];
+            k++;
             j++;
         }
     }
     while (i < n / 2)
-    { /* finish up lower half */
-        tmp[ti] = X[i];
-        ti++;
+    {
+        tmp[k] = X[i];
+        k++;
         i++;
     }
     while (j < n)
-    { /* finish up upper half */
-        tmp[ti] = X[j];
-        ti++;
+    {
+        tmp[k] = X[j];
+        k++;
         j++;
     }
     memcpy(X, tmp, n * sizeof(int));
