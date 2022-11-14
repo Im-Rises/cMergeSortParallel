@@ -19,10 +19,10 @@ the algorithm can be found [here](https://en.wikipedia.org/wiki/Merge_sort).
 
 ## Results
 
-| Array size | threads | Sequential | OpenMP    | Pthreads  |
-|------------|---------|------------|-----------|-----------|
-| 1 000 000  | 1       | 0.153550s  | 0.153550s | 0.153550s |
-| 1 000 000  | 4       | 0.153550s  | 0.079991s | 0.073561s |      
+| Number of int (Array size) | Number of threads | Sequential time (Work) (s) | Parallel OpenMP time (s) | Parallel Pthread time (s) |
+|----------------------------|-------------------|----------------------------|--------------------------|---------------------------|
+| 1000000                    | 1                 | 0.219678                   | 0.21941                  | 0.23636                   |
+|                            | 2                 |                            | 0.140376                 | 0.137846                  |  
 
 <details>
 <summary>Click here to get the details for an array of 10 to 10 000 000 ints.</summary>
