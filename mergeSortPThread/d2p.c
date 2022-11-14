@@ -16,7 +16,7 @@
 
 #define MULTITHREAD_THRESHOLD 1000
 
-typedef enum Boolean Boolean;
+/*typedef enum Boolean Boolean;*/
 enum Boolean {
     False = 0,
     True = 1
@@ -25,7 +25,7 @@ enum Boolean {
 typedef struct ThreadState ThreadState;
 struct ThreadState {
     pthread_t thread;
-    Boolean isUsed;
+    enum Boolean isUsed;
 };
 
 typedef struct MergeSortArgs MergeSortArgs;
@@ -181,7 +181,7 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
             exit(3);
         }
 
-        //* sort the other half of the array*/
+        /* sort the other half of the array*/
         mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber);
 
         /* wait for the thread to finish*/
