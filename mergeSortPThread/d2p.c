@@ -28,11 +28,13 @@ struct MergeSortArgs {
     int* A;
     int size;
     int* B;
+    ThreadState* threads;
+    int threadsNumber;
 };
 
 void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber);
 void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber);
-void* mergeSortThread(void* input);
+void* mergeSortParallelPthreadThread(void* input);
 void mergeSort(int* X, int n, int* tmp);
 void merge(int* X, int n, int* tmp);
 
@@ -165,16 +167,19 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
             args.A = A;
             args.size = arraySize / 2;
             args.B = B;
+            args.threads = threads;
+            args.threadsNumber = threadsNumber;
 
             /*             create thread*/
-            if (pthread_create(&threads[i].thread, NULL, mergeSortThread, &args) != 0)
+            if (pthread_create(&threads[i].thread, NULL, mergeSortParallelPthreadThread, &args) != 0)
             {
                 fprintf(stderr, "Error creating thread");
                 exit(3);
             }
 
             /*             sort the other half of the array*/
-            mergeSort(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2);
+            /*mergeSort(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2);*/
+            mergeSortParallelPthread(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber);
 
             /*             wait for the thread to finish*/
             pthread_join(threads[i].thread, NULL);
@@ -189,10 +194,12 @@ void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* thre
 
     /*     if no thread is available do monothread merge sort*/
     mergeSort(A, arraySize, B);
+    //
+    //    mergeSortParallelPthread(A, arraySize, B, threads, threadsNumber);
 }
 
-void* mergeSortThread(void* input) {
-    mergeSort((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).size, (*(MergeSortArgs*)input).B);
+void* mergeSortParallelPthreadThread(void* input) {
+    mergeSortParallelPthread((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).size, (*(MergeSortArgs*)input).B, (*(MergeSortArgs*)input).threads, (*(MergeSortArgs*)input).threadsNumber);
     pthread_exit(NULL);
 }
 
