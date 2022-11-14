@@ -41,10 +41,9 @@ struct MergeSortArgs {
 void mergeSortParallel(int A[], int arraySize, int B[], int threadsNumber);
 void mergeSortParallelPthread(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
 void* mergeSortParallelPthreadThread(void* input);
+int checkThreadsAvailable(ThreadState* threads, int threadsNumber);
 void mergeSort(int* X, int n, int* tmp);
 void merge(int* X, int n, int* tmp);
-
-int checkThreadsAvailable(ThreadState* threads, int threadsNumber);
 
 void* allocateMemory(size_t size);
 void printArraySummary(int* array, int arraySize);
