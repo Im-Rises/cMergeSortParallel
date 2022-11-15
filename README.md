@@ -422,9 +422,9 @@ ParticleEngine
 
 ## Dependencies
 
-- C11
+- C90
 - CMake or Make
-- C11 compiler (MSVC, Mingw, ...)
+- C90 compiler (MSVC, Mingw, ...)
 
 ## Compilation
 

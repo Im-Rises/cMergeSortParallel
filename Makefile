@@ -1,6 +1,6 @@
 all:
 	$(MAKE) LinuxVer
-#	$(MAKE) WindowsVer
+	$(MAKE) WindowsVer
 
 LinuxVer:
 	$(MAKE) MrProperLinux
@@ -24,25 +24,25 @@ PThreadVerLinux:
 
 MrProperLinux : clean
 	rm -f buildMakeFile/fileGenerator
-	#rm -f buildMakeFile/mergeSortOpenMp
+	rm -f buildMakeFile/mergeSortOpenMp
 	rm -f buildMakeFile/mergeSortPThread
 	rm -f buildMakeFile/mergeSortSequential
 
-#WindowsVer:
-#	$(MAKE) MrProperWin
-#	$(MAKE) fileGenWin
-#	$(MAKE) sequentialVerWin
-#	$(MAKE) OpenMpVerWin
-#	$(MAKE) clean
-#
-#fileGenWin:
-#	x86_64-w64-mingw32-gcc ./fileGenerator/fileGenerator.c -o buildMakeFile/fileGenerator.exe -std=c90 -Wall -O2
-#
-#sequentialVerWin:
-#	x86_64-w64-mingw32-gcc ./mergeSortSequential/d2s.c -o buildMakeFile/mergeSortSequential.exe -std=c90 -Wall -O2
-#
-#OpenMpVerWin:
-#	x86_64-w64-mingw32-gcc ./mergeSortOpenMp/d2omp.c -o buildMakeFile/mergeSortOpenMp.exe -fopenmp=libomp5 -std=c90 -Wall -O2
+WindowsVer:
+	$(MAKE) MrProperWin
+	$(MAKE) fileGenWin
+	$(MAKE) sequentialVerWin
+	$(MAKE) OpenMpVerWin
+	$(MAKE) clean
+
+fileGenWin:
+	x86_64-w64-mingw32-gcc ./fileGenerator/fileGenerator.c -o buildMakeFile/fileGenerator.exe -std=c90 -Wall -O2
+
+sequentialVerWin:
+	x86_64-w64-mingw32-gcc ./mergeSortSequential/d2s.c -o buildMakeFile/mergeSortSequential.exe -std=c90 -Wall -O2
+
+OpenMpVerWin:
+	x86_64-w64-mingw32-gcc ./mergeSortOpenMp/d2omp.c -o buildMakeFile/mergeSortOpenMp.exe -fopenmp=libomp5 -std=c90 -Wall -O2
 
 clean :
 	rm -rf *.o
