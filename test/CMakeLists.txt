@@ -16,7 +16,7 @@ add_test(${Test_Name} ${Test_Name})
 set(HDRS_MERGE_SORT_OPENMP "../mergeSortOpenMp/mergeSortParallelOpenMp.h")
 set(SRCS_MERGE_SORT_OPENMP "../mergeSortOpenMp/mergeSortParallelOpenMp.c")
 
-set(Test_File "mergeSortOpenMpTest.c")
+set(Test_File "mergeSortParallelOpenMpTest.c")
 get_filename_component(Test_Name ${Test_File} NAME_WE)
 add_executable(${Test_Name} ${Test_File} ${HDRS_MERGE_SORT_OPENMP} ${SRCS_MERGE_SORT_OPENMP} ${HDRS_COMMON_FUNCTIONS} ${SRCS_COMMON_FUNCTIONS} ${HDRS_MERGE_SORT} ${SRCS_MERGE_SORT})
 add_test(${Test_Name} ${Test_Name})
@@ -24,22 +24,22 @@ add_test(${Test_Name} ${Test_Name})
 if (UNIX)
     find_package(OpenMP REQUIRED)
     target_link_libraries(${Test_Name} PUBLIC OpenMP::OpenMP_C)
-endif()
+endif ()
 
 
 # Merge sort PThread
-if(UNIX)
+if (UNIX)
     set(HDRS_MERGE_SORT_PTHREAD "../mergeSortPThread/mergeSortParallelPThread.h")
     set(SRCS_MERGE_SORT_PTHREAD "../mergeSortPThread/mergeSortParallelPThread.c")
 
-    set(Test_File "mergeSortPThreadTest.c")
+    set(Test_File "mergeSortParallelPThreadTest.c")
     get_filename_component(Test_Name ${Test_File} NAME_WE)
     add_executable(${Test_Name} ${Test_File} ${HDRS_MERGE_SORT_PTHREAD} ${SRCS_MERGE_SORT_PTHREAD} ${HDRS_COMMON_FUNCTIONS} ${SRCS_COMMON_FUNCTIONS} ${HDRS_MERGE_SORT} ${SRCS_MERGE_SORT})
     add_test(${Test_Name} ${Test_Name})
-    
+
     find_package(Threads REQUIRED)
     target_link_libraries(${Test_Name} PRIVATE Threads::Threads)
-endif()
+endif ()
 
 
 # Old CMake
