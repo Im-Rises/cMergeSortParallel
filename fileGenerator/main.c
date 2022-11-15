@@ -3,6 +3,8 @@
 #include <time.h>
 #include <limits.h>
 
+#include "../commonFunctions/commonFunctions.h"
+
 int main(int argc, char* argv[]) {
     /*
      * Error list:
@@ -17,11 +19,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    srand(time(NULL));
-
+    /* Init input variables */
     char* fileName = argv[2];
     int size = atoi(argv[1]);
 
+    /* Set random seed*/
+    srand(time(NULL));
+
+
+    /* Open file*/
     FILE* file = fopen(fileName, "w");
     if (file == NULL)
     {
@@ -29,24 +35,16 @@ int main(int argc, char* argv[]) {
         return 2;
     }
 
-    /*Method 1*/
+    /* Create random value and write them in the output file*/
     fprintf(file, "%d\n", size);
     int minNumber = 0;
+    int maxNumber = INT_MAX;
     int i;
     for (i = 0; i < size; i++)
     {
-        int random = rand() % (INT_MAX + 1 - minNumber) + minNumber;
+        int random = rand() % (maxNumber - minNumber + 1) + minNumber;
         fprintf(file, "%d\n", random);
     }
-
-    /*Method 2*/
-    /*    int* arrayBuffer = malloc(size * sizeof(int));
-        for (i = 0; i < size; i++)
-        {
-            int random = rand() % (INT_MAX + 1 - minNumber) + minNumber;
-            arrayBuffer[i] = random;
-        }
-        fwrite(arrayBuffer, sizeof(int), size, file);*/
 
     fclose(file);
 

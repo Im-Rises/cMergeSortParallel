@@ -509,6 +509,7 @@ sudo apt-get install gcc
 sudo apt-get install make
 ```
 
+<!--
 You also need to install the mingw compiler to compile the Windows version under linux:
 
 ```bash
@@ -520,6 +521,7 @@ You also need the LLVM OpenMP lib. Type the following command at the project roo
 ```shell
 sudo apt-get install libomp-12-dev
 ```
+-->
 
 #### Compilation
 
@@ -537,11 +539,14 @@ to compile the project for Linux only.
 make LinuxVer
 ```
 
+<!--
+
 and to compile the project for Windows only.
 
 ```bash
 make WindowsVer
 ```
+-->
 
 ##### Compile only one script
 
@@ -558,11 +563,15 @@ The Linux scripts names are:
 - `OpenMpVerLinux`
 - `PThreadVerLinux`
 
+<!--
+
 The Windows ones are:
 
 - `fileGenWin`
 - `sequentialVerWin`
 - `OpenMpVerWin`
+
+-->
 
 The executables will be created in the `BuildMakeFile` folder.
 

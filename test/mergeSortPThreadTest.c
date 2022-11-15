@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../CommonFunctions/sortFunctions.h"
+#include "../CommonFunctions/commonFunctions.h"
 
 int main() {
 

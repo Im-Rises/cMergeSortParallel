@@ -1,5 +1,11 @@
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+set(SRCS mergeSortParallelPThread.c)
+set(HDRS mergeSortParallelPThread.h)
+
+add_executable(${PROJECT_NAME} main.c ${SRCS} ${HDRS})
+
+
 if (UNIX)
     add_executable(${PROJECT_NAME} "d2p.c")
     find_package(Threads REQUIRED)

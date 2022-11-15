@@ -1,6 +1,11 @@
 ## NEW CMAKE
 ## (https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html)
-add_executable(${PROJECT_NAME} "d2omp.c")
+
+set(SRCS mergeSortParallelOpenMp.c)
+set(HDRS mergeSortParallelOpenMp.h)
+
+add_executable(${PROJECT_NAME} main.c ${SRCS} ${HDRS})
+
 
 find_package(Threads REQUIRED)
 add_library(OpenMP::OpenMP_C IMPORTED INTERFACE)
