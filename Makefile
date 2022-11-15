@@ -11,7 +11,7 @@ LinuxVer:
 	$(MAKE) clean
 
 fileGenLinux:
-	gcc ./fileGenerator/fileGenerator.c -o buildMakeFile/fileGenerator -std=c90 -Wall -O2
+	gcc ./fileGenerator/main.c -o buildMakeFile/fileGenerator -std=c90 -Wall -O2
 
 sequentialVerLinux:
 	gcc ./mergeSortSequential/d2s.c -o buildMakeFile/mergeSortSequential -fopenmp -std=c90 -Wall -O2
