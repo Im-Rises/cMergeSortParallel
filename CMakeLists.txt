@@ -15,7 +15,7 @@ add_subdirectory(${PROJECT_NAME})
 
 project("mergeSortPThread")
 add_subdirectory(${PROJECT_NAME})
-#[[
+
 enable_testing()
 add_subdirectory("test")
-]]
+

@@ -43,12 +43,12 @@ MrProperLinux : clean
 #
 #OpenMpVerWin:
 #	x86_64-w64-mingw32-gcc ./mergeSortOpenMp/d2omp.c -o buildMakeFile/mergeSortOpenMp.exe -fopenmp=libomp5 -std=c90 -Wall -O2
-#
-#clean :
-#	rm -rf *.o
-#
-#MrProperWin : clean
-#	rm -f buildMakeFile/fileGenerator.exe
-#	rm -f buildMakeFile/mergeSortOpenMp.exe
-#	rm -f buildMakeFile/mergeSortPThread.exe
-#	rm -f buildMakeFile/mergeSortSequential.exe
+
+clean :
+	rm -rf *.o
+
+MrProperWin : clean
+	rm -f buildMakeFile/fileGenerator.exe
+	rm -f buildMakeFile/mergeSortOpenMp.exe
+	rm -f buildMakeFile/mergeSortPThread.exe
+	rm -f buildMakeFile/mergeSortSequential.exe
