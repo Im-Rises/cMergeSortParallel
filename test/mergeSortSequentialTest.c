@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <limits.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <time.h>
 
 #include "../commonFunctions/commonFunctions.h"
@@ -20,9 +20,9 @@ int main() {
     int errorCode = isSorted(A, n);
 
     if (errorCode == 0)
-        printf("- mergeSortSequential ok!\\n");
+        printf("- mergeSortSequential ok!\n");
     else
-        printf("- mergeSortSequential fail!\\n");
+        printf("- mergeSortSequential fail!\n");
 
     free(A);
     free(tmp);

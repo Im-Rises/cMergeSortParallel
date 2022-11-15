@@ -3,6 +3,6 @@
 
 void mergeSort(int* X, int n, int* tmp);
 
-static void merge(int* X, int n, int* tmp);
+void merge(int* X, int n, int* tmp);
 
 #endif

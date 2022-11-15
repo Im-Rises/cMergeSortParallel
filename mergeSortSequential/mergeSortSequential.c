@@ -10,7 +10,7 @@ void mergeSort(int* X, int n, int* tmp) {
     merge(X, n, tmp);
 }
 
-static void merge(int* X, int n, int* tmp) {
+void merge(int* X, int n, int* tmp) {
     int i = 0;
     int j = n / 2;
     int k = 0;

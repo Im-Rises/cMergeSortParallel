@@ -1,10 +1,14 @@
-#ifndef MERGE_SORT_PARALLEL_OPENMP_H
-#define MERGE_SORT_PARALLEL_OPENMP_H
+#include "mergeSortParallelOpenMp.h"
+
+#include <omp.h>
+#include <stdio.h>
 
 #include "../commonFunctions/commonFunctions.h"
 #include "../mergeSortSequential/mergeSortSequential.h"
+#include "../mergeSortSequential/mergeSortSequential.h"
 
-void mergeSortParallelOpenMp(int a[], int size, int temp[], int threadsNumber);
+
+void mergeSortParallelOpenMp(int a[], int size, int temp[], int threadsNumber)
 {
     /* Handle and print the number of threads */
     omp_set_num_threads(threadsNumber);
@@ -23,13 +27,10 @@ static void mergeSortParallel(int a[], int size, int temp[]) {
         return;
     }
 #pragma omp task
-    mergeSortParallelOmp(a, size / 2, temp);
+    mergeSortParallel(a, size / 2, temp);
 
-    mergeSortParallelOmp(a + size / 2, size - size / 2, temp + size / 2);
+    mergeSortParallel(a + size / 2, size - size / 2, temp + size / 2);
 
 #pragma omp taskwait
     merge(a, size, temp);
 }
-
-
-#endif // MERGE_SORT_PARALLEL_OPENMP_H

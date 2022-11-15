@@ -6,7 +6,6 @@ set(HDRS mergeSortParallelOpenMp.h)
 
 add_executable(${PROJECT_NAME} main.c ${SRCS} ${HDRS})
 
-
 find_package(Threads REQUIRED)
 add_library(OpenMP::OpenMP_C IMPORTED INTERFACE)
 set_property(TARGET OpenMP::OpenMP_C

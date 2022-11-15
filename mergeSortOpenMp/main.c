@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     copyStreamToIntArray(inputArray, arraySize);
 
     /* Sort array */
-    mergeSortParallelOpenMp(inputArray, arraySize, outputArray);
+    mergeSortParallelOpenMp(inputArray, arraySize, outputArray, threadsNumber);
 
     /* Print array is sorted */
     printf("Is array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");

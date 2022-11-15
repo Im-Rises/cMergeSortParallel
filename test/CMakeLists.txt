@@ -1,23 +1,15 @@
-#project("MergeSortSequentialTest")
-#
-#add_executable(${PROJECT_NAME} mergeSortSequentialTest.c ../mergeSortSequential/mergeSortSequential.h ../mergeSortSequential/mergeSortSequential.c)
-#add_test(${PROJECT_NAME} ${PROJECT_NAME})
-
-#add_executable(mergeSortOpenMPTest.c ${test} ${HEADERS} ${SRCS})
-#add_test(${testName} ${testName})
-#
-#add_executable(mergeSortPThreadTest.c ${test} ${HEADERS} ${SRCS})
-#add_test(${testName} ${testName})
-
-set(SRCS_TEST "mergeSortSequentialTest.c")
-
-#set(SRCS_TEST mergeSortSequentialTest.c mergeSortOpenMPTest.c mergeSortPThreadTest.c)
+if (WIN32)
+    set(SRCS_TEST "mergeSortSequentialTest.c" "mergeSortOpenMPTest.c")
+    set(HEADERS "../mergeSortSequential/mergeSortSequential.h" "../mergeSortOpenMp/mergeSortParallelOpenMp.h")
+    set(SRCS "../mergeSortSequential/mergeSortSequential.c" "../mergeSortOpenMp/mergeSortParallelOpenMp.c")
+elseif (UNIX)
+    set(SRCS_TEST mergeSortSequentialTest.c mergeSortOpenMPTest.c mergeSortPThreadTest.c)
+    set(HEADERS "../mergeSortSequential/mergeSortSequential.h" "../mergeSortOpenMp/mergeSortParallelOpenMp.h" "../mergeSortPThread/mergeSortPThread.h")
+    set(SRCS "../mergeSortSequential/mergeSortSequential.c" "../mergeSortOpenMp/mergeSortParallelOpenMp.c" "../mergeSortPThread/mergeSortPThread.c")
+endif ()
 
 set(COMMON_FUNCTIONS_HEADERS ../commonFunctions/commonFunctions.h)
 set(COMMON_FUNCTIONS_SRCS ../commonFunctions/commonFunctions.c)
-
-set(HEADERS "../mergeSortSequential/mergeSortSequential.h") #"../mergeSortOpenMp/mergeSortOpenMP.h" "../mergeSortPThread/mergeSortPThread.h")
-set(SRCS    "../mergeSortSequential/mergeSortSequential.c") #"../mergeSortOpenMp/mergeSortOpenMP.c" "../mergeSortPThread/mergeSortPThread.c")
 
 enable_testing()
 
