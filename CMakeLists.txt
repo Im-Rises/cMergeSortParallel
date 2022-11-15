@@ -7,14 +7,15 @@ set(CMAKE_C_EXTENSIONS OFF)
 project("fileGenerator")
 add_subdirectory(${PROJECT_NAME})
 
-project("mergeSortPThread")
-add_subdirectory(${PROJECT_NAME})
-
-project("mergeSortOpenMP")
-add_subdirectory(${PROJECT_NAME})
-
 project("mergeSortSequential")
+add_subdirectory(${PROJECT_NAME})
+
+project("mergeSortOpenMp")
+add_subdirectory(${PROJECT_NAME})
+
+project("mergeSortPThread")
 add_subdirectory(${PROJECT_NAME})
 
 enable_testing()
 add_subdirectory("test")
+

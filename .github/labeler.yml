@@ -1,20 +1,35 @@
 repo:
   - '*'
 
-CMakeLists:
-  - 'ParticleEngine/CMakeLists.txt'
-
 readme:
   - 'README.md'
 
 github-actions:
   - '.github/**/*.yml'
 
-src:
-  - '*/**/*.{cpp,hpp}'
-
-main:
-  - '*/main.*'
+CMakeLists:
+  - 'CMakeLists.txt'
+  - 'mergeSortSequential/CMakeLists.txt'
+  - 'mergeSortParallelOpenMp/CMakeLists.txt'
+  - 'mergeSortParallelPThread/CMakeLists.txt'
 
 test:
   - 'test/**/*.{cpp,hpp}'
+
+mergeSortSequential:
+  - 'mergeSortSequential/mergeSortSequential.*'
+  - 'mergeSortSequential/main.c'
+
+mergeSortParallelPThread:
+  - 'mergeSortParallelPThread/mergeSortParallelPThread.*'
+  - 'mergeSortParallelPThread/main.c'
+
+mergeSortParallelOpenMp:
+  - 'mergeSortParallelOpenMp/mergeSortParallelOpenMp.*'
+  - 'mergeSortParallelOpenMp/main.c'
+
+fileGenerator:
+  - 'fileGenerator/main.c'
+
+commonFunctions:
+  - 'commonFunctions/**/*.{c,h}'

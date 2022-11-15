@@ -8,26 +8,78 @@
 
 ## Description
 
-Merge Sort algorithm implemented in C available in thre versions:
+Merge Sort algorithm implemented in C available in three versions:
 
 - Sequential
 - Parallel with OpenMP
 - Parallel with Pthreads (Linux only)
 
+Merge sort is a divide and conquer algorithm that was invented by John von Neumann in 1945. A detailed description of
+the algorithm can be found [here](https://en.wikipedia.org/wiki/Merge_sort).
+
 ## Results
 
-| Array size | threads | Sequential | OpenMP    | Pthreads  |
-|------------|---------|------------|-----------|-----------|
-| 1 000 000  | 1       | 0.153550s  | 0.153550s | 0.153550s |
-| 1 000 000  | 4       | 0.153550s  | 0.079991s | 0.073561s |      
+| Number of int (Array size) | Number of threads | Sequential time (Work) (s) | Parallel OpenMP time (s) | Parallel Pthread time (s) |
+|----------------------------|-------------------|----------------------------|--------------------------|---------------------------|
+| 1000000                    | 1                 | 0.219678                   | 0.21941                  | 0.23636                   |
+|                            | 2                 |                            | 0.140376                 | 0.137846                  |  
 
-<!--
-Results for 1 000 000 integers:
+<details>
+<summary>Click here to get the details for an array of 10 to 10 000 000 ints.</summary>
 
-- Sequential: 0.153550 seconds
-- OpenMP Parallel: 0.079991 seconds
-- PThread Parallel: 0.073561 seconds
--->
+| Number of int (Array size) | Number of threads | Sequential time (Work) (s) | Parallel OpenMP time (s) | Parallel Pthread time (s) |
+|----------------------------|-------------------|----------------------------|--------------------------|---------------------------|
+| 10                         | 1                 | 0.000023                   | 0.000079                 | 0.000012                  |
+|                            | 2                 |                            | 0.000216                 | 0.000011                  |
+|                            | 4                 |                            | 0.000439                 | 0.000011                  |
+|                            | 8                 |                            | 0.007493                 | 0.000011                  |
+|                            | 16                |                            | 0.000752                 | 0.000012                  |
+|                            | 24                |                            | 0.000861                 | 0.000012                  |
+|                            | 48                |                            | 0.00178                  | 0.000012                  |
+| 100                        | 1                 | 0.000034                   | 0.000039                 | 0.000025                  |
+|                            | 2                 |                            | 0.000228                 | 0.000025                  |
+|                            | 4                 |                            | 0.000211                 | 0.000032                  |
+|                            | 8                 |                            | 0.005617                 | 0.000025                  |
+|                            | 16                |                            | 0.000866                 | 0.000025                  |
+|                            | 24                |                            | 0.001311                 | 0.000025                  |
+|                            | 48                |                            | 0.002728                 | 0.000026                  |
+| 1000                       | 1                 | 0.000383                   | 0.000387                 | 0.000159                  |
+|                            | 2                 |                            | 0.00411                  | 0.001905                  |
+|                            | 4                 |                            | 0.000531                 | 0.000493                  |
+|                            | 8                 |                            | 0.007541                 | 0.000425                  |
+|                            | 16                |                            | 0.000808                 | 0.000354                  |
+|                            | 24                |                            | 0.001013                 | 0.000369                  |
+|                            | 48                |                            | 0.002234                 | 0.000368                  |
+| 10000                      | 1                 | 0.003015                   | 0.001617                 | 0.00202                   |
+|                            | 2                 |                            | 0.002415                 | 0.001964                  |
+|                            | 4                 |                            | 0.002049                 | 0.002111                  |
+|                            | 8                 |                            | 0.003257                 | 0.001249                  |
+|                            | 16                |                            | 0.003079                 | 0.003737                  |
+|                            | 24                |                            | 0.003156                 | 0.003423                  |
+|                            | 48                |                            | 0.00544                  | 0.00294                   |
+| 100000                     | 1                 | 0.01854                    | 0.018547                 | 0.199                     |
+|                            | 2                 |                            | 0.021651                 | 0.015189                  |
+|                            | 4                 |                            | 0.01688                  | 0.008408                  |
+|                            | 8                 |                            | 0.018882                 | 0.01606                   |
+|                            | 16                |                            | 0.013631                 | 0.016771                  |
+|                            | 24                |                            | 0.016659                 | 0.02296                   |
+|                            | 48                |                            | 0.0227                   | 0.035204                  |
+| 1000000                    | 1                 | 0.219678                   | 0.21941                  | 0.23636                   |
+|                            | 2                 |                            | 0.140376                 | 0.137846                  |
+|                            | 4                 |                            | 0.1255587                | 0.103484                  |
+|                            | 8                 |                            | 0.102441                 | 0.133948                  |
+|                            | 16                |                            | 0.082464                 | 0.092748                  |
+|                            | 24                |                            | 0.088869                 | 0.294837                  |
+|                            | 48                |                            | 0.077861                 | 0.131344                  |
+| 10000000                   | 1                 | 2.568292                   | 2.564808                 | 2.768002                  |
+|                            | 2                 |                            | 1.473908                 | 1.47016                   |
+|                            | 4                 |                            | 1.177107                 | 1.08515                   |
+|                            | 8                 |                            | 0.892717                 | 1.117797                  |
+|                            | 16                |                            | 0.754185                 | 0.924634                  |
+|                            | 24                |                            | 0.738589                 | 0.786672                  |
+|                            | 48                |                            | 0.714466                 | 0.709331                  |
+
+</details>
 
 > **Note**  
 > The results are indicative and may vary depending on the machine.
@@ -45,8 +97,87 @@ The different algorithms used are described below.
 
 - [x] Merge Sort
 - [x] Parallel Merge Sort
+- [x] Parallel Merge Sort using OpenMP
+- [x] Parallel Merge Sort using PThread
 
 ### Merge Sort
+
+```algorithm
+merge_sort(A, n, temp)
+    if n > 1
+        merge_sort(A, n/2, temp)
+        merge_sort(A + n/2, n - n/2, temp)
+        merge(A, n, temp)
+```
+
+```algorithm
+merge(A, n, temp)
+    i = 0
+    j = n/2
+    k = 0
+    while i < n/2 and j < n
+        if A[i] < A[j]
+            temp[k] = A[i]
+            i++
+        else
+            temp[k] = A[j]
+            j++
+        k++
+    while i < n/2
+        temp[k] = A[i]
+        i++
+        k++
+    while j < n
+        temp[k] = A[j]
+        j++
+        k++
+    for i = 0 to n
+        A[i] = temp[i]
+```
+
+### Parallel Merge Sort
+
+The parallel merge sort is a simple implementation of the merge sort algorithm, it uses the `fork` system call to create
+a new process for each recursive call.
+The `merge` function is the same as the one used in the sequential merge sort.
+The algorithm is written using `Cilk` syntax:
+
+```algorithm
+parallel_merge_sort(A, n, temp)
+    if n > 1
+        spawn parallel_merge_sort(A, n/2, temp)
+        parallel_merge_sort(A + n/2, n - n/2, temp)
+        sync
+        parallel_merge(A, n, temp)
+```
+
+```algorithm
+parallel_merge(A, n, temp)
+    i = 0
+    j = n/2
+    k = 0
+    while i < n/2 and j < n
+        if A[i] < A[j]
+            temp[k] = A[i]
+            i++
+        else
+            temp[k] = A[j]
+            j++
+        k++
+    while i < n/2
+        temp[k] = A[i]
+        i++
+        k++
+    while j < n
+        temp[k] = A[j]
+        j++
+        k++
+    for i = 0 to n
+        A[i] = temp[i]
+```
+
+<!--
+### Merge Sort V1
 
 ```algorithm
 mergeSort(A,p,r)
@@ -84,17 +215,17 @@ Stein
 The parallel version of the algorithm is implemented using OpenMP and PThreads.
 Depending on the version the results are different.
 
-<!--
-### Parallel Merge Sort
 
-The parallel algorithm is written using `Cilk` algorithm syntax. 
+### Merge Sort V2
+
+The parallel algorithm is written using `Cilk` algorithm syntax.
 
 ```algorithm
 parallelMergeSort(A,p,r)
     n = r-p+1
     if n == 1
         B[s] = A[p]
-    else let T[1..n] be a new array
+    else let T[1...n] be a new array
         q = (p+r)/2
         q2 = q-p+1
         spawn parallelMergeSort(A,p,q,T,1)
@@ -136,7 +267,12 @@ binarySearch(x,T,p,r)
     return high
 ```
 
-Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
+Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford
+Stein
+
+### Parallel Merge Sort
+
+PLACEHOLDER
 -->
 
 ## How to use
@@ -169,7 +305,7 @@ For example :
 400
 ```
 
-All the executables work the same way, use pipes to redirect the file to the executable.
+All the executables work the same way, use pipes to redirect the input file to the executable.
 
 For example :
 
@@ -286,9 +422,9 @@ ParticleEngine
 
 ## Dependencies
 
-- C11
+- C90
 - CMake or Make
-- C11 compiler (MSVC, Mingw, ...)
+- C90 compiler (MSVC, Mingw, ...)
 
 ## Compilation
 
@@ -297,15 +433,25 @@ To compile the app, the first thing you need to do is install a C++ compiler:
 - Visual Studio (MSVC)
 - Mingw
 - GCC
+- Cmake
+- Make
 - ...
 
-You also need to install Cmake:  
+### Compilation with CMake
+
+First download CMake:  
 <https://cmake.org>
+
+Or install it with your package manager under Linux:
+
+```bash
+sudo apt install cmake
+```
 
 Once your environment is set up, depending on your operating system you'll need to install some libs before compiling
 the project. Refer to the section below `Windows` or `Linux`;
 
-### Windows
+#### Windows
 
 Windows users can directly compile the project by typing the following command at the project root folder:
 
@@ -317,7 +463,7 @@ cmake .
 > If you're using Visual Studio, you can install CMake directly from the IDE (Visual Studio Installer).
 > Then you need to open the Project as a CMake Project, not a Visual Studio Project!
 
-### Linux
+#### Linux
 
 Linux's users need to install some libs before compiling the project:
 
@@ -345,33 +491,89 @@ You are now able to compile the project. Go to the project root and type the fol
 cmake .
 ```
 
+### Compile with Make
+
 You can also use the Makefile to compile the project. Type the following command at the project root:
 
-First you need to install `make`:
+#### Setup
+
+First you need to install `make` and `gcc` for linux users:
+
+For linux:
+
+```shell
+sudo apt-get install gcc
+```
 
 ```bash
 sudo apt-get install make
 ```
 
-Then you can compile the project:
+<!--
+You also need to install the mingw compiler to compile the Windows version under linux:
+
+```bash
+sudo apt-get install mingw-w64
+```
+
+You also need the LLVM OpenMP lib. Type the following command at the project root.
+
+```shell
+sudo apt-get install libomp-12-dev
+```
+-->
+
+#### Compilation
+
+##### Compile all the versions
+
+You can compile the project for Linux and Windows:
 
 ```bash
 make
 ```
 
-or if you want to compile only one of the scripts type:
+to compile the project for Linux only.
+
+```bash
+make LinuxVer
+```
+
+<!--
+
+and to compile the project for Windows only.
+
+```bash
+make WindowsVer
+```
+-->
+
+##### Compile only one script
+
+To compile only one of the scripts type:
 
 ```bash
 make <script_name>
 ```
 
-The scripts names are:
+The Linux scripts names are:
 
-- `sequentialVer`
-- `OpenMpVer`
-- `PThreadVer`
+- `fileGenLinux`
+- `sequentialVerLinux`
+- `OpenMpVerLinux`
+- `PThreadVerLinux`
 
-The executable will be created in the `BuildMakeFile` folder.
+<!--
+
+The Windows ones are:
+
+- `fileGenWin`
+- `sequentialVerWin`
+- `OpenMpVerWin`
+
+-->
+
+The executables will be created in the `BuildMakeFile` folder.
 
 ## GitHub Actions
 
@@ -403,7 +605,11 @@ OpenMp CMake:
 <https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html>
 
 StackOverflow:  
-<https://stackoverflow.com/questions/52767944/merge-sort-with-pthreads-in-c>
+<https://stackoverflow.com/questions/52767944/merge-sort-with-pthreads-in-c>  
+<https://stackoverflow.com/questions/67131148/how-to-do-merge-sort-without-using-additional-arrays-for-splitting-the-initial-a>
+
+cliutils:  
+<https://cliutils.gitlab.io/modern-cmake/chapters/packages/OpenMP.html>
 
 ## Contributors
 
