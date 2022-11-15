@@ -7,6 +7,25 @@
 #include "../mergeSortPThread/mergeSortParallelPThread.h"
 
 int main() {
+    int threadsNumber = 4;
+    int n = 1000000;
+    int* A = allocateMemory(n*sizeof(int));
+    int* tmp = allocateMemory(n*sizeof(int));
 
-    return 0;
+    srand(time(NULL));
+
+    randomizeIntArray(A, n, 0, INT_MAX);
+
+    mergeSortParallelPThread(A, n, tmp, threadsNumber);
+
+    int errorCode = isSorted(A, n);
+
+    if (errorCode == 0)
+        printf("- mergeSortParallelOpenMp ok!\n");
+    else
+        printf("- mergeSortParallelOpenMp fail!\n");
+
+    free(A);
+    free(tmp);
+    return errorCode;
 }
