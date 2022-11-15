@@ -14,6 +14,10 @@ int isSorted(const int* array, int arraySize);
 
 void copyStreamToIntArray(int* array, int arraySize);
 
+void randomizeIntArray(int* array, int arraySize, int minNumber, int maxNumber);
+
+int randomInt(int minNumber, int maxNumber);
+
 #endif
 
 //
@@ -55,3 +59,8 @@ void copyStreamToIntArray(int* array, int arraySize);
 //}
 //
 //#endif
+
+
+
+
+

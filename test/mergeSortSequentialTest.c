@@ -1,20 +1,30 @@
 #include <stdio.h>
-#include "../CommonFunctions/commonFunctions.h"
+#include <limits.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include "../commonFunctions/commonFunctions.h"
+#include "../mergeSortSequential/mergeSortSequential.h"
 
 int main() {
+    int n = 1000000;
+    int* A = allocateMemory(n*sizeof(int));
+    int* tmp = allocateMemory(n*sizeof(int));
 
+    srand(time(NULL));
 
-    return 0;
-}
+    randomizeIntArray(A, n, 0, INT_MAX);
 
-void randomizeIntArray(int* array, int arraySize, int minNumber, int maxNumber) {
-    int i;
-    for (i = 0; i < arraySize; i++)
-    {
-        array[i] = randomInt(minNumber, maxNumber);
-    }
-}
+    mergeSort(A, n, tmp);
 
-void randomInt(int minNumber, int maxNumber) {
-    return rand() % (maxNumber - minNumber + 1) + minNumber;
+    int errorCode = isSorted(A, n);
+
+    if (errorCode == 0)
+        printf("- mergeSortSequential ok!\\n");
+    else
+        printf("- mergeSortSequential fail!\\n");
+
+    free(A);
+    free(tmp);
+    return errorCode;
 }

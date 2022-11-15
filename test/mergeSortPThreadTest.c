@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../CommonFunctions/commonFunctions.h"
+#include "../commonFunctions/commonFunctions.h"
 
 int main() {
 
