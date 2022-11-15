@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <pthread.h>
 
 #include "../mergeSortSequential/mergeSortSequential.h"
 
@@ -90,6 +88,6 @@ static int checkThreadIsAvailable(ThreadState* threads, int threadsNumber) {
 }
 
 static void* mergeSortParallelThread(void* input) {
-    mergeSortParallelPthread((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).size, (*(MergeSortArgs*)input).B, (*(MergeSortArgs*)input).threads, (*(MergeSortArgs*)input).threadsNumber, (*(MergeSortArgs*)input).myMutex);
+    mergeSortParallel((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).size, (*(MergeSortArgs*)input).B, (*(MergeSortArgs*)input).threads, (*(MergeSortArgs*)input).threadsNumber, (*(MergeSortArgs*)input).myMutex);
     pthread_exit(NULL);
 }

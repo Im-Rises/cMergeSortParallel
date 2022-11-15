@@ -3,6 +3,8 @@
 
 #define MULTITHREAD_THRESHOLD 1000
 
+#include <pthread.h>
+
 /*typedef enum Boolean Boolean;*/
 enum Boolean {
     False = 0,

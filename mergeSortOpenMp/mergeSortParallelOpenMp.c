@@ -1,10 +1,8 @@
 #include "mergeSortParallelOpenMp.h"
 
-#include <omp.h>
 #include <stdio.h>
+#include <omp.h>
 
-#include "../commonFunctions/commonFunctions.h"
-#include "../mergeSortSequential/mergeSortSequential.h"
 #include "../mergeSortSequential/mergeSortSequential.h"
 
 

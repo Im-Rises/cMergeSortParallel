@@ -20,10 +20,10 @@ int main(int argc, char* argv[]) {
     printf("Usage: %s < <input file> > <threads number>\n\n", argv[0]);
 
     /* Read optional parameter */
-    int threadsNumber = INIT_THREADS_NUMBER; // include main thread
+    int threadsNumber = INIT_THREADS_NUMBER; /* include main thread*/
     if (argc != 1)
         threadsNumber = atoi(argv[1]);
-    threadsNumber--; // Main thread is not counted for PThread
+    threadsNumber--; /*Main thread is not counted for PThread*/
 
     /* Read size of array from stream */
     int arraySize = 0;
