@@ -9,14 +9,13 @@
 int main() {
     int threadsNumber = 4;
     int n = 1000000;
-    int* A = allocateMemory(n*sizeof(int));
-    int* tmp = allocateMemory(n*sizeof(int));
+    int* A = allocateMemory(n * sizeof(int));
 
     srand(time(NULL));
 
     randomizeIntArray(A, n, 0, INT_MAX);
 
-    mergeSortParallelOpenMp(A, n, tmp, threadsNumber);
+    mergeSortParallelOpenMp(A, n, threadsNumber);
 
     int errorCode = isSorted(A, n);
 
@@ -26,7 +25,5 @@ int main() {
         printf("- mergeSortParallelOpenMp fail!\n");
 
     free(A);
-    free(tmp);
     return errorCode;
 }
-

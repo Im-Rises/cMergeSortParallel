@@ -17,6 +17,13 @@ Merge Sort algorithm implemented in C available in three versions:
 Merge sort is a divide and conquer algorithm that was invented by John von Neumann in 1945.  
 A detailed description of the algorithm can be found [here](https://en.wikipedia.org/wiki/Merge_sort).
 
+The implemented algorithm are the following:
+
+- [x] Merge Sort
+- [x] Parallel Merge Sort
+- [x] Parallel Merge Sort using OpenMP
+- [x] Parallel Merge Sort using PThread
+
 ## Dependencies
 
 - C90
@@ -31,8 +38,15 @@ A detailed description of the algorithm can be found [here](https://en.wikipedia
 - [Table of Contents](#table-of-contents)
 - [Quickstart](#Quickstart)
 - [Algorithms](#Algorithms)
-    - [Merge Sort](#Merge-Sort)
+    - [Sequential Merge Sort V1](#Sequential-Merge-Sort-V1)
+    - [Sequential Merge Sort V2](#Sequential-Merge-Sort-V2)
+    - [Merge Sort algorithm chosen](#Merge-Sort-algorithm-chosen)
     - [Parallel Merge Sort](#Parallel-Merge-Sort)
+    - [Details on the implementation](#Details-on-the-implementation)
+- [Details on the implementation](#Details-on-the-implementation)
+    - [Sequential Merge Sort](#Sequential-Merge-Sort)
+    - [Parallel Merge Sort with OpenMP](#Parallel-Merge-Sort-with-OpenMP)
+    - [Parallel Merge Sort with Pthreads](#Parallel-Merge-Sort-with-Pthreads)
 - [Results](#Results)
 - [How to use](#How-to-use)
 - [Speed test](#Speed-test)
@@ -59,18 +73,18 @@ The different algorithms used are described below.
 
 ## Algorithms
 
-- [x] Merge Sort
-- [x] Parallel Merge Sort
-- [x] Parallel Merge Sort using OpenMP
-- [x] Parallel Merge Sort using PThread
+The different algorithms used are described below.
 
-### Merge Sort
+For more detail about them refer to :  
+Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
+
+### Sequential Merge Sort V1
 
 ```algorithm
-merge_sort(A, n, temp)
+mergeSort(A, n, temp)
     if n > 1
-        merge_sort(A, n/2, temp)
-        merge_sort(A + n/2, n - n/2, temp)
+        mergeSort(A, n/2, temp)
+        mergeSort(A + n/2, n - n/2, temp)
         merge(A, n, temp)
 ```
 
@@ -99,49 +113,7 @@ merge(A, n, temp)
         A[i] = temp[i]
 ```
 
-### Parallel Merge Sort
-
-The parallel merge sort is a simple implementation of the merge sort algorithm, it uses the `fork` system call to create
-a new process for each recursive call.
-The `merge` function is the same as the one used in the sequential merge sort.
-The algorithm is written using `Cilk` syntax:
-
-```algorithm
-parallel_merge_sort(A, n, temp)
-    if n > 1
-        spawn parallel_merge_sort(A, n/2, temp)
-        parallel_merge_sort(A + n/2, n - n/2, temp)
-        sync
-        parallel_merge(A, n, temp)
-```
-
-```algorithm
-parallel_merge(A, n, temp)
-    i = 0
-    j = n/2
-    k = 0
-    while i < n/2 and j < n
-        if A[i] < A[j]
-            temp[k] = A[i]
-            i++
-        else
-            temp[k] = A[j]
-            j++
-        k++
-    while i < n/2
-        temp[k] = A[i]
-        i++
-        k++
-    while j < n
-        temp[k] = A[j]
-        j++
-        k++
-    for i = 0 to n
-        A[i] = temp[i]
-```
-
-<!--
-### Merge Sort V1
+### Sequential Merge Sort V2
 
 ```algorithm
 mergeSort(A,p,r)
@@ -173,71 +145,80 @@ merge(A,p,q,r)
             j = j + 1
 ```
 
-Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford
-Stein
+### Merge Sort algorithm chosen
 
-The parallel version of the algorithm is implemented using OpenMP and PThreads.
-Depending on the version the results are different.
+The algorithm chosen is the first one, it is the simplest to understand and the most efficient.
+The most efficient because it only creates one buffer array named `temp` of size `n` and not two of size `n/2` at each
+recursive call
+of the function `merge`.
+By comparing the two algorithms, for any array size the first algorithm was two times faster than the second one.
 
-
-### Merge Sort V2
-
-The parallel algorithm is written using `Cilk` algorithm syntax.
-
-```algorithm
-parallelMergeSort(A,p,r)
-    n = r-p+1
-    if n == 1
-        B[s] = A[p]
-    else let T[1...n] be a new array
-        q = (p+r)/2
-        q2 = q-p+1
-        spawn parallelMergeSort(A,p,q,T,1)
-        parallelMergeSort(A,q+1,r,T,q2+1)
-        sync
-        parallelMerge(T,1,q2,q2+1,n,B,s)
-```
-
-```algorithm
-parallelMerge(A,p_1,r_1,p_2,r_2,A,p_3)
-    n1 = r_1-p_1+1
-    n2 = r_2-p_2+1
-    if n_1 < n_2
-        exchange p_1 and p_2
-        exchange r_1 and r_2
-        exchange n_1 and n_2
-    if n_1 == 0
-        return
-    else 
-        q_1 = (p_1+r_1)/2
-        q_2 = binarySearch(T[q1], T, p_2, r_2)
-        q_3 = p_3+(q_1-p_1)+(q_2-p_2)
-        A[q_3] = T[q_1]
-        spawn parallelMerge(T,p_1,q_1-1,p_2,q_2-1,A,p_3)
-        parallelMerge(T,q_1+1,r_1,q_2,r_2,A,q_3+1)
-        sync
-```
-
-```algorithm
-binarySearch(x,T,p,r)
-    low = p
-    high = max(p,r+1)
-    while low < high
-        mid = (low+high)/2
-        if x <= T[mid]
-            high = mid
-        else 
-            low = mid+1
-    return high
-```
-
-Refer to : Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford
-Stein
+> **Note**
+> For the parallel algorithms, the first algorithm is used.
 
 ### Parallel Merge Sort
 
-PLACEHOLDER
--->
+The parallel merge sort is a simple implementation of the merge sort algorithm, it uses the `fork` system call to create
+a new process for each recursive call.
+The `merge` function is the same as the one used in the sequential merge sort.
+The algorithm is written using `Cilk` syntax:
+
+```algorithm
+mergeSortParallel(A, n, temp)
+    if n > 1
+        spawn mergeSortParallel(A, n/2, temp)
+        mergeSortParallel(A + n/2, n - n/2, temp)
+        sync
+        merge(A, n, temp)
+```
+
+```algorithm
+merge(A, n, temp)
+    i = 0
+    j = n/2
+    k = 0
+    while i < n/2 and j < n
+        if A[i] < A[j]
+            temp[k] = A[i]
+            i++
+        else
+            temp[k] = A[j]
+            j++
+        k++
+    while i < n/2
+        temp[k] = A[i]
+        i++
+        k++
+    while j < n
+        temp[k] = A[j]
+        j++
+        k++
+    for i = 0 to n
+        A[i] = temp[i]
+```
+
+## Details on the implementation
+
+The parallel algorithm are customized to prevent creation of threads if the array size is too small.
+The `mergeSort` function is called with a minimum size of `MULTITHREAD_THRESHOLD` (defined in the header file).
+If the array size is smaller than this threshold, the algorithm is executed sequentially preventing loss of performance
+from creating thread for small arrays.
+
+This also apply in the recursive calls of the `mergeSort` function. After some division of the recursive call of
+the `mergeSort` function the array size
+is smaller than the threshold, the algorithm is executed sequentially.
+
+The algorithm is the following:
+
+```algorithm
+mergeSortParallel(A, n, temp)
+    if (size < MULTITHREAD_THRESHOLD)
+        mergeSortSequential(array, size, bufferArray);
+    else
+        mergeSortParallel(A, n/2, temp)
+        mergeSortParallel(A + n/2, n - n/2, temp)
+        merge(A, n, temp)
+```
 
 ## Results
 

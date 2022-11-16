@@ -5,6 +5,8 @@
 #include <pthread.h>
 
 #include "../mergeSortSequential/mergeSortSequential.h"
+#include "../commonFunctions/commonFunctions.h" 56
+
 
 /*typedef enum Boolean Boolean;*/
 enum Boolean {
@@ -18,8 +20,8 @@ struct ThreadState {
     enum Boolean isUsed;
 };
 
-typedef struct MergeSortArgs MergeSortArgs;
-struct MergeSortArgs {
+typedef struct MergeSortThreadArgs MergeSortThreadArgs;
+struct MergeSortThreadArgs {
     int* A;
     int size;
     int* B;
@@ -28,11 +30,11 @@ struct MergeSortArgs {
     pthread_mutex_t* myMutex;
 };
 
-void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
+void mergeSortParallel(int array[], int arraySize, int bufferArray[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
 int checkThreadIsAvailable(ThreadState* threads, int threadsNumber);
 void* mergeSortParallelThread(void* input);
 
-void mergeSortParallelPThread(int A[], int arraySize, int B[], int threadsNumber) {
+void mergeSortParallelPThread(int array[], int arraySize, int threadsNumber) {
     ThreadState threads[threadsNumber];
     int i;
     for (i = 0; i < threadsNumber; i++)
@@ -42,14 +44,17 @@ void mergeSortParallelPThread(int A[], int arraySize, int B[], int threadsNumber
 
     pthread_mutex_t myMutex = PTHREAD_MUTEX_INITIALIZER;
 
-    mergeSortParallel(A, arraySize, B, threads, threadsNumber, &myMutex);
+    int* bufferArray = allocateMemory(arraySize * sizeof(int));
+    mergeSortParallel(array, arraySize, bufferArray, threads, threadsNumber, &myMutex);
+
+    free(bufferArray);
 }
 
-void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex) {
+void mergeSortParallel(int array[], int arraySize, int bufferArray[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex) {
     /* if array is too small do mono-thread merge sort*/
     if (arraySize < MULTITHREAD_THRESHOLD)
     {
-        mergeSort(A, arraySize, B);
+        mergeSort(array, arraySize, bufferArray);
         return;
     }
 
@@ -66,10 +71,10 @@ void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, in
     if (threadIndex != -1)
     {
         /* if a thread is available use it */
-        MergeSortArgs args = {
-            A,
+        MergeSortThreadArgs args = {
+            array,
             arraySize / 2,
-            B,
+            bufferArray,
             threads,
             threadsNumber,
             myMutex
@@ -83,7 +88,7 @@ void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, in
         }
 
         /* sort the other half of the array*/
-        mergeSortParallel(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber, myMutex);
+        mergeSortParallel(array + arraySize / 2, arraySize - arraySize / 2, bufferArray + arraySize / 2, threads, threadsNumber, myMutex);
 
         /* wait for the thread to finish*/
         pthread_join(threads[threadIndex].thread, NULL);
@@ -92,14 +97,14 @@ void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, in
         threads[threadIndex].isUsed = False;
 
         /* merge the two sorted arrays*/
-        merge(A, arraySize, B);
+        merge(array, arraySize, bufferArray);
     }
     else
     {
         /* if no thread is available do mono-thread merge sort*/
-        mergeSortParallel(A, arraySize / 2, B, threads, threadsNumber, myMutex);
-        mergeSortParallel(A + arraySize / 2, arraySize - arraySize / 2, B + arraySize / 2, threads, threadsNumber, myMutex);
-        merge(A, arraySize, B);
+        mergeSortParallel(array, arraySize / 2, bufferArray, threads, threadsNumber, myMutex);
+        mergeSortParallel(array + arraySize / 2, arraySize - arraySize / 2, bufferArray + arraySize / 2, threads, threadsNumber, myMutex);
+        merge(array, arraySize, bufferArray);
     }
 }
 
@@ -114,6 +119,6 @@ int checkThreadIsAvailable(ThreadState* threads, int threadsNumber) {
 }
 
 void* mergeSortParallelThread(void* input) {
-    mergeSortParallel((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).size, (*(MergeSortArgs*)input).B, (*(MergeSortArgs*)input).threads, (*(MergeSortArgs*)input).threadsNumber, (*(MergeSortArgs*)input).myMutex);
+    mergeSortParallel((*(MergeSortThreadArgs*)input).A, (*(MergeSortThreadArgs*)input).size, (*(MergeSortThreadArgs*)input).B, (*(MergeSortThreadArgs*)input).threads, (*(MergeSortThreadArgs*)input).threadsNumber, (*(MergeSortThreadArgs*)input).myMutex);
     pthread_exit(NULL);
 }

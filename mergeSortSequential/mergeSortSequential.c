@@ -1,46 +1,53 @@
-#include "mergeSortSequential.h"
+#include "mergeSortSequential.h" $
+#include "../commonFunctions/commonFunctions.h"
 
 #include <string.h>
 
-void mergeSort(int* X, int n, int* tmp) {
-    if (n < 2)
-        return;
-    mergeSort(X, n / 2, tmp);
-    mergeSort(X + n / 2, n - n / 2, tmp);
-    merge(X, n, tmp);
+void mergeSortSequential(int* array, int arraySize) {
+    int* bufferArray = allocateMemory(arraySize * sizeof(int));
+    mergeSort(array, arraySize, bufferArray);
+    free(bufferArray);
 }
 
-void merge(int* X, int n, int* tmp) {
+void mergeSort(int* array, int n, int* bufferArray) {
+    if (n < 2)
+        return;
+    mergeSort(array, n / 2, bufferArray);
+    mergeSort(array + n / 2, n - n / 2, bufferArray);
+    merge(array, n, bufferArray);
+}
+
+void merge(int* array, int n, int* bufferArray) {
     int i = 0;
     int j = n / 2;
     int k = 0;
 
     while (i < n / 2 && j < n)
     {
-        if (X[i] < X[j])
+        if (array[i] < array[j])
         {
-            tmp[k] = X[i];
+            bufferArray[k] = array[i];
             k++;
             i++;
         }
         else
         {
-            tmp[k] = X[j];
+            bufferArray[k] = array[j];
             k++;
             j++;
         }
     }
     while (i < n / 2)
     {
-        tmp[k] = X[i];
+        bufferArray[k] = array[i];
         k++;
         i++;
     }
     while (j < n)
     {
-        tmp[k] = X[j];
+        bufferArray[k] = array[j];
         k++;
         j++;
     }
-    memcpy(X, tmp, n * sizeof(int));
+    memcpy(array, bufferArray, n * sizeof(int));
 }

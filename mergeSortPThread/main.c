@@ -33,11 +33,10 @@ int main(int argc, char* argv[]) {
     printf("- Array size: %d\n", arraySize);
 
     /* Create array */
-    int* inputArray = allocateMemory(arraySize * sizeof(int));
-    int* outputArray = allocateMemory(arraySize * sizeof(int));
+    int* array = allocateMemory(arraySize * sizeof(int));
 
     /* Copy data from stream to array */
-    copyStreamToIntArray(inputArray, arraySize);
+    copyStreamToIntArray(array, arraySize);
 
     /* Print the number of threads */
     printf("Number of threads: %d\n", threadsNumber + 1);
@@ -49,7 +48,7 @@ int main(int argc, char* argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &timeSpecStart);
 
     /* Sort array */
-    mergeSortParallelPThread(inputArray, arraySize, outputArray, threadsNumber);
+    mergeSortParallelPThread(array, arraySize, threadsNumber);
 
     /* Stop timer */
     clock_t endClock = clock();
@@ -61,14 +60,13 @@ int main(int argc, char* argv[]) {
     printf("- Wall time: %f seconds\n", unixTimelapsed);
 
     /* Print array is sorted */
-    printf("Is output array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");
+    printf("Is output array correctly sorted? %s\n", isSorted(array, arraySize) ? "No" : "Yes");
 
     /* Print array */
-    printArraySummary(outputArray, arraySize);
+    printArraySummary(array, arraySize);
 
     /* Free memory */
-    free(inputArray);
-    free(outputArray);
+    free(array);
 
     return 0;
 }

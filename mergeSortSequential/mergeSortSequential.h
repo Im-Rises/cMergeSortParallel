@@ -1,8 +1,10 @@
 #ifndef MERGE_SORT_SEQUENTIAL_H
 #define MERGE_SORT_SEQUENTIAL_H
 
-void mergeSort(int* X, int n, int* tmp);
+void mergeSortSequential(int* array, int arraySize);
 
-void merge(int* X, int n, int* tmp);
+void mergeSort(int* array, int n, int* bufferArray);
+
+void merge(int* array, int n, int* bufferArray);
 
 #endif

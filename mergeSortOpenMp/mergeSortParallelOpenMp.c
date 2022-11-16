@@ -4,31 +4,36 @@
 #include <omp.h>
 
 #include "../mergeSortSequential/mergeSortSequential.h"
+#include "../commonFunctions/commonFunctions.h"
 
-void mergeSortParallel(int a[], int size, int temp[]);
+void mergeSortParallel(int array[], int size, int bufferArray[]);
 
-void mergeSortParallelOpenMp(int a[], int size, int temp[], int threadsNumber) {
+void mergeSortParallelOpenMp(int array[], int size, int threadsNumber) {
     /* Handle and print the number of threads */
     omp_set_num_threads(threadsNumber);
     printf("Number of maximum thread: %d\n", omp_get_max_threads());
     printf("Using %d threads\n", omp_get_max_threads());
 
+    int* bufferArray = allocateMemory(size * sizeof(int));
+
 #pragma omp parallel
 #pragma omp single
-    mergeSortParallel(a, size, temp);
+    mergeSortParallel(array, size, bufferArray);
+
+    free(bufferArray);
 }
 
-void mergeSortParallel(int a[], int size, int temp[]) {
+void mergeSortParallel(int array[], int size, int bufferArray[]) {
     if (size < MULTITHREAD_THRESHOLD)
     {
-        mergeSort(a, size, temp);
+        mergeSort(array, size, bufferArray);
         return;
     }
 #pragma omp task
-    mergeSortParallel(a, size / 2, temp);
+    mergeSortParallel(array, size / 2, bufferArray);
 
-    mergeSortParallel(a + size / 2, size - size / 2, temp + size / 2);
+    mergeSortParallel(array + size / 2, size - size / 2, bufferArray + size / 2);
 
 #pragma omp taskwait
-    merge(a, size, temp);
+    merge(array, size, bufferArray);
 }

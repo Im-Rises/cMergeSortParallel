@@ -3,6 +3,6 @@
 
 #define MULTITHREAD_THRESHOLD 1000
 
-void mergeSortParallelOpenMp(int a[], int size, int temp[], int threadsNumber);
+void mergeSortParallelOpenMp(int array[], int size, int threadsNumber);
 
 #endif
