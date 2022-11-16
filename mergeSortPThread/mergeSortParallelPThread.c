@@ -2,9 +2,35 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 #include "../mergeSortSequential/mergeSortSequential.h"
 
+/*typedef enum Boolean Boolean;*/
+enum Boolean {
+    False = 0,
+    True = 1
+};
+
+typedef struct ThreadState ThreadState;
+struct ThreadState {
+    pthread_t thread;
+    enum Boolean isUsed;
+};
+
+typedef struct MergeSortArgs MergeSortArgs;
+struct MergeSortArgs {
+    int* A;
+    int size;
+    int* B;
+    ThreadState* threads;
+    int threadsNumber;
+    pthread_mutex_t* myMutex;
+};
+
+void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
+int checkThreadIsAvailable(ThreadState* threads, int threadsNumber);
+void* mergeSortParallelThread(void* input);
 
 void mergeSortParallelPThread(int A[], int arraySize, int B[], int threadsNumber) {
     ThreadState threads[threadsNumber];
@@ -19,7 +45,7 @@ void mergeSortParallelPThread(int A[], int arraySize, int B[], int threadsNumber
     mergeSortParallel(A, arraySize, B, threads, threadsNumber, &myMutex);
 }
 
-static void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex) {
+void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex) {
     /* if array is too small do mono-thread merge sort*/
     if (arraySize < MULTITHREAD_THRESHOLD)
     {
@@ -77,7 +103,7 @@ static void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* thre
     }
 }
 
-static int checkThreadIsAvailable(ThreadState* threads, int threadsNumber) {
+int checkThreadIsAvailable(ThreadState* threads, int threadsNumber) {
     int index;
     for (index = 0; index < threadsNumber; index++)
     {
@@ -87,7 +113,7 @@ static int checkThreadIsAvailable(ThreadState* threads, int threadsNumber) {
     return -1;
 }
 
-static void* mergeSortParallelThread(void* input) {
+void* mergeSortParallelThread(void* input) {
     mergeSortParallel((*(MergeSortArgs*)input).A, (*(MergeSortArgs*)input).size, (*(MergeSortArgs*)input).B, (*(MergeSortArgs*)input).threads, (*(MergeSortArgs*)input).threadsNumber, (*(MergeSortArgs*)input).myMutex);
     pthread_exit(NULL);
 }

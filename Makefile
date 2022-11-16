@@ -27,11 +27,11 @@ OpenMpVerLinux:
 	gcc -o ./buildMakeFile/mergeSortOpenMp buildMakeFile/main.o buildMakeFile/mergeSortParallelOpenMp.o buildMakeFile/commonFunctions.o buildMakeFile/mergeSortSequential.o -fopenmp -std=c90 -Wall -O2
 
 PThreadVerLinux:
-	gcc ./mergeSortPThread/main.c -o buildMakeFile/main.o -c -std=c90 -Wall -O2
-	gcc ./mergeSortPThread/mergeSortParallelPThread.c -o buildMakeFile/mergeSortParallelPThread.o -lpthread -c -std=c90 -Wall -O2
-	gcc ./mergeSortSequential/mergeSortSequential.c -o buildMakeFile/mergeSortSequential.o -c -std=c90 -Wall -O2
-	gcc ./commonFunctions/commonFunctions.c -o buildMakeFile/commonFunctions.o -c -std=c90 -Wall -O2
-	gcc -o ./buildMakeFile/mergeSortPThread buildMakeFile/main.o buildMakeFile/mergeSortParallelPThread.o buildMakeFile/commonFunctions.o buildMakeFile/mergeSortSequential.o -lpthread -std=c90 -Wall -O2
+	gcc ./mergeSortPThread/main.c -o buildMakeFile/main.o -c -std=gnu90 -Wall -O2
+	gcc ./mergeSortPThread/mergeSortParallelPThread.c -o buildMakeFile/mergeSortParallelPThread.o -lpthread -c -std=gnu90 -Wall -O2
+	gcc ./mergeSortSequential/mergeSortSequential.c -o buildMakeFile/mergeSortSequential.o -c -std=gnu90 -Wall -O2
+	gcc ./commonFunctions/commonFunctions.c -o buildMakeFile/commonFunctions.o -c -std=gnu90 -Wall -O2
+	gcc -o ./buildMakeFile/mergeSortPThread buildMakeFile/main.o buildMakeFile/mergeSortParallelPThread.o buildMakeFile/commonFunctions.o buildMakeFile/mergeSortSequential.o -lpthread -std=gnu90 -Wall -O2
 
 MrProperLinux : clean
 	rm -f buildMakeFile/fileGenerator

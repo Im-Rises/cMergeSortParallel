@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <omp.h>
 
 #include "mergeSortParallelOpenMp.h"
 #include "../commonFunctions/commonFunctions.h"
@@ -35,8 +37,19 @@ int main(int argc, char* argv[]) {
     /* Copy data from stream to array */
     copyStreamToIntArray(inputArray, arraySize);
 
+    /* Start timer */
+    clock_t startClock = clock();
+    double openMpT = omp_get_wtime();
+
     /* Sort array */
     mergeSortParallelOpenMp(inputArray, arraySize, outputArray, threadsNumber);
+
+    /* Stop timers */
+    clock_t endClock = clock();
+    double openMpTime = (omp_get_wtime() - openMpT);
+    printf("CPU and Wall time:\n");
+    printf("- CPU time: %f seconds\n", (double)(endClock - startClock) / CLOCKS_PER_SEC);
+    printf("- Wall time: %f seconds\n", openMpTime);
 
     /* Print array is sorted */
     printf("Is array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");
