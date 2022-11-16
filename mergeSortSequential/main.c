@@ -24,7 +24,6 @@ int main(int argc, char* argv[]) {
 
     /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
-    int* outputArray = allocateMemory(arraySize * sizeof(int));
 
     /* Copy data from stream to array */
     copyStreamToIntArray(inputArray, arraySize);
@@ -33,21 +32,20 @@ int main(int argc, char* argv[]) {
     clock_t startClock = clock();
 
     /* Merge sort */
-    mergeSort(inputArray, arraySize, outputArray);
+    mergeSortSequential(inputArray, arraySize);
 
     /* Stop timer */
     clock_t endClock = clock();
     printf("Wall time and CPU time: %f seconds\n", (double)(endClock - startClock) / CLOCKS_PER_SEC);
 
     /* Print array is sorted */
-    printf("Is array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");
+    printf("Is array correctly sorted? %s\n", isSorted(inputArray, arraySize) ? "No" : "Yes");
 
     /* Print array */
-    printArraySummary(outputArray, arraySize);
+    printArraySummary(inputArray, arraySize);
 
     /* Free memory */
     free(inputArray);
-    free(outputArray);
 
     return 0;
 }

@@ -28,11 +28,11 @@ struct MergeSortArgs {
     pthread_mutex_t* myMutex;
 };
 
-void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
+void mergeSortParallel(int A[], int arraySize, ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
 int checkThreadIsAvailable(ThreadState* threads, int threadsNumber);
 void* mergeSortParallelThread(void* input);
 
-void mergeSortParallelPThread(int A[], int arraySize, int B[], int threadsNumber) {
+void mergeSortParallelPThread(int A[], int arraySize, int threadsNumber) {
     ThreadState threads[threadsNumber];
     int i;
     for (i = 0; i < threadsNumber; i++)
@@ -42,7 +42,11 @@ void mergeSortParallelPThread(int A[], int arraySize, int B[], int threadsNumber
 
     pthread_mutex_t myMutex = PTHREAD_MUTEX_INITIALIZER;
 
+    int* B = allocateMemory(arraySize * sizeof(int));
+
     mergeSortParallel(A, arraySize, B, threads, threadsNumber, &myMutex);
+
+    free(B);
 }
 
 void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex) {

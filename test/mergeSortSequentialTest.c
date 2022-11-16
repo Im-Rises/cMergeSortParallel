@@ -8,14 +8,13 @@
 
 int main() {
     int n = 1000000;
-    int* A = allocateMemory(n*sizeof(int));
-    int* tmp = allocateMemory(n*sizeof(int));
+    int* A = allocateMemory(n * sizeof(int));
 
     srand(time(NULL));
 
     randomizeIntArray(A, n, 0, INT_MAX);
 
-    mergeSort(A, n, tmp);
+    mergeSortSequential(A, n);
 
     int errorCode = isSorted(A, n);
 
@@ -25,6 +24,5 @@ int main() {
         printf("- mergeSortSequential fail!\n");
 
     free(A);
-    free(tmp);
     return errorCode;
 }

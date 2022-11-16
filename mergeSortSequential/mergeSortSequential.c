@@ -1,6 +1,13 @@
-#include "mergeSortSequential.h"
+#include "mergeSortSequential.h" $
+#include "../commonFunctions/commonFunctions.h"
 
 #include <string.h>
+
+void mergeSortSequential(int* inputArray, int arraySize) {
+    int* bufferArray = allocateMemory(arraySize * sizeof(int));
+    mergeSort(inputArray, arraySize, bufferArray);
+    free(bufferArray);
+}
 
 void mergeSort(int* X, int n, int* tmp) {
     if (n < 2)

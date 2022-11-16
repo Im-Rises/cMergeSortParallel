@@ -32,7 +32,6 @@ int main(int argc, char* argv[]) {
 
     /* Create array */
     int* inputArray = allocateMemory(arraySize * sizeof(int));
-    int* outputArray = allocateMemory(arraySize * sizeof(int));
 
     /* Copy data from stream to array */
     copyStreamToIntArray(inputArray, arraySize);
@@ -42,7 +41,7 @@ int main(int argc, char* argv[]) {
     double openMpT = omp_get_wtime();
 
     /* Sort array */
-    mergeSortParallelOpenMp(inputArray, arraySize, outputArray, threadsNumber);
+    mergeSortParallelOpenMp(inputArray, arraySize, inputArray, threadsNumber);
 
     /* Stop timers */
     clock_t endClock = clock();
@@ -52,14 +51,13 @@ int main(int argc, char* argv[]) {
     printf("- Wall time: %f seconds\n", openMpTime);
 
     /* Print array is sorted */
-    printf("Is array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");
+    printf("Is array correctly sorted? %s\n", isSorted(inputArray, arraySize) ? "No" : "Yes");
 
     /* Print array */
-    printArraySummary(outputArray, arraySize);
+    printArraySummary(inputArray, arraySize);
 
     /* Free memory */
     free(inputArray);
-    free(outputArray);
 
     return 0;
 }
