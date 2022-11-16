@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     printf("-----Random Array File Generator-----\n");
     if (argc != 3)
     {
-        printf("Usage: %s <size of array> <output file>\n", argv[0]);
+        printf("Usage: %s <arraySize> <outputFile>\n", argv[0]);
         return 1;
     }
 

@@ -21,4 +21,3 @@ void randomizeIntArray(int* array, int arraySize, int minNumber, int maxNumber);
 int randomInt(int minNumber, int maxNumber);
 
 #endif
-

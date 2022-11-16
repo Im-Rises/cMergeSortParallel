@@ -1,7 +1,7 @@
 #include "commonFunctions.h"
 
 #include <stdio.h>
-
+#include <time.h>
 
 void* allocateMemory(size_t size) {
     void* memory = malloc(size);

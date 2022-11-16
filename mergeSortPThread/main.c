@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <pthread.h>
 
 #include "mergeSortParallelPThread.h"
 #include "../commonFunctions/commonFunctions.h"
@@ -16,8 +18,8 @@ int main(int argc, char* argv[]) {
 
     printf("|-----Merge Sort Parallel using PThread-----|\n\n");
 
-    printf("Usage: %s < <input file> > <output file> <threads number>\n\n", argv[0]);
-    printf("Usage: %s < <input file> > <threads number>\n\n", argv[0]);
+    printf("Usage: %s < <inputFile> > <outputFile> <threadsNumber>\n", argv[0]);
+    printf("Usage: %s < <inputFile> <threadsNumber>\n\n", argv[0]);
 
     /* Read optional parameter */
     int threadsNumber = INIT_THREADS_NUMBER; /* include main thread*/
@@ -40,8 +42,23 @@ int main(int argc, char* argv[]) {
     /* Print the number of threads */
     printf("Number of threads: %d\n", threadsNumber + 1);
 
+    /* Start timer */
+    struct timespec timeSpecStart, timeSpecFinish;
+    double unixTimelapsed;
+    clock_t startClock = clock();
+    clock_gettime(CLOCK_MONOTONIC, &timeSpecStart);
+
     /* Sort array */
     mergeSortParallelPThread(inputArray, arraySize, outputArray, threadsNumber);
+
+    /* Stop timer */
+    clock_t endClock = clock();
+    clock_gettime(CLOCK_MONOTONIC, &timeSpecFinish);
+    unixTimelapsed = (timeSpecFinish.tv_sec - timeSpecStart.tv_sec);
+    unixTimelapsed += (timeSpecFinish.tv_nsec - timeSpecStart.tv_nsec) / 1000000000.0;
+    printf("CPU and Wall time:\n");
+    printf("- CPU time: %f seconds\n", (double)(endClock - startClock) / CLOCKS_PER_SEC);
+    printf("- Wall time: %f seconds\n", unixTimelapsed);
 
     /* Print array is sorted */
     printf("Is output array correctly sorted? %s\n", isSorted(outputArray, arraySize) ? "No" : "Yes");

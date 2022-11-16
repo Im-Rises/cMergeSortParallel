@@ -5,9 +5,9 @@
 
 #include "../mergeSortSequential/mergeSortSequential.h"
 
+void mergeSortParallel(int a[], int size, int temp[]);
 
-void mergeSortParallelOpenMp(int a[], int size, int temp[], int threadsNumber)
-{
+void mergeSortParallelOpenMp(int a[], int size, int temp[], int threadsNumber) {
     /* Handle and print the number of threads */
     omp_set_num_threads(threadsNumber);
     printf("Number of maximum thread: %d\n", omp_get_max_threads());
@@ -18,7 +18,7 @@ void mergeSortParallelOpenMp(int a[], int size, int temp[], int threadsNumber)
     mergeSortParallel(a, size, temp);
 }
 
-static void mergeSortParallel(int a[], int size, int temp[]) {
+void mergeSortParallel(int a[], int size, int temp[]) {
     if (size < MULTITHREAD_THRESHOLD)
     {
         mergeSort(a, size, temp);
