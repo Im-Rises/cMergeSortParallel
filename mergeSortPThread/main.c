@@ -18,8 +18,8 @@ int main(int argc, char* argv[]) {
 
     printf("|-----Merge Sort Parallel using PThread-----|\n\n");
 
-    printf("Usage: %s < <input file> > <output file> <threads number>\n\n", argv[0]);
-    printf("Usage: %s < <input file> > <threads number>\n\n", argv[0]);
+    printf("Usage: %s < <inputFile> > <outputFile> <threadsNumber>\n", argv[0]);
+    printf("Usage: %s < <inputFile> <threadsNumber>\n\n", argv[0]);
 
     /* Read optional parameter */
     int threadsNumber = INIT_THREADS_NUMBER; /* include main thread*/

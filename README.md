@@ -14,80 +14,44 @@ Merge Sort algorithm implemented in C available in three versions:
 - Parallel with OpenMP
 - Parallel with Pthreads (Linux only)
 
-Merge sort is a divide and conquer algorithm that was invented by John von Neumann in 1945. A detailed description of
-the algorithm can be found [here](https://en.wikipedia.org/wiki/Merge_sort).
+Merge sort is a divide and conquer algorithm that was invented by John von Neumann in 1945.  
+A detailed description of the algorithm can be found [here](https://en.wikipedia.org/wiki/Merge_sort).
 
-## Results
+## Dependencies
 
-| Number of int (Array size) | Number of threads | Sequential time (Work) (s) | Parallel OpenMP time (s) | Parallel Pthread time (s) |
-|----------------------------|-------------------|----------------------------|--------------------------|---------------------------|
-| 1000000                    | 1                 | 0.219678                   | 0.21941                  | 0.23636                   |
-|                            | 2                 |                            | 0.140376                 | 0.137846                  |  
+- C90
+- GNU90 (PThread)
+- CMake or Make
+- C90 compiler (GCC, Clang, MSVC, ...)
 
-<details>
-<summary>Click here to get the details for an array of 10 to 10 000 000 ints.</summary>
+## Table of Contents
 
-| Number of int (Array size) | Number of threads | Sequential time (Work) (s) | Parallel OpenMP time (s) | Parallel Pthread time (s) |
-|----------------------------|-------------------|----------------------------|--------------------------|---------------------------|
-| 10                         | 1                 | 0.000023                   | 0.000079                 | 0.000012                  |
-|                            | 2                 |                            | 0.000216                 | 0.000011                  |
-|                            | 4                 |                            | 0.000439                 | 0.000011                  |
-|                            | 8                 |                            | 0.007493                 | 0.000011                  |
-|                            | 16                |                            | 0.000752                 | 0.000012                  |
-|                            | 24                |                            | 0.000861                 | 0.000012                  |
-|                            | 48                |                            | 0.00178                  | 0.000012                  |
-| 100                        | 1                 | 0.000034                   | 0.000039                 | 0.000025                  |
-|                            | 2                 |                            | 0.000228                 | 0.000025                  |
-|                            | 4                 |                            | 0.000211                 | 0.000032                  |
-|                            | 8                 |                            | 0.005617                 | 0.000025                  |
-|                            | 16                |                            | 0.000866                 | 0.000025                  |
-|                            | 24                |                            | 0.001311                 | 0.000025                  |
-|                            | 48                |                            | 0.002728                 | 0.000026                  |
-| 1000                       | 1                 | 0.000383                   | 0.000387                 | 0.000159                  |
-|                            | 2                 |                            | 0.00411                  | 0.001905                  |
-|                            | 4                 |                            | 0.000531                 | 0.000493                  |
-|                            | 8                 |                            | 0.007541                 | 0.000425                  |
-|                            | 16                |                            | 0.000808                 | 0.000354                  |
-|                            | 24                |                            | 0.001013                 | 0.000369                  |
-|                            | 48                |                            | 0.002234                 | 0.000368                  |
-| 10000                      | 1                 | 0.003015                   | 0.001617                 | 0.00202                   |
-|                            | 2                 |                            | 0.002415                 | 0.001964                  |
-|                            | 4                 |                            | 0.002049                 | 0.002111                  |
-|                            | 8                 |                            | 0.003257                 | 0.001249                  |
-|                            | 16                |                            | 0.003079                 | 0.003737                  |
-|                            | 24                |                            | 0.003156                 | 0.003423                  |
-|                            | 48                |                            | 0.00544                  | 0.00294                   |
-| 100000                     | 1                 | 0.01854                    | 0.018547                 | 0.199                     |
-|                            | 2                 |                            | 0.021651                 | 0.015189                  |
-|                            | 4                 |                            | 0.01688                  | 0.008408                  |
-|                            | 8                 |                            | 0.018882                 | 0.01606                   |
-|                            | 16                |                            | 0.013631                 | 0.016771                  |
-|                            | 24                |                            | 0.016659                 | 0.02296                   |
-|                            | 48                |                            | 0.0227                   | 0.035204                  |
-| 1000000                    | 1                 | 0.219678                   | 0.21941                  | 0.23636                   |
-|                            | 2                 |                            | 0.140376                 | 0.137846                  |
-|                            | 4                 |                            | 0.1255587                | 0.103484                  |
-|                            | 8                 |                            | 0.102441                 | 0.133948                  |
-|                            | 16                |                            | 0.082464                 | 0.092748                  |
-|                            | 24                |                            | 0.088869                 | 0.294837                  |
-|                            | 48                |                            | 0.077861                 | 0.131344                  |
-| 10000000                   | 1                 | 2.568292                   | 2.564808                 | 2.768002                  |
-|                            | 2                 |                            | 1.473908                 | 1.47016                   |
-|                            | 4                 |                            | 1.177107                 | 1.08515                   |
-|                            | 8                 |                            | 0.892717                 | 1.117797                  |
-|                            | 16                |                            | 0.754185                 | 0.924634                  |
-|                            | 24                |                            | 0.738589                 | 0.786672                  |
-|                            | 48                |                            | 0.714466                 | 0.709331                  |
-
-</details>
-
-> **Note**  
-> The results are indicative and may vary depending on the machine.
+- [Description](#description)
+- [Dependencies](#Dependencies)
+- [Table of Contents](#table-of-contents)
+- [Quickstart](#Quickstart)
+- [Algorithms](#Algorithms)
+    - [Merge Sort](#Merge Sort)
+    - [Parallel Merge Sort](#Parallel Merge Sort)
+- [Results](#Results)
+- [How to use](#How to use)
+- [Speed test](#Speed test)
+- [Compilation](#Compilation)
+    - [Compilation with CMake](#Compilation with CMake)
+        - [Windows](#Windows)
+        - [Linux](#Linux)
+    - [Compile with Make](#Compile with Make)
+    - [Setup](#Setup)
+    - [Compilation](#Compilation)
+- [Project Architecture](#Project Architecture)
+- [GitHub Actions](#GitHub Actions)
+- [Documentations](#Documentations)
+- [Contributors](#Contributors)
 
 ## Quickstart
 
 Depending on you `operating system` you will need to install some libs, they are installed differently depending on your
-system, please follow one of the section below `Windows` or `Linux`.
+system, please follow the instructions in the `Compilation` section.
 
 For an explanation on `How to use` go to the according section.
 
@@ -275,6 +239,73 @@ Stein
 PLACEHOLDER
 -->
 
+## Results
+
+| Number of int (Array size) | Number of threads | Sequential time (Work) (s) | Parallel OpenMP time (s) | Parallel Pthread time (s) |
+|----------------------------|-------------------|----------------------------|--------------------------|---------------------------|
+| 1000000                    | 1                 | 0.219678                   | 0.21941                  | 0.23636                   |
+|                            | 2                 |                            | 0.140376                 | 0.137846                  |  
+
+<details>
+<summary>Click here to get the details for an array of 10 to 10 000 000 ints.</summary>
+
+| Number of int (Array size) | Number of threads | Sequential time (Work) (s) | Parallel OpenMP time (s) | Parallel Pthread time (s) |
+|----------------------------|-------------------|----------------------------|--------------------------|---------------------------|
+| 10                         | 1                 | 0.000023                   | 0.000079                 | 0.000012                  |
+|                            | 2                 |                            | 0.000216                 | 0.000011                  |
+|                            | 4                 |                            | 0.000439                 | 0.000011                  |
+|                            | 8                 |                            | 0.007493                 | 0.000011                  |
+|                            | 16                |                            | 0.000752                 | 0.000012                  |
+|                            | 24                |                            | 0.000861                 | 0.000012                  |
+|                            | 48                |                            | 0.00178                  | 0.000012                  |
+| 100                        | 1                 | 0.000034                   | 0.000039                 | 0.000025                  |
+|                            | 2                 |                            | 0.000228                 | 0.000025                  |
+|                            | 4                 |                            | 0.000211                 | 0.000032                  |
+|                            | 8                 |                            | 0.005617                 | 0.000025                  |
+|                            | 16                |                            | 0.000866                 | 0.000025                  |
+|                            | 24                |                            | 0.001311                 | 0.000025                  |
+|                            | 48                |                            | 0.002728                 | 0.000026                  |
+| 1000                       | 1                 | 0.000383                   | 0.000387                 | 0.000159                  |
+|                            | 2                 |                            | 0.00411                  | 0.001905                  |
+|                            | 4                 |                            | 0.000531                 | 0.000493                  |
+|                            | 8                 |                            | 0.007541                 | 0.000425                  |
+|                            | 16                |                            | 0.000808                 | 0.000354                  |
+|                            | 24                |                            | 0.001013                 | 0.000369                  |
+|                            | 48                |                            | 0.002234                 | 0.000368                  |
+| 10000                      | 1                 | 0.003015                   | 0.001617                 | 0.00202                   |
+|                            | 2                 |                            | 0.002415                 | 0.001964                  |
+|                            | 4                 |                            | 0.002049                 | 0.002111                  |
+|                            | 8                 |                            | 0.003257                 | 0.001249                  |
+|                            | 16                |                            | 0.003079                 | 0.003737                  |
+|                            | 24                |                            | 0.003156                 | 0.003423                  |
+|                            | 48                |                            | 0.00544                  | 0.00294                   |
+| 100000                     | 1                 | 0.01854                    | 0.018547                 | 0.199                     |
+|                            | 2                 |                            | 0.021651                 | 0.015189                  |
+|                            | 4                 |                            | 0.01688                  | 0.008408                  |
+|                            | 8                 |                            | 0.018882                 | 0.01606                   |
+|                            | 16                |                            | 0.013631                 | 0.016771                  |
+|                            | 24                |                            | 0.016659                 | 0.02296                   |
+|                            | 48                |                            | 0.0227                   | 0.035204                  |
+| 1000000                    | 1                 | 0.219678                   | 0.21941                  | 0.23636                   |
+|                            | 2                 |                            | 0.140376                 | 0.137846                  |
+|                            | 4                 |                            | 0.1255587                | 0.103484                  |
+|                            | 8                 |                            | 0.102441                 | 0.133948                  |
+|                            | 16                |                            | 0.082464                 | 0.092748                  |
+|                            | 24                |                            | 0.088869                 | 0.294837                  |
+|                            | 48                |                            | 0.077861                 | 0.131344                  |
+| 10000000                   | 1                 | 2.568292                   | 2.564808                 | 2.768002                  |
+|                            | 2                 |                            | 1.473908                 | 1.47016                   |
+|                            | 4                 |                            | 1.177107                 | 1.08515                   |
+|                            | 8                 |                            | 0.892717                 | 1.117797                  |
+|                            | 16                |                            | 0.754185                 | 0.924634                  |
+|                            | 24                |                            | 0.738589                 | 0.786672                  |
+|                            | 48                |                            | 0.714466                 | 0.709331                  |
+
+</details>
+
+> **Note**  
+> The results are indicative and may vary depending on the machine.
+
 ## How to use
 
 First you need to build the scripts (check the `compilation` section).
@@ -310,7 +341,7 @@ All the executables work the same way, use pipes to redirect the input file to t
 For example :
 
 ```bash
-./mergeSortSequential < ./test_file > ./output_file.txt
+./mergeSortSequential < ./test_file
 ```
 
 or
@@ -339,6 +370,14 @@ For example :
 
 The parallel merge sort using OpenMP is started with 4 threads.
 
+The output will explain some details about the execution of the algorithm.
+
+- The number of int in the array
+- The number of threads used (only for the parallel versions)
+- The CPU Time taken to sort the array
+- The Wall Time taken to sort the array
+- The sorted array (only if the array is small enough)
+
 ## Speed test
 
 The project is set up with some `bash` scripts to test the speed of the different algorithms.
@@ -363,68 +402,6 @@ folder.
 > **Warning**
 > You need to build the project before running the script (check the `compilation` section).
 > You also need to be in the `speedTest` folder to run the script correctly.
-
-## Project Architecture
-
-~~~
-ParticleEngine
-├── .github
-│  ├── workflows
-│  │   |── c-cpp.yml
-│  │   |── cmake.yml
-│  │   |── codeql.yml
-│  │   |── cpp-linter.yml
-│  │   |── dependency-review.yml
-│  │   |── flawfinder.yml
-│  │   |── greetings.yml
-│  │   |── label.yml
-│  │   |── msvc.yml
-│  │   |── stale.yml
-|  ├── labeler.yml
-|  ├── release.yml
-├── buildMakeFile
-|  ├── readme.txt
-|  ├── test_file.txt
-├── fileGenerator
-|  ├── CMakelists.txt
-|  ├── fileGenerator.c
-├── OpenMpVersion
-|  ├── CMakelists.txt
-|  ├── d2omp.c
-├── PThreadVersion
-|  ├── CMakelists.txt
-|  ├── d2p.c
-├── sequentialVersion
-|  ├── CMakelists.txt
-|  ├── d2s.c
-├── speedTest
-|  ├── fileGenerator.sh
-|  ├── multithreads_comparison.xlsx
-|  ├── speedTest.sh
-├── test
-|  ├── CMakelists.txt
-|  ├── mergeSortOpenMPTest.c
-|  ├── mergeSortPThreadTest.c
-|  ├── mergeSortSequentialTest.c
-|  ├── sortFunctions.h
-├── ParticleEngine
-├── .clang-format
-├── .clang-tidy
-├── .editorconfig
-├── .gitattributes
-├── .gitignore
-├── CMakelists.txt
-├── CMakePresets.json
-├── CMakeSettings.json
-├── Makefile
-├── README.md
-~~~
-
-## Dependencies
-
-- C90
-- CMake or Make
-- C90 compiler (MSVC, Mingw, ...)
 
 ## Compilation
 
@@ -525,9 +502,7 @@ sudo apt-get install libomp-12-dev
 
 #### Compilation
 
-##### Compile all the versions
-
-You can compile the project for Linux and Windows:
+You can compile the project for Linux:
 
 ```bash
 make
@@ -548,9 +523,7 @@ make WindowsVer
 ```
 -->
 
-##### Compile only one script
-
-To compile only one of the scripts type:
+To compile only one of the scripts, type:
 
 ```bash
 make <script_name>
@@ -574,6 +547,76 @@ The Windows ones are:
 -->
 
 The executables will be created in the `BuildMakeFile` folder.
+
+## Project Architecture
+
+~~~
+ParticleEngine
+├── .github
+│  ├── workflows
+│  │   |── c-cpp.yml
+│  │   |── cmake.yml
+│  │   |── codeql.yml
+│  │   |── cpp-linter.yml
+│  │   |── dependency-review.yml
+│  │   |── flawfinder.yml
+│  │   |── greetings.yml
+│  │   |── label.yml
+│  │   |── msvc.yml
+│  │   |── stale.yml
+|  ├── labeler.yml
+|  ├── release.yml
+├── buildMakeFile
+|  ├── readme.txt
+|  ├── test_file.txt
+├── commonFunctions
+|  ├── commonFunctions.h
+|  ├── commonFunctions.c
+├── fileGenerator
+|  ├── CMakelists.txt
+|  ├── main.c
+├── OpenMpVersion
+|  ├── CMakelists.txt
+|  ├── main.c
+|  ├── mergeSortParallelOpenMP.c
+|  ├── mergeSortParallelOpenMP.h
+├── PThreadVersion
+|  ├── CMakelists.txt
+|  ├── main.c
+|  ├── mergeSortParallelPThread.c
+|  ├── mergeSortParallelPThread.h
+├── sequentialVersion
+|  ├── CMakelists.txt
+|  ├── main.c
+|  ├── mergeSortSequential.c
+|  ├── mergeSortSequential.h
+├── speedTest
+│  ├── outputs
+│  │   |── readme.txt
+│  ├── speedTestArrays
+│  │   |── readme.txt
+|  ├── fileGenerator.sh
+|  ├── multithreads_comparison.xlsx
+|  ├── multithreads_comparison.csv
+|  ├── speedTest.sh
+├── test
+|  ├── CMakelists.txt
+|  ├── mergeSortOpenMPTest.c
+|  ├── mergeSortPThreadTest.c
+|  ├── mergeSortSequentialTest.c
+|  ├── sortFunctions.h
+├── ParticleEngine
+├── .clang-format
+├── .clang-tidy
+├── .editorconfig
+├── .gitattributes
+├── .gitignore
+├── CMakelists.txt
+├── CMakePresets.json
+├── CMakeSettings.json
+├── Makefile
+├── README.md
+~~~
 
 ## GitHub Actions
 

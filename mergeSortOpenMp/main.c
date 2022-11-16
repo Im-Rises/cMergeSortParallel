@@ -17,8 +17,8 @@ int main(int argc, char* argv[]) {
 
     printf("|-----Merge Sort Parallel using OpenMP-----|\n\n");
 
-    printf("Usage: %s < <input file> > <output file> <threads number>\n\n", argv[0]);
-    printf("Usage: %s < <input file> > <threads number>\n\n", argv[0]);
+    printf("Usage: %s < <inputFile> > <outputFile> <threadsNumber>\n", argv[0]);
+    printf("Usage: %s < <inputFile> <threadsNumber>\n\n", argv[0]);
 
     /* Read optional parameters */
     int threadsNumber = INIT_THREADS_NUMBER;

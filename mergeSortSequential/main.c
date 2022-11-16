@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 
     printf("|-----Merge Sort Sequential-----|\n\n");
 
-    printf("Usage: %s < <input file> > <output file> <threads number>\n\n", argv[0]);
+    printf("Usage: %s < <input file> > <output file> <threads number>\n", argv[0]);
     printf("Usage: %s < <input file> > <threads number>\n\n", argv[0]);
 
     /* Read size of array from stream */
