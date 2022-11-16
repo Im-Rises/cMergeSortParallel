@@ -586,10 +586,10 @@ The executables will be created in the `BuildMakeFile` folder.
 
 - CMake: This script is used to build the project.
 - MSVC: This script is used to analyze the code with Microsoft C++ Code Analysis.
-- c-cpp: This script is used to build the project with C/C++ CI using make.
-- cpp-linter: This script is used to check the C code formatting.
 - CodeQL: This script is used to analyze the code with CodeQL.
+- cpp-linter: This script is used to check the C code formatting.
 - flawfinder: This script is used to analyze the code with flawfinder.
+- c-cpp: This script is used to build the project with C/C++ CI using make.
 
 ## Documentations
 
