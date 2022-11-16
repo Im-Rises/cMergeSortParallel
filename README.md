@@ -38,8 +38,11 @@ The implemented algorithm are the following:
 - [Table of Contents](#table-of-contents)
 - [Quickstart](#Quickstart)
 - [Algorithms](#Algorithms)
-    - [Merge Sort](#Merge-Sort)
+    - [Sequential Merge Sort V1](#Sequential-Merge-Sort-V1)
+    - [Sequential Merge Sort V2](#Sequential-Merge-Sort-V2)
+    - [Merge Sort algorithm chosen](#Merge-Sort-algorithm-chosen)
     - [Parallel Merge Sort](#Parallel-Merge-Sort)
+    - [Details on the implementation](#Details-on-the-implementation)
 - [Details on the implementation](#Details-on-the-implementation)
     - [Sequential Merge Sort](#Sequential-Merge-Sort)
     - [Parallel Merge Sort with OpenMP](#Parallel-Merge-Sort-with-OpenMP)
@@ -78,10 +81,10 @@ Introduction to Algorithms, 3rd Edition, Thomas H. Cormen, Charles E. Leiserson,
 ### Sequential Merge Sort V1
 
 ```algorithm
-merge_sort(A, n, temp)
+mergeSort(A, n, temp)
     if n > 1
-        merge_sort(A, n/2, temp)
-        merge_sort(A + n/2, n - n/2, temp)
+        mergeSort(A, n/2, temp)
+        mergeSort(A + n/2, n - n/2, temp)
         merge(A, n, temp)
 ```
 
@@ -161,16 +164,16 @@ The `merge` function is the same as the one used in the sequential merge sort.
 The algorithm is written using `Cilk` syntax:
 
 ```algorithm
-parallel_merge_sort(A, n, temp)
+mergeSortParallel(A, n, temp)
     if n > 1
-        spawn parallel_merge_sort(A, n/2, temp)
-        parallel_merge_sort(A + n/2, n - n/2, temp)
+        spawn mergeSortParallel(A, n/2, temp)
+        mergeSortParallel(A + n/2, n - n/2, temp)
         sync
-        parallel_merge(A, n, temp)
+        merge(A, n, temp)
 ```
 
 ```algorithm
-parallel_merge(A, n, temp)
+merge(A, n, temp)
     i = 0
     j = n/2
     k = 0
@@ -204,6 +207,18 @@ from creating thread for small arrays.
 This also apply in the recursive calls of the `mergeSort` function. After some division of the recursive call of
 the `mergeSort` function the array size
 is smaller than the threshold, the algorithm is executed sequentially.
+
+The algorithm is the following:
+
+```algorithm
+mergeSortParallel(A, n, temp)
+    if (size < MULTITHREAD_THRESHOLD)
+        mergeSortSequential(array, size, bufferArray);
+    else
+        mergeSortParallel(A, n/2, temp)
+        mergeSortParallel(A + n/2, n - n/2, temp)
+        merge(A, n, temp)
+```
 
 ## Results
 
