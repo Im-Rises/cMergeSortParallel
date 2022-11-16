@@ -28,7 +28,7 @@ struct MergeSortArgs {
     pthread_mutex_t* myMutex;
 };
 
-void mergeSortParallel(int A[], int arraySize, ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
+void mergeSortParallel(int A[], int arraySize, int B[], ThreadState* threads, int threadsNumber, pthread_mutex_t* myMutex);
 int checkThreadIsAvailable(ThreadState* threads, int threadsNumber);
 void* mergeSortParallelThread(void* input);
 

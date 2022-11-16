@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     double openMpT = omp_get_wtime();
 
     /* Sort array */
-    mergeSortParallelOpenMp(inputArray, arraySize, inputArray, threadsNumber);
+    mergeSortParallelOpenMp(inputArray, arraySize, threadsNumber);
 
     /* Stop timers */
     clock_t endClock = clock();
