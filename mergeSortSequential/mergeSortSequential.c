@@ -1,4 +1,4 @@
-#include "mergeSortSequential.h" $
+#include "mergeSortSequential.h"
 #include "../commonFunctions/commonFunctions.h"
 
 #include <string.h>
