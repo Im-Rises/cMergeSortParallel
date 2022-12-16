@@ -512,10 +512,10 @@ make <script_name>
 
 The Linux scripts names are:
 
-- `fileGenLinux`
-- `sequentialVerLinux`
-- `OpenMpVerLinux`
-- `PThreadVerLinux`
+- `fileGen`
+- `mergeSortSeq`
+- `mergeSortParOpenMp`
+- `mergeSortParPthread`
 
 <!--
 
