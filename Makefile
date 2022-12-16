@@ -9,7 +9,7 @@ all:
 	$(MAKE) fileGen
 	$(MAKE) mergeSortSeq
 	$(MAKE) mergeSortParOpenMp
-	$(MAKE) mergeSortParPthread
+	$(MAKE) mergeSortParPThread
 	$(MAKE) clean
 
 fileGen:
@@ -28,12 +28,12 @@ mergeSortParOpenMp:
 	$(CC) $(CFLAGS) $(OPENMP_FLAGS) -o $(OUTPUT_DIR)/main.o -c mergeSortOpenMp/main.c
 	$(CC) $(CFLAGS) $(OPENMP_FLAGS) -o $(OUTPUT_DIR)/mergeSortOpenMp $(OUTPUT_DIR)/mergeSortOpenMp.o $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/commonFunctions.o $(OUTPUT_DIR)/mergeSortSequential.o
 
-mergeSortParPthread:
+mergeSortParPThread:
 	$(MAKE) commonFuncs
 	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/mergeSortSequential.o -c mergeSortSequential/mergeSortSequential.c
-	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/mergeSortPthread.o -c mergeSortPthread/mergeSortParallelPthread.c
-	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/main.o -c mergeSortPthread/main.c
-	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/mergeSortPthread $(OUTPUT_DIR)/mergeSortPthread.o $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/commonFunctions.o $(OUTPUT_DIR)/mergeSortSequential.o
+	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/mergeSortPThread.o -c mergeSortPThread/mergeSortParallelPThread.c
+	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/main.o -c mergeSortPThread/main.c
+	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/mergeSortPThread $(OUTPUT_DIR)/mergeSortPThread.o $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/commonFunctions.o $(OUTPUT_DIR)/mergeSortSequential.o
 
 commonFuncs:
 	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/commonFunctions.o -c commonFunctions/commonFunctions.c
