@@ -414,7 +414,7 @@ the project. Refer to the section below `Windows` or `Linux`;
 Windows users can directly compile the project by typing the following command at the project root folder:
 
 ```bash
-cmake .
+cmake -B . -DCMAKE_BUILD_TYPE=Release
 ```
 
 > **Note**  
@@ -446,7 +446,7 @@ sudo apt-get install libomp-dev
 You are now able to compile the project. Go to the project root and type the following command:
 
 ```bash
-cmake .
+cmake -B . -DCMAKE_BUILD_TYPE=Release
 ```
 
 ### Compile with Make
@@ -512,10 +512,10 @@ make <script_name>
 
 The Linux scripts names are:
 
-- `fileGenLinux`
-- `sequentialVerLinux`
-- `OpenMpVerLinux`
-- `PThreadVerLinux`
+- `fileGen`
+- `mergeSortSeq`
+- `mergeSortParOpenMp`
+- `mergeSortParPthread`
 
 <!--
 

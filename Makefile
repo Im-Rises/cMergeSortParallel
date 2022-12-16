@@ -1,48 +1,56 @@
+CC=gcc
+CFLAGS= -std=c90 -W -Wall -ansi -pedantic  -O2
+#LDFLAGS=
+OPENMP_FLAGS= -fopenmp
+PTHREAD_FLAGS= -pthread
+OUTPUT_DIR=./buildMakeFile
+
 all:
-	$(MAKE) LinuxVer
-#	$(MAKE) WindowsVer
-
-LinuxVer:
-	$(MAKE) MrProperLinux
-	$(MAKE) fileGenLinux
-	$(MAKE) sequentialVerLinux
-	$(MAKE) OpenMpVerLinux
-	$(MAKE) PThreadVerLinux
+	$(MAKE) fileGen
+	$(MAKE) mergeSortSeq
+	$(MAKE) mergeSortParOpenMp
+	$(MAKE) mergeSortParPthread
 	$(MAKE) clean
 
-fileGenLinux:
-	gcc ./fileGenerator/main.c -o buildMakeFile/fileGenerator -std=c90 -Wall -O2
+fileGen:
+	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/fileGen fileGenerator/main.c
 
-sequentialVerLinux:
-	gcc ./mergeSortSequential/main.c -o buildMakeFile/main.o -c -std=c90 -Wall -O2
-	gcc ./mergeSortSequential/mergeSortSequential.c -o buildMakeFile/mergeSortSequential.o -c -std=c90 -Wall -O2
-	gcc ./commonFunctions/commonFunctions.c -o buildMakeFile/commonFunctions.o -c -std=c90 -Wall -O2
-	gcc -o ./buildMakeFile/mergeSortSequential buildMakeFile/main.o buildMakeFile/mergeSortSequential.o buildMakeFile/commonFunctions.o -std=c90 -Wall -O2
+mergeSortSeq:
+	$(MAKE) commonFuncs
+	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/mergeSortSequential.o -c mergeSortSequential/mergeSortSequential.c
+	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/main.o -c mergeSortSequential/main.c
+	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/mergeSortSequential $(OUTPUT_DIR)/mergeSortSequential.o $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/commonFunctions.o
 
-OpenMpVerLinux:
-	gcc ./mergeSortOpenMp/main.c -o buildMakeFile/main.o -c -std=c90 -Wall -O2
-	gcc ./mergeSortOpenMp/mergeSortParallelOpenMp.c -o buildMakeFile/mergeSortParallelOpenMp.o -fopenmp -c -std=c90 -Wall -O2
-	gcc ./mergeSortSequential/mergeSortSequential.c -o buildMakeFile/mergeSortSequential.o -c -std=c90 -Wall -O2
-	gcc ./commonFunctions/commonFunctions.c -o buildMakeFile/commonFunctions.o -c -std=c90 -Wall -O2
-	gcc -o ./buildMakeFile/mergeSortOpenMp buildMakeFile/main.o buildMakeFile/mergeSortParallelOpenMp.o buildMakeFile/commonFunctions.o buildMakeFile/mergeSortSequential.o -fopenmp -std=c90 -Wall -O2
+mergeSortParOpenMp:
+	$(MAKE) commonFuncs
+	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/mergeSortSequential.o -c mergeSortSequential/mergeSortSequential.c
+	$(CC) $(CFLAGS) $(OPENMP_FLAGS) -o $(OUTPUT_DIR)/mergeSortOpenMp.o -c mergeSortOpenMp/mergeSortParallelOpenMp.c
+	$(CC) $(CFLAGS) $(OPENMP_FLAGS) -o $(OUTPUT_DIR)/main.o -c mergeSortOpenMp/main.c
+	$(CC) $(CFLAGS) $(OPENMP_FLAGS) -o $(OUTPUT_DIR)/mergeSortOpenMp $(OUTPUT_DIR)/mergeSortOpenMp.o $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/commonFunctions.o $(OUTPUT_DIR)/mergeSortSequential.o
 
-PThreadVerLinux:
-	gcc ./mergeSortPThread/main.c -o buildMakeFile/main.o -c -std=gnu90 -Wall -O2
-	gcc ./mergeSortPThread/mergeSortParallelPThread.c -o buildMakeFile/mergeSortParallelPThread.o -lpthread -c -std=gnu90 -Wall -O2
-	gcc ./mergeSortSequential/mergeSortSequential.c -o buildMakeFile/mergeSortSequential.o -c -std=gnu90 -Wall -O2
-	gcc ./commonFunctions/commonFunctions.c -o buildMakeFile/commonFunctions.o -c -std=gnu90 -Wall -O2
-	gcc -o ./buildMakeFile/mergeSortPThread buildMakeFile/main.o buildMakeFile/mergeSortParallelPThread.o buildMakeFile/commonFunctions.o buildMakeFile/mergeSortSequential.o -lpthread -std=gnu90 -Wall -O2
+mergeSortParPthread:
+	$(MAKE) commonFuncs
+	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/mergeSortSequential.o -c mergeSortSequential/mergeSortSequential.c
+	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/mergeSortPthread.o -c mergeSortPthread/mergeSortParallelPthread.c
+	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/main.o -c mergeSortPthread/main.c
+	$(CC) $(CFLAGS) $(PTHREAD_FLAGS) -o $(OUTPUT_DIR)/mergeSortPthread $(OUTPUT_DIR)/mergeSortPthread.o $(OUTPUT_DIR)/main.o $(OUTPUT_DIR)/commonFunctions.o $(OUTPUT_DIR)/mergeSortSequential.o
 
-MrProperLinux : clean
-	rm -f buildMakeFile/fileGenerator
-	rm -f buildMakeFile/mergeSortOpenMp
-	rm -f buildMakeFile/mergeSortPThread
-	rm -f buildMakeFile/mergeSortSequential
-	$(MAKE) clean
+commonFuncs:
+	$(CC) $(CFLAGS) -o $(OUTPUT_DIR)/commonFunctions.o -c commonFunctions/commonFunctions.c
 
-clean :
-	rm -rf buildMakeFile/*.o
+.PHONY: clean mrproper all
 
+clean:
+	rm -rf $(OUTPUT_DIR)/*.o
+
+mrproper: clean
+	rm -rf $(OUTPUT_DIR)/fileGen
+	rm -rf $(OUTPUT_DIR)/mergeSortSeq
+	rm -rf $(OUTPUT_DIR)/mergeSortOpenMp
+	rm -rf $(OUTPUT_DIR)/mergeSortPthread
+
+
+## OTHER
 #WindowsVer:
 #	$(MAKE) MrProperWin
 #	$(MAKE) fileGenWin

@@ -5,7 +5,7 @@
 #include <pthread.h>
 
 #include "../mergeSortSequential/mergeSortSequential.h"
-#include "../commonFunctions/commonFunctions.h" 56
+#include "../commonFunctions/commonFunctions.h"
 
 
 /*typedef enum Boolean Boolean;*/
